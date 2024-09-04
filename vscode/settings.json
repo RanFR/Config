@@ -1,0 +1,62 @@
+{
+    // Sync settings
+    "settingsSync.ignoredSettings": [
+        "editor.fontFamily",
+        "editor.fontSize",
+        "terminal.integrated.fontFamily"
+    ],
+    /* editor settings */
+    // font settings
+    "editor.fontFamily": "'JetBrains Mono', 'HarmonyOS Sans SC'",
+    "editor.fontSize": 20,
+    "editor.rulers": [
+        120
+    ],
+    "editor.guides.bracketPairs": "active", // display bracket pairs
+    "editor.suggest.insertMode": "replace", // replace text when accepting suggestion
+    "editor.acceptSuggestionOnEnter": "off", // tab completion without enter
+    "editor.tabSize": 4,
+    "editor.formatOnSave": true,
+    // explorer settings
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
+    "explorer.confirmPasteNative": false,
+    "explorer.compactFolders": false,
+    // files settings
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "files.exclude": { // do not display in explorer
+        "**/.cache": true,
+        "**/.catkin_tools": true,
+    },
+    // workbench settings
+    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.iconTheme": "vscode-icons",
+    // tree
+    "workbench.tree.indent": 16,
+    // terminal settings
+    "terminal.integrated.fontFamily": "'Cascadia Code NF', 'HarmonyOS Sans SC'",
+    "terminal.integrated.inheritEnv": false,
+    // romote settings
+    "remote.autoForwardPortsSource": "hybrid",
+    // git settings
+    "git.openRepositoryInParentFolders": "always",
+    "git.confirmSync": false,
+    "git.autofetch": false,
+    // c++ settings
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+    // Clangd settings
+    "clangd.arguments": [
+        "--background-index",
+        "--completion-style=detailed",
+        "--clang-tidy",
+        "--header-insertion=never"
+    ],
+    // extensions settings
+    "extensions.ignoreRecommendations": true,
+    // Help prove
+    "redhat.telemetry.enabled": true,
+}
+
