@@ -1,62 +1,80 @@
 {
-    // Sync settings
+    /* Sync settings */
     "settingsSync.ignoredSettings": [
-        "editor.fontFamily",
-        "editor.fontSize",
-        "terminal.integrated.fontFamily"
+        "editor.fontFamily",  // Font type
+        "editor.fontSize",  // Font size
+        "terminal.integrated.fontFamily",
+        "http.proxy"
     ],
+
+    /* Proxy settings */
+    "http.proxy": "http://127.0.0.1:7890",
+
     /* editor settings */
-    // font settings
-    "editor.fontFamily": "'JetBrains Mono', 'HarmonyOS Sans SC'",
+    // Font settings
+    "editor.fontFamily": "'Cascadia Mono', 'Noto Sans CJK SC'",
     "editor.fontSize": 20,
-    "editor.rulers": [
-        120
-    ],
-    "editor.guides.bracketPairs": "active", // display bracket pairs
-    "editor.suggest.insertMode": "replace", // replace text when accepting suggestion
-    "editor.acceptSuggestionOnEnter": "off", // tab completion without enter
-    "editor.tabSize": 4,
+    "editor.rulers": [120],
+    "editor.guides.bracketPairs": "active", // Display bracket pairs
+    "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
+    "editor.acceptSuggestionOnEnter": "off", // Tab completion without enter
+    // Format
     "editor.formatOnSave": true,
-    // explorer settings
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+
+    /* Explorer settings */
     "explorer.confirmDragAndDrop": false,
     "explorer.confirmDelete": false,
     "explorer.confirmPasteNative": false,
     "explorer.compactFolders": false,
-    // files settings
+
+    /* Files settings */
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
-    "files.exclude": { // do not display in explorer
+    "files.exclude": { // Do not display in explorer
         "**/.cache": true,
         "**/.catkin_tools": true,
     },
-    // workbench settings
+
+    /* Workbench settings */
     "workbench.colorTheme": "Default Dark Modern",
     "workbench.iconTheme": "vscode-icons",
-    // tree
+    // Tree
     "workbench.tree.indent": 16,
-    // terminal settings
-    "terminal.integrated.fontFamily": "'Cascadia Code NF', 'HarmonyOS Sans SC'",
+
+    /* Integrated terminal settings */
+    "terminal.integrated.fontFamily": "'Cascadia Mono NF', 'Noto Sans CJK SC'",
+    "terminal.integrated.fontSize": 16,
     "terminal.integrated.inheritEnv": false,
-    // romote settings
-    "remote.autoForwardPortsSource": "hybrid",
-    // git settings
+    "terminal.integrated.lineHeight": 1,
+
+    /* Romote settings */
+    "remote.autoForwardPorts": true,
+    "remote.autoForwardPortsSource": "process",
+
+    /* Git settings */
     "git.openRepositoryInParentFolders": "always",
     "git.confirmSync": false,
     "git.autofetch": false,
-    // c++ settings
-    "[cpp]": {
-        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
-    },
-    // Clangd settings
+
+    /* Clangd settings */
     "clangd.arguments": [
         "--background-index",
         "--completion-style=detailed",
         "--clang-tidy",
-        "--header-insertion=never"
+        "--header-insertion=never",
+        "--compile-commands-dir=${workspaceFolder}/build"
     ],
+
     // extensions settings
     "extensions.ignoreRecommendations": true,
-    // Help prove
-    "redhat.telemetry.enabled": true,
-}
+    "extensions.autoCheckUpdates": true,
+    "extensions.autoUpdate": true,
+    "extensions.closeExtensionDetailsOnViewChange": true,
 
+    /* Help REDHAT */
+    "redhat.telemetry.enabled": true,
+
+    /* Json settings */
+    "json.format.keepLines": true
+}
