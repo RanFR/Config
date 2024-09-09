@@ -1,0 +1,16 @@
+" line number
+set relativenumber
+set number
+
+" indentation
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set autoindent
+
+" wrap
+set nowrap
+
+" appearance
+set termguicolors
+set signcolumn=yes
