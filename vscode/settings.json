@@ -1,26 +1,34 @@
 {
     /* Sync settings */
     "settingsSync.ignoredSettings": [
-        "editor.fontFamily",  // Font type
-        "editor.fontSize",  // Font size
+        "editor.fontFamily", // Font type, in case of different font types on different devices
+        "editor.fontSize", // Font size, different screen will have different font size, need to be changed manually
         "terminal.integrated.fontFamily",
-        "http.proxy"
+        "clangd.onConfigChanged" // If version of clangd over 12, it can reload config automatically
     ],
-
-    /* Proxy settings */
-    "http.proxy": "http://127.0.0.1:7890",
 
     /* editor settings */
     // Font settings
-    "editor.fontFamily": "'Cascadia Mono', 'Noto Sans CJK SC'",
+    "editor.fontFamily": "'JetBrains Mono', 'Noto Sans CJK SC'",
     "editor.fontSize": 20,
-    "editor.rulers": [120],
+    "editor.rulers": [ 120 ],
     "editor.guides.bracketPairs": "active", // Display bracket pairs
     "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
     "editor.acceptSuggestionOnEnter": "off", // Tab completion without enter
     // Format
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+    // Detailed settings about editor fonts
+    "editor.tokenColorCustomizations": {
+        "comments": {
+            "fontStyle": "italic" // Italic comments
+        }
+    },
 
     /* Explorer settings */
     "explorer.confirmDragAndDrop": false,
@@ -37,7 +45,7 @@
     },
 
     /* Workbench settings */
-    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.colorTheme": "Default Dark Modern", // In my view, default is the best
     "workbench.iconTheme": "vscode-icons",
     // Tree
     "workbench.tree.indent": 16,
@@ -66,14 +74,16 @@
         "--compile-commands-dir=${workspaceFolder}/build"
     ],
 
+    /* YAML settings */
+    "yaml.format.enable": true,
+    "yaml.format.bracketSpacing": true,
+    "yaml.format.printWidth": 120,
+
     // extensions settings
     "extensions.ignoreRecommendations": true,
     "extensions.autoCheckUpdates": true,
     "extensions.autoUpdate": true,
     "extensions.closeExtensionDetailsOnViewChange": true,
-
-    /* Help REDHAT */
-    "redhat.telemetry.enabled": true,
 
     /* Json settings */
     "json.format.keepLines": true
