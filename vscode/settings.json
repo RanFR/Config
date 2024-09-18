@@ -23,12 +23,12 @@
     "[cpp]": {
         "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
     },
-    // Detailed settings about editor fonts
-    "editor.tokenColorCustomizations": {
-        "comments": {
-            "fontStyle": "italic" // Italic comments
-        }
-    },
+    // // Detailed settings about editor fonts
+    // "editor.tokenColorCustomizations": {
+    //     "comments": {
+    //         "fontStyle": "italic" // Italic comments, but one dark pro has already set this
+    //     }
+    // },
 
     /* Explorer settings */
     "explorer.confirmDragAndDrop": false,
@@ -45,7 +45,7 @@
     },
 
     /* Workbench settings */
-    "workbench.colorTheme": "Default Dark Modern", // In my view, default is the best
+    "workbench.colorTheme": "One Dark Pro",
     "workbench.iconTheme": "vscode-icons",
     // Tree
     "workbench.tree.indent": 16,
