@@ -7,6 +7,9 @@
         "clangd.onConfigChanged" // If version of clangd over 12, it can reload config automatically
     ],
 
+    // Http proxy
+    "http.proxy": "http://127.0.0.1:7890",
+
     /* editor settings */
     // Font settings
     "editor.fontFamily": "'JetBrains Mono', 'Noto Sans CJK SC'",
@@ -15,7 +18,15 @@
     "editor.guides.bracketPairs": "active", // Display bracket pairs
     "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
     "editor.acceptSuggestionOnEnter": "off", // Tab completion without enter
-    // Format
+
+    // Detailed settings about current theme
+    "editor.tokenColorCustomizations": {
+        "comments": {
+            "fontStyle": "italic" // Italic comments, but one dark pro has already set this
+        }
+    },
+
+    // Format settings
     "editor.formatOnSave": true,
     "[yaml]": {
         "editor.defaultFormatter": "redhat.vscode-yaml"
@@ -23,18 +34,15 @@
     "[cpp]": {
         "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
     },
-    // // Detailed settings about editor fonts
-    // "editor.tokenColorCustomizations": {
-    //     "comments": {
-    //         "fontStyle": "italic" // Italic comments, but one dark pro has already set this
-    //     }
-    // },
+    "[xml]": {
+        "editor.defaultFormatter": "redhat.vscode-xml"
+    },
 
     /* Explorer settings */
-    "explorer.confirmDragAndDrop": false,
-    "explorer.confirmDelete": false,
-    "explorer.confirmPasteNative": false,
-    "explorer.compactFolders": false,
+    "explorer.confirmDragAndDrop": true,
+    "explorer.confirmDelete": true,
+    "explorer.confirmPasteNative": true,
+    "explorer.compactFolders": true,
 
     /* Files settings */
     "files.insertFinalNewline": true,
@@ -45,7 +53,7 @@
     },
 
     /* Workbench settings */
-    "workbench.colorTheme": "One Dark Pro",
+    "workbench.colorTheme": "Default Dark Modern",
     "workbench.iconTheme": "vscode-icons",
     // Tree
     "workbench.tree.indent": 16,
@@ -54,14 +62,14 @@
     "terminal.integrated.fontFamily": "'Cascadia Mono NF', 'Noto Sans CJK SC'",
     "terminal.integrated.fontSize": 16,
     "terminal.integrated.inheritEnv": false,
-    "terminal.integrated.lineHeight": 1,
+    "terminal.integrated.defaultProfile.linux": "bash",
 
     /* Romote settings */
     "remote.autoForwardPorts": true,
     "remote.autoForwardPortsSource": "process",
 
     /* Git settings */
-    "git.openRepositoryInParentFolders": "always",
+    "git.openRepositoryInParentFolders": "never",
     "git.confirmSync": false,
     "git.autofetch": false,
 
@@ -86,5 +94,8 @@
     "extensions.closeExtensionDetailsOnViewChange": true,
 
     /* Json settings */
-    "json.format.keepLines": true
+    "json.format.keepLines": true,
+
+    /* Help prove */
+    "redhat.telemetry.enabled": true,
 }
