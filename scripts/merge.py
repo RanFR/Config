@@ -1,8 +1,14 @@
 import os
 import json
 
-# 获取当前工作目录
-workspace = os.getcwd()
+# 获取当前工作目录，判断是在项目根目录下，还是在其他目录下（比如scripts目录下）
+# 通过判断当前目录下是否存在src目录，来判断是否在项目根目录下
+current_path = os.getcwd()
+if os.path.exists(os.path.join(current_path, 'src')):
+    workspace = current_path
+else:
+    # 返回目录的上一级目录，作为项目根目录
+    workspace = os.path.dirname(current_path)
 build_dir = os.path.join(workspace, 'build')
 
 # 用于存储合并的编译命令
