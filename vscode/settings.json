@@ -7,9 +7,6 @@
         "clangd.onConfigChanged" // If version of clangd over 12, it can reload config automatically
     ],
 
-    // Http proxy
-    "http.proxy": "http://127.0.0.1:7890",
-
     /* editor settings */
     // Font settings
     "editor.fontFamily": "'JetBrains Mono', 'Noto Sans CJK SC'",
@@ -38,19 +35,16 @@
         "editor.defaultFormatter": "redhat.vscode-xml"
     },
 
+
     /* Explorer settings */
-    "explorer.confirmDragAndDrop": true,
-    "explorer.confirmDelete": true,
-    "explorer.confirmPasteNative": true,
-    "explorer.compactFolders": true,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
+    "explorer.confirmPasteNative": false,
+    "explorer.compactFolders": false,
 
     /* Files settings */
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
-    "files.exclude": { // Do not display in explorer
-        "**/.cache": true,
-        "**/.catkin_tools": true,
-    },
 
     /* Workbench settings */
     "workbench.colorTheme": "Default Dark Modern",
@@ -87,6 +81,10 @@
     "yaml.format.bracketSpacing": true,
     "yaml.format.printWidth": 120,
 
+    /* XML settings */
+    "xml.codeLens.enabled": true,
+    "xml.format.maxLineWidth": 120,
+
     // extensions settings
     "extensions.ignoreRecommendations": true,
     "extensions.autoCheckUpdates": true,
@@ -95,7 +93,4 @@
 
     /* Json settings */
     "json.format.keepLines": true,
-
-    /* Help prove */
-    "redhat.telemetry.enabled": true,
 }
