@@ -5,8 +5,8 @@ AccessModifierOffset: -2
 AlignAfterOpenBracket: Align
 AlignConsecutiveMacros: None
 AlignConsecutiveBitFields: None
-AlignConsecutiveAssignments: True
-AlignConsecutiveDeclarations: True
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
 AlignEscapedNewlines: Left
 AlignOperands: Align
 AlignTrailingComments: true

@@ -4,14 +4,16 @@
         "editor.fontFamily", // Font type, in case of different font types on different devices
         "editor.fontSize", // Font size, different screen will have different font size, need to be changed manually
         "terminal.integrated.fontFamily",
-        "clangd.onConfigChanged" // If version of clangd over 12, it can reload config automatically
+        // "clangd.onConfigChanged" // If version of clangd over 12, it can reload config automatically
     ],
 
     /* editor settings */
     // Font settings
     "editor.fontFamily": "'JetBrains Mono', 'Noto Sans CJK SC'",
     "editor.fontSize": 20,
+    "editor.fontLigatures": true,
     "editor.rulers": [ 120 ],
+    "editor.tabSize": 4,
     "editor.guides.bracketPairs": "active", // Display bracket pairs
     "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
     "editor.acceptSuggestionOnEnter": "off", // Tab completion without enter
@@ -25,16 +27,18 @@
 
     // Format settings
     "editor.formatOnSave": true,
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
     "[yaml]": {
         "editor.defaultFormatter": "redhat.vscode-yaml"
-    },
-    "[cpp]": {
-        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
     },
     "[xml]": {
         "editor.defaultFormatter": "redhat.vscode-xml"
     },
-
 
     /* Explorer settings */
     "explorer.confirmDragAndDrop": false,
@@ -53,8 +57,8 @@
     "workbench.tree.indent": 16,
 
     /* Integrated terminal settings */
-    "terminal.integrated.fontFamily": "'Cascadia Mono NF', 'Noto Sans CJK SC'",
-    "terminal.integrated.fontSize": 16,
+    "terminal.integrated.fontFamily": "'Cascadia Code NF', 'Noto Sans CJK SC'",
+    "terminal.integrated.fontSize": 20,
     "terminal.integrated.inheritEnv": false,
     "terminal.integrated.defaultProfile.linux": "bash",
 
@@ -67,14 +71,14 @@
     "git.confirmSync": false,
     "git.autofetch": false,
 
-    /* Clangd settings */
-    "clangd.arguments": [
-        "--background-index",
-        "--completion-style=detailed",
-        "--clang-tidy",
-        "--header-insertion=never",
-        "--compile-commands-dir=${workspaceFolder}/build"
-    ],
+    // /* Clangd settings */
+    // "clangd.arguments": [
+    //     "--background-index",
+    //     "--completion-style=detailed",
+    //     "--clang-tidy",
+    //     "--header-insertion=never",
+    //     "--compile-commands-dir=${workspaceFolder}/build"
+    // ],
 
     /* YAML settings */
     "yaml.format.enable": true,
@@ -92,5 +96,5 @@
     "extensions.closeExtensionDetailsOnViewChange": true,
 
     /* Json settings */
-    "json.format.keepLines": true,
+    "json.format.keepLines": true
 }
