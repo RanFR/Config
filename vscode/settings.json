@@ -3,8 +3,8 @@
     "settingsSync.ignoredSettings": [
         "editor.fontFamily", // Font type, in case of different font types on different devices
         "editor.fontSize", // Font size, different screen will have different font size, need to be changed manually
-        "terminal.integrated.fontFamily",
-        // "clangd.onConfigChanged" // If version of clangd over 12, it can reload config automatically
+        "terminal.integrated.fontFamily", // Terminal font type
+        "terminal.fontSize" // Terminal font size
     ],
 
     /* editor settings */
@@ -60,6 +60,7 @@
     "terminal.integrated.fontFamily": "'Cascadia Code NF', 'Noto Sans CJK SC'",
     "terminal.integrated.fontSize": 20,
     "terminal.integrated.inheritEnv": false,
+    "terminal.external.linuxExec": "/usr/bin/bash",
     "terminal.integrated.defaultProfile.linux": "bash",
 
     /* Romote settings */
@@ -70,15 +71,6 @@
     "git.openRepositoryInParentFolders": "never",
     "git.confirmSync": false,
     "git.autofetch": false,
-
-    // /* Clangd settings */
-    // "clangd.arguments": [
-    //     "--background-index",
-    //     "--completion-style=detailed",
-    //     "--clang-tidy",
-    //     "--header-insertion=never",
-    //     "--compile-commands-dir=${workspaceFolder}/build"
-    // ],
 
     /* YAML settings */
     "yaml.format.enable": true,

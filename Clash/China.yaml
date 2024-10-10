@@ -1,0 +1,5 @@
+payload:
+  - DOMAIN-SUFFIX,baidu.com # Baidu
+  - DOMAIN-SUFFIX,bdstatic.com # Baidu static resources
+  - DOMAIN-SUFFIX,bit.edu.cn # Beijing Institute of Technology
+  - DOMAIN-SUFFIX,csdn.net # CSDN
