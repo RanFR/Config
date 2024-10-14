@@ -3,13 +3,13 @@
     "settingsSync.ignoredSettings": [
         "editor.fontFamily", // Font type, in case of different font types on different devices
         "editor.fontSize", // Font size, different screen will have different font size, need to be changed manually
-        "terminal.integrated.fontFamily", // Terminal font type
-        "terminal.fontSize" // Terminal font size
+        "terminal.integrated.fontFamily", // terminal font type
+        "terminal.integrated.fontSize" // terminal font size
     ],
 
     /* editor settings */
     // Font settings
-    "editor.fontFamily": "'JetBrains Mono', 'Noto Sans CJK SC'",
+    "editor.fontFamily": "'JetBrains Mono', 'Source Han Sans SC'",
     "editor.fontSize": 20,
     "editor.fontLigatures": true,
     "editor.rulers": [ 120 ],
@@ -18,12 +18,13 @@
     "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
     "editor.acceptSuggestionOnEnter": "off", // Tab completion without enter
 
-    // Detailed settings about current theme
-    "editor.tokenColorCustomizations": {
-        "comments": {
-            "fontStyle": "italic" // Italic comments, but one dark pro has already set this
-        }
-    },
+    // more editor settings
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "editor.defaultColorDecorators": true,
+    "editor.experimentalInlineEdit.enabled": true,
+    "editor.inlayHints.padding": true,
+    "editor.inlineCompletionsAccessibilityVerbose": true,
+    "editor.linkedEditing": true,
 
     // Format settings
     "editor.formatOnSave": true,
@@ -47,17 +48,24 @@
     "explorer.compactFolders": false,
 
     /* Files settings */
+    "files.autoSave": "onFocusChange",
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
+    "files.associations": {
+        "*.h": "cpp",
+        "*.hpp": "cpp",
+        "*.cc": "cpp",
+        "*.cpp": "cpp"
+    },
 
-    /* Workbench settings */
-    "workbench.colorTheme": "Default Dark Modern",
+    // workbench settings
+    "workbench.colorTheme": "One Dark Pro",
     "workbench.iconTheme": "vscode-icons",
     // Tree
     "workbench.tree.indent": 16,
 
     /* Integrated terminal settings */
-    "terminal.integrated.fontFamily": "'Cascadia Code NF', 'Noto Sans CJK SC'",
+    "terminal.integrated.fontFamily": "'Cascadia Code NF', 'Source Han Sans SC'",
     "terminal.integrated.fontSize": 20,
     "terminal.integrated.inheritEnv": false,
     "terminal.external.linuxExec": "/usr/bin/bash",
@@ -71,6 +79,13 @@
     "git.openRepositoryInParentFolders": "never",
     "git.confirmSync": false,
     "git.autofetch": false,
+
+    /* CMake settings */
+    "cmake.showOptionsMovedNotification": false,
+    "cmake.pinnedCommands": [
+        "workbench.action.tasks.configureTaskRunner",
+        "workbench.action.tasks.runTask"
+    ],
 
     /* YAML settings */
     "yaml.format.enable": true,
