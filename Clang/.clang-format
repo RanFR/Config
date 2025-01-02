@@ -9,8 +9,8 @@ AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
 AlignConsecutiveMacros: true
 AlignEscapedNewlines: Left
-AlignOperands: Align
-AlignTrailingComments: Always
+AlignOperands: true
+AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: Empty
@@ -111,8 +111,8 @@ RawStringFormats:
     CanonicalDelimiter: ""
     BasedOnStyle: google
 ReflowComments: true
-SortIncludes: CaseSensitive
-SortUsingDeclarations: Lexicographic
+SortIncludes: true
+SortUsingDeclarations: true
 SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
 SpaceAfterTemplateKeyword: false
@@ -125,7 +125,7 @@ SpaceBeforeRangeBasedForLoopColon: true
 SpaceBeforeSquareBrackets: false
 SpaceInEmptyBlock: false
 SpacesBeforeTrailingComments: 2
-SpacesInAngles: Never
+SpacesInAngles: false
 SpacesInContainerLiterals: false
 SpacesInSquareBrackets: false
 Standard: Auto

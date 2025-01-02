@@ -7,15 +7,20 @@ const selfRuleProviders = {
     behavior: "classical",
     path: "ios_rule_scripts/Bing.yaml"
   },
-  "ChinaMax": {
+  "China": {
     type: "file",
     behavior: "classical",
-    path: "ios_rule_scripts/ChinaMax.yaml"
+    path: "ios_rule_scripts/China.yaml"
   },
-  "Github": {
+  "Docker": {
     type: "file",
     behavior: "classical",
-    path: "ios_rule_scripts/Github.yaml"
+    "path": "ios_rule_scripts/Docker.yaml"
+  },
+  "GitHub": {
+    type: "file",
+    behavior: "classical",
+    path: "ios_rule_scripts/GitHub.yaml"
   },
   "Google": {
     type: "file",
@@ -27,27 +32,40 @@ const selfRuleProviders = {
     behavior: "classical",
     path: "ios_rule_scripts/Microsoft.yaml"
   },
-  "YouTube": {
+  "Mozilla": {
     type: "file",
-    behavior: "classical",
-    path: "ios_rule_scripts/YouTube.yaml"
+    "behavior": "classical",
+    path: "ios_rule_scripts/Mozilla.yaml"
   },
   "OpenAI": {
     type: "file",
     behavior: "classical",
     path: "ios_rule_scripts/OpenAI.yaml"
-  }
+  },
+  "Scholar": {
+    type: "file",
+    behavior: "classical",
+    path: "ios_rule_scripts/Scholar.yaml"
+  },
+  "YouTube": {
+    type: "file",
+    behavior: "classical",
+    path: "ios_rule_scripts/YouTube.yaml"
+  },
 };
 
 // Add self rules.
 const selfRules = [
   "RULE-SET,Bing,DIRECT",
-  "RULE-SET,Github,SSRDOG",
-  "RULE-SET,Google,Google",
-  "RULE-SET,YouTube,Google",
-  "RULE-SET,Microsoft,Microsoft",
-  "RULE-SET,OpenAI,OpenAI",
-  "RULE-SET,ChinaMax,DIRECT"
+  "RULE-SET,Docker,SSRDOG",
+  "RULE-SET,GitHub,SSRDOG",
+  "RULE-SET,Google,SSRDOG",
+  "RULE-SET,Microsoft,SSRDOG",
+  "RULE-SET,Mozilla,SSRDOG",
+  "RULE-SET,OpenAI,SSRDOG",
+  "RULE-SET,Scholar,SSRDOG",
+  "RULE-SET,YouTube,SSRDOG",
+  "RULE-SET,China,DIRECT"
 ]
 const endRules = [
   "GEOIP,CN,DIRECT",
@@ -56,20 +74,20 @@ const endRules = [
 ]
 
 // Rules and rule providers to remove.
-const stringsToRemove = ["Bing", "Github", "Google", "YouTube", "Microsoft", "OpenAI", "ChinaMax", "GEOIP,CN", "GEOIP,LAN", "MATCH"]
+const stringsToRemove = ["Bing", "Microsoft", "GEOIP,CN", "GEOIP,LAN", "MATCH"]
 
 // DNS
 const demosticNameservers = [
-  "https://223.5.5.5", // Aliyun, main
-  "https://223.6.6.6", // Aliyun, backup
-  "https://119.29.29.29", // Tencent
-  "https://101.226.4.6", // 360, none unicom
-  "https://123.125.81.6" // 360, for unicom
+  "223.5.5.5", // Aliyun, main
+  "223.6.6.6", // Aliyun, backup
+  "119.29.29.29", // Tencent
+  "101.226.4.6", // 360, none unicom
+  "123.125.81.6" // 360, for unicom
 ]
 const foreignNameservers = [
-  "https://1.1.1.1", // Cloudflare, main
-  "https://1.0.0.1", // Cloudflare, backup
-  "https://8.8.8.8" // Google
+  "1.1.1.1", // Cloudflare, main
+  "1.0.0.1", // Cloudflare, backup
+  "8.8.8.8" // Google
 ]
 const dnsConfig = {
   "enable": true,
@@ -78,7 +96,7 @@ const dnsConfig = {
   "enhanced-mode": "fake-ip",
   "fake-ip-range": "198.18.0.1/16",
   "use-hosts": true,
-  "default-nameserver": ["223.5.5.5", "1.1.1.1"],
+  "default-nameserver": ["1.1.1.1", "1.0.0.1"],
   "nameserver": [...demosticNameservers, ...foreignNameservers],
   "fake-ip-filter": [
     "*.lan", // local network/domain

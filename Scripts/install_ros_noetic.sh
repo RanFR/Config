@@ -2,7 +2,7 @@
 
 # 设置ROS的镜像列表
 setup_ros_mirror() {
-    local mirror_url="https://mirrors.ustc.edu.cn/ros/ubuntu/"
+    local mirror_url="https://mirrors.cernet.edu.cn/ros/ubuntu/"
     local distro="focal"
     local mirror_file="/etc/apt/sources.list.d/ros.list"
 

@@ -1,7 +1,4 @@
-[user]
-	name = RanFR
-	email = ranfr@outlook.com
 [core]
-	editor = vim
+	editor = nvim
 [http]
 	proxy = http://127.0.0.1:7890

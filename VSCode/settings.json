@@ -1,107 +1,29 @@
 {
-    /* Sync settings */
+    /* For basic using */
+
+    // Don't sync font size for different size of screen need different size of font.
     "settingsSync.ignoredSettings": [
-        "editor.fontFamily", // Font type, in case of different font types on different devices
-        "editor.fontSize", // Font size, different screen will have different font size, need to be changed manually
-        "terminal.integrated.fontFamily", // terminal font type
-        "terminal.integrated.fontSize" // terminal font size
+        "editor.fontSize",
+        "terminal.integrated.fontSize",
+        "http.proxy"
     ],
 
-    /* editor settings */
+    /* Editor settings */
     // Font settings
-    "editor.fontFamily": "'JetBrains Mono', 'Source Han Sans SC'",
-    "editor.fontSize": 20,
-    "editor.fontLigatures": true,
-    "editor.rulers": [ 120 ],
-    "editor.tabSize": 4,
-    "editor.guides.bracketPairs": "active", // Display bracket pairs
-    "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
-    "editor.acceptSuggestionOnEnter": "off", // Tab completion without enter
+    "editor.fontFamily": "'Cascadia Code NF', 'Noto Sans SC'",
+    "editor.fontSize": 16,
+    // Other editor settings
+    "editor.wordWrap": "wordWrapColumn",  // word wrap
+    "editor.wordWrapColumn": 120,
 
-    // more editor settings
-    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
-    "editor.defaultColorDecorators": true,
-    "editor.experimentalInlineEdit.enabled": true,
-    "editor.inlayHints.padding": true,
-    "editor.inlineCompletionsAccessibilityVerbose": true,
-    "editor.linkedEditing": true,
-
-    // Format settings
-    "editor.formatOnSave": true,
-    "[cpp]": {
-        "editor.defaultFormatter": "ms-vscode.cpptools"
-    },
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
-    },
-    "[yaml]": {
-        "editor.defaultFormatter": "redhat.vscode-yaml"
-    },
-    "[xml]": {
-        "editor.defaultFormatter": "redhat.vscode-xml"
-    },
-
-    /* Explorer settings */
-    "explorer.confirmDragAndDrop": false,
-    "explorer.confirmDelete": false,
-    "explorer.confirmPasteNative": false,
-    "explorer.compactFolders": false,
-
-    /* Files settings */
-    "files.autoSave": "onFocusChange",
-    "files.insertFinalNewline": true,
-    "files.trimTrailingWhitespace": true,
-    "files.associations": {
-        "*.h": "cpp",
-        "*.hpp": "cpp",
-        "*.cc": "cpp",
-        "*.cpp": "cpp"
-    },
-
-    // workbench settings
-    "workbench.colorTheme": "One Dark Pro",
-    "workbench.iconTheme": "vscode-icons",
-    // Tree
+    /* Workbench settings */
+    "workbench.colorTheme": "Default Dark Modern",  // color theme
+    "workbench.iconTheme": "vscode-icons",  // icon theme
+    // Tree indent
     "workbench.tree.indent": 16,
 
     /* Integrated terminal settings */
-    "terminal.integrated.fontFamily": "'Cascadia Code NF', 'Source Han Sans SC'",
-    "terminal.integrated.fontSize": 20,
+    "terminal.integrated.fontFamily": "'Cascadia Code NF', 'Noto Sans SC'",
+    "terminal.integrated.fontSize": 16,
     "terminal.integrated.inheritEnv": false,
-    "terminal.external.linuxExec": "/usr/bin/bash",
-    "terminal.integrated.defaultProfile.linux": "bash",
-
-    /* Romote settings */
-    "remote.autoForwardPorts": true,
-    "remote.autoForwardPortsSource": "process",
-
-    /* Git settings */
-    "git.openRepositoryInParentFolders": "never",
-    "git.confirmSync": false,
-    "git.autofetch": false,
-
-    /* CMake settings */
-    "cmake.showOptionsMovedNotification": false,
-    "cmake.pinnedCommands": [
-        "workbench.action.tasks.configureTaskRunner",
-        "workbench.action.tasks.runTask"
-    ],
-
-    /* YAML settings */
-    "yaml.format.enable": true,
-    "yaml.format.bracketSpacing": true,
-    "yaml.format.printWidth": 120,
-
-    /* XML settings */
-    "xml.codeLens.enabled": true,
-    "xml.format.maxLineWidth": 120,
-
-    // extensions settings
-    "extensions.ignoreRecommendations": true,
-    "extensions.autoCheckUpdates": true,
-    "extensions.autoUpdate": true,
-    "extensions.closeExtensionDetailsOnViewChange": true,
-
-    /* Json settings */
-    "json.format.keepLines": true
 }

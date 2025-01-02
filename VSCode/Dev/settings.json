@@ -1,0 +1,115 @@
+{
+    /* Editor settings */
+    // Font settings
+    "editor.fontFamily": "'Cascadia Code NF', 'Noto Sans SC'",
+    "editor.fontLigatures": true,  // ligature
+    "editor.fontSize": 20,
+    "editor.rulers": [ 120 ],
+    "editor.guides.bracketPairs": "active", // Display bracket pairs
+    "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
+    "editor.acceptSuggestionOnEnter": "off",  // only accept suggestion by <tab>
+    // word wrap
+    "editor.wordWrapColumn": 120,
+    "editor.wordWrap": "wordWrapColumn",
+
+    // Format
+    "[cpp]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
+        "editor.defaultFormatter": "ms-vscode.cpptools",
+    },
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "[xml]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "redhat.vscode-xml",
+        "editor.tabSize": 2  // only for xml file
+    },
+    "[yaml]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "redhat.vscode-yaml",
+        "editor.tabSize": 2 // only for yaml files
+    },
+
+    /* Files settings */
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "files.associations": {
+        "*.launch": "xml"  // ros launch files
+    },
+
+    /* Search settings */
+    "search.exclude": {
+        "**/.cache": true,
+        "**/.git": true,
+        // IDEs
+        "**/.vscode": true,
+        "**/.idea": true,
+        // Ros build folder
+        "**/build": true,
+        "**/devel": true,
+        "**/logs": true,
+        // Python
+        "**/__pycache__": true
+    },
+
+    /* Workbench settings */
+    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.iconTheme": "vscode-icons",
+    // Tree
+    "workbench.tree.indent": 16,
+    "workbench.tree.renderIndentGuides": "onHover",
+
+    /* Integrated terminal settings */
+    "terminal.integrated.fontFamily": "'Cascadia Code NF', 'Noto Sans SC'",
+    "terminal.integrated.fontSize": 16,
+
+    /* Git settings */
+    "git.openRepositoryInParentFolders": "never",
+    "git.confirmSync": false,
+    "git.autofetch": false,
+
+    /* C/C++ settings */
+    "C_Cpp.clang_format_path": "/usr/local/bin/clang-format",
+    "C_Cpp.codeAnalysis.clangTidy.path": "/usr/local/bin/clang-tidy",
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "C_Cpp.codeAnalysis.runAutomatically": false,
+
+    /* Python settings */
+
+    /* TODO settings */
+    "todohighlight.keywords": [
+        "DEBUG:",
+        {
+            "text": "MODIFIED:",
+            "color": "#ffffff",
+            "backgroundColor": "green",
+            "overviewRulerColor": "green"
+        }
+    ],
+    "todohighlight.exclude": [
+        "**/node_modules/**",
+        "**/bower_components/**",
+        "**/dist/**",
+        "**/build/**",
+        "**/devel/**",
+        "**/logs/**",
+        "**/.vscode/**",
+        "**/.github/**",
+        "**/_output/**",
+        "**/*.min.*",
+        "**/*.map",
+        "**/.next/**"
+    ],
+
+    /* XML settings */
+    "xml.format.maxLineWidth": 120,
+
+    /* Yaml settings */
+    "yaml.format.printWidth": 120,
+
+    /* Telemetry */
+    "redhat.telemetry.enabled": true
+}

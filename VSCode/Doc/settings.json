@@ -1,0 +1,81 @@
+{
+	/* Font */
+	"editor.fontFamily": "'Cascadia Code NF', 'Noto Sans SC'",
+	"editor.fontLigatures": true,
+	"editor.fontSize": 16,
+	
+	/* Workbench */
+	"workbench.colorTheme": "Default Dark Modern",
+	"workbench.iconTheme": "vscode-icons",
+	
+	/* Latex */
+	"latex-workshop.latex.tools": [
+		{
+			"name": "latexmk",
+			"command": "latexmk",
+			"args": [
+				"-synctex=1",
+				"-interaction=nonstopmode",
+				"-file-line-error",
+				"-xelatex",
+				"-outdir=%OUTDIR%",
+				"-cd",
+				"%DOC%"
+			],
+			"env": {}
+		},
+		{
+			"name": "xelatex",
+			"command": "xelatex",
+			"args": [
+				"-synctex=1",
+				"-interaction=nonstopmode",
+				"-file-line-error",
+				"-pdf",
+				"-outdir=%OUTDIR%",
+				"-cd",
+				"%DOC%"
+			],
+			"env": {}
+		},
+		{
+			"name": "biber",
+			"command": "biber",
+			"args": [
+				"%DOCFILE%"
+			],
+			"env": {}
+		},
+		{
+			"name": "pdflatex",
+			"command": "pdflatex",
+			"args": [
+				"-synctex=1",
+				"-interaction=nonstopmode",
+				"-file-line-error",
+				"%DOC%"
+			],
+			"env": {}
+		}
+	],
+	"latex-workshop.latex.recipes": [
+		{
+			"name": "latexmk",
+			"tools": [
+				"latexmk"
+			]
+		},
+		{
+			"name": "xelatex -> biber -> xelatex * 2",
+			"tools": [
+				"xelatex",
+				"biber",
+				"xelatex",
+				"xelatex"
+			]
+		}
+	],
+	"latex-workshop.latex.autoClean.run": "onBuilt",
+	"latex-workshop.view.pdf.viewer": "external",
+	"latex-workshop.view.pdf.external.viewer.command": "/usr/bin/wps"
+}
