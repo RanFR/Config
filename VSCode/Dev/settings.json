@@ -3,20 +3,23 @@
     // Font settings
     "editor.fontFamily": "'Cascadia Code NF', 'Noto Sans SC'",
     "editor.fontLigatures": true,  // ligature
-    "editor.fontSize": 20,
+    "editor.fontSize": 16,
     "editor.rulers": [ 120 ],
     "editor.guides.bracketPairs": "active", // Display bracket pairs
     "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
     "editor.acceptSuggestionOnEnter": "off",  // only accept suggestion by <tab>
     // word wrap
     "editor.wordWrapColumn": 120,
-    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrap": "bounded",
+
+    /* Explorer */
+    "explorer.confirmDelete": false,
 
     // Format
     "[cpp]": {
         "editor.formatOnSave": true,
         "editor.formatOnSaveMode": "file",
-        "editor.defaultFormatter": "ms-vscode.cpptools",
+        "editor.defaultFormatter": "ms-vscode.cpptools"
     },
     "[python]": {
         "editor.formatOnSave": true,
@@ -37,12 +40,14 @@
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
     "files.associations": {
-        "*.launch": "xml"  // ros launch files
+        "*.launch": "xml"  // set ros launch file type as xml
     },
 
     /* Search settings */
     "search.exclude": {
+        // clangd cache
         "**/.cache": true,
+        // git
         "**/.git": true,
         // IDEs
         "**/.vscode": true,
@@ -58,12 +63,12 @@
     /* Workbench settings */
     "workbench.colorTheme": "Default Dark Modern",
     "workbench.iconTheme": "vscode-icons",
-    // Tree
+    // workbench tree
     "workbench.tree.indent": 16,
     "workbench.tree.renderIndentGuides": "onHover",
 
     /* Integrated terminal settings */
-    "terminal.integrated.fontFamily": "'Cascadia Code NF', 'Noto Sans SC'",
+    "terminal.integrated.fontFamily": "'Cascadia Mono NF', 'Noto Sans SC'",
     "terminal.integrated.fontSize": 16,
 
     /* Git settings */
@@ -72,12 +77,24 @@
     "git.autofetch": false,
 
     /* C/C++ settings */
+    // Default settings
+    "C_Cpp.default.cStandard": "c17",
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+    // code analysis
     "C_Cpp.clang_format_path": "/usr/local/bin/clang-format",
+    "C_Cpp.codeAnalysis.clangTidy.args": [
+        "-j=16",
+        "-p=${workspaceFolder}/build"
+    ],
     "C_Cpp.codeAnalysis.clangTidy.path": "/usr/local/bin/clang-tidy",
     "C_Cpp.codeAnalysis.clangTidy.enabled": true,
-    "C_Cpp.codeAnalysis.runAutomatically": false,
+    "C_Cpp.codeAnalysis.runAutomatically": true,
 
     /* Python settings */
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "standard",
 
     /* TODO settings */
     "todohighlight.keywords": [
@@ -87,21 +104,23 @@
             "color": "#ffffff",
             "backgroundColor": "green",
             "overviewRulerColor": "green"
+        },
+        {
+            "text": "TEST:",
+            "color": "white",
+            "backgroundColor": "gray",
+            "overviewRulerColor": "gray"
         }
     ],
     "todohighlight.exclude": [
-        "**/node_modules/**",
-        "**/bower_components/**",
-        "**/dist/**",
+        // ros related
         "**/build/**",
         "**/devel/**",
         "**/logs/**",
+        // vscode
         "**/.vscode/**",
-        "**/.github/**",
-        "**/_output/**",
-        "**/*.min.*",
-        "**/*.map",
-        "**/.next/**"
+        // git
+        "**/.git/**"
     ],
 
     /* XML settings */

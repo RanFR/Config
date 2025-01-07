@@ -4,8 +4,7 @@
     // Don't sync font size for different size of screen need different size of font.
     "settingsSync.ignoredSettings": [
         "editor.fontSize",
-        "terminal.integrated.fontSize",
-        "http.proxy"
+        "terminal.integrated.fontSize"
     ],
 
     /* Editor settings */
@@ -13,7 +12,7 @@
     "editor.fontFamily": "'Cascadia Code NF', 'Noto Sans SC'",
     "editor.fontSize": 16,
     // Other editor settings
-    "editor.wordWrap": "wordWrapColumn",  // word wrap
+    "editor.wordWrap": "bounded",  // word wrap
     "editor.wordWrapColumn": 120,
 
     /* Workbench settings */
@@ -23,7 +22,7 @@
     "workbench.tree.indent": 16,
 
     /* Integrated terminal settings */
-    "terminal.integrated.fontFamily": "'Cascadia Code NF', 'Noto Sans SC'",
+    "terminal.integrated.fontFamily": "'Cascadia Mono NF', 'Noto Sans SC'",
     "terminal.integrated.fontSize": 16,
-    "terminal.integrated.inheritEnv": false,
+    "terminal.integrated.inheritEnv": false
 }

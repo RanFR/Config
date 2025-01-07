@@ -57,24 +57,24 @@ const selfRuleProviders = {
 // Add self rules.
 const selfRules = [
   "RULE-SET,Bing,DIRECT",
-  "RULE-SET,Docker,SSRDOG",
-  "RULE-SET,GitHub,SSRDOG",
-  "RULE-SET,Google,SSRDOG",
-  "RULE-SET,Microsoft,SSRDOG",
-  "RULE-SET,Mozilla,SSRDOG",
-  "RULE-SET,OpenAI,SSRDOG",
-  "RULE-SET,Scholar,SSRDOG",
-  "RULE-SET,YouTube,SSRDOG",
+  "RULE-SET,Docker,PROXY-Provider",
+  "RULE-SET,GitHub,PROXY-Provider",
+  "RULE-SET,Google,PROXY-Provider",
+  "RULE-SET,Microsoft,PROXY-Provider",
+  "RULE-SET,Mozilla,PROXY-Provider",
+  "RULE-SET,OpenAI,PROXY-Provider",
+  "RULE-SET,Scholar,PROXY-Provider",
+  "RULE-SET,YouTube,PROXY-Provider",
   "RULE-SET,China,DIRECT"
 ]
 const endRules = [
   "GEOIP,CN,DIRECT",
   "GEOIP,LAN,DIRECT",
-  "MATCH,SSRDOG"
+  "MATCH,PROXY-Provider"
 ]
 
 // Rules and rule providers to remove.
-const stringsToRemove = ["Bing", "Microsoft", "GEOIP,CN", "GEOIP,LAN", "MATCH"]
+const stringsToRemove = ["Bing", "GEOIP,CN", "GEOIP,LAN", "MATCH"]
 
 // DNS
 const demosticNameservers = [
