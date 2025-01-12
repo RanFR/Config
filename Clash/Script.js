@@ -1,80 +1,102 @@
 // Define main function (script entry)
 
 // Define rule provider for China, which can easily write yaml file to add rules
+// Ruleset General Configuration
+const ruleProviderCommon = {
+  type: "http",
+  format: "yaml",
+  interval: 86400
+}
 const selfRuleProviders = {
   "Bing": {
-    type: "file",
+    ...ruleProviderCommon,
     behavior: "classical",
-    path: "ios_rule_scripts/Bing.yaml"
+    url: "https://proxy-rule-provider/Bing/Bing.yaml",
+    path: "RuleProvider/Bing.yaml"
   },
   "China": {
+    ...ruleProviderCommon,
+    behavior: "classical",
+    url: "https://proxy-rule-provider/China/China_Classical.yaml",
+    path: "RuleProvider/China.yaml"
+  },
+  "Custom": {
     type: "file",
     behavior: "classical",
-    path: "ios_rule_scripts/China.yaml"
+    path: "Custom/Custom.yaml"
   },
   "Docker": {
-    type: "file",
+    ...ruleProviderCommon,
     behavior: "classical",
-    "path": "ios_rule_scripts/Docker.yaml"
+    url: "https://proxy-rule-provider/Docker/Docker.yaml",
+    "path": "RuleProvider/Docker.yaml"
   },
   "GitHub": {
-    type: "file",
+    ...ruleProviderCommon,
     behavior: "classical",
-    path: "ios_rule_scripts/GitHub.yaml"
+    url: "https://proxy-rule-provider/GitHub/GitHub.yaml",
+    path: "RuleProvider/GitHub.yaml"
   },
   "Google": {
-    type: "file",
+    ...ruleProviderCommon,
     behavior: "classical",
-    path: "ios_rule_scripts/Google.yaml"
+    url: "https://proxy-rule-provider/Google/Google.yaml",
+    path: "RuleProvider/Google.yaml"
   },
   "Microsoft": {
-    type: "file",
+    ...ruleProviderCommon,
     behavior: "classical",
-    path: "ios_rule_scripts/Microsoft.yaml"
+    url: "https://proxy-rule-provider/Microsoft/Microsoft.yaml",
+    path: "RuleProvider/Microsoft.yaml"
   },
   "Mozilla": {
-    type: "file",
+    ...ruleProviderCommon,
     "behavior": "classical",
-    path: "ios_rule_scripts/Mozilla.yaml"
+    url: "https://proxy-rule-provider/Mozilla/Mozilla.yaml",
+    path: "RuleProvider/Mozilla.yaml"
   },
   "OpenAI": {
-    type: "file",
+    ...ruleProviderCommon,
     behavior: "classical",
-    path: "ios_rule_scripts/OpenAI.yaml"
+    url: "https://proxy-rule-provider/OpenAI/OpenAI.yaml",
+    path: "RuleProvider/OpenAI.yaml"
   },
   "Scholar": {
-    type: "file",
+    ...ruleProviderCommon,
     behavior: "classical",
-    path: "ios_rule_scripts/Scholar.yaml"
+    url: "https://proxy-rule-provider/Scholar/Scholar.yaml",
+    path: "RuleProvider/Scholar.yaml"
   },
   "YouTube": {
-    type: "file",
+    ...ruleProviderCommon,
     behavior: "classical",
-    path: "ios_rule_scripts/YouTube.yaml"
+    url: "https://proxy-rule-provider/YouTube/YouTube.yaml",
+    path: "RuleProvider/YouTube.yaml"
   },
 };
 
 // Add self rules.
 const selfRules = [
   "RULE-SET,Bing,DIRECT",
-  "RULE-SET,Docker,PROXY-Provider",
-  "RULE-SET,GitHub,PROXY-Provider",
-  "RULE-SET,Google,PROXY-Provider",
-  "RULE-SET,Microsoft,PROXY-Provider",
-  "RULE-SET,Mozilla,PROXY-Provider",
-  "RULE-SET,OpenAI,PROXY-Provider",
-  "RULE-SET,Scholar,PROXY-Provider",
-  "RULE-SET,YouTube,PROXY-Provider",
+  "RULE-SET,Custom,proxy",
+  "RULE-SET,Docker,proxy",
+  "RULE-SET,GitHub,proxy",
+  "RULE-SET,Google,proxy",
+  "RULE-SET,Microsoft,proxy",
+  "RULE-SET,Mozilla,proxy",
+  "RULE-SET,OpenAI,proxy",
+  "RULE-SET,Scholar,proxy",
+  "RULE-SET,YouTube,proxy",
   "RULE-SET,China,DIRECT"
 ]
 const endRules = [
   "GEOIP,CN,DIRECT",
   "GEOIP,LAN,DIRECT",
-  "MATCH,PROXY-Provider"
+  "MATCH,proxy"
 ]
 
 // Rules and rule providers to remove.
-const stringsToRemove = ["Bing", "GEOIP,CN", "GEOIP,LAN", "MATCH"]
+const stringsToRemove = ["Bing", "Microsoft", "GEOIP,CN", "GEOIP,LAN", "MATCH"]
 
 // DNS
 const demosticNameservers = [
@@ -132,3 +154,4 @@ function main(config, profileName) {
 
   return config;
 }
+
