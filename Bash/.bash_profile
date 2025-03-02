@@ -22,11 +22,3 @@ fi
 if [ -d "$HOME/.local/bin/sh" ]; then
   PATH="$HOME/.local/bin/sh:$PATH"
 fi
-
-# set fcitx
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS=@im=fcitx
-
-# Texlive
-export PATH=$PATH:/usr/local/texlive/2024/bin/x86_64-linux
