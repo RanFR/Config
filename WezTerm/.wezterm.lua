@@ -65,5 +65,19 @@ for i = 1, 8 do
 	})
 end
 
+-- Mouse
+config.mouse_bindings = {
+	{
+		event = { Up = { streak = 1, button = "Left" } },
+		mods = "NONE",
+		action = act.CompleteSelection "ClipboardAndPrimarySelection"
+	},
+	{
+		event = { Up = { streak = 1, button = "Left" } },
+		mods = "CTRL",
+		action = act.OpenLinkAtMouseCursor
+	}
+}
+
 -- Finally, return the configuration to wezterm
 return config
