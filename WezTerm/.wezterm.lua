@@ -6,7 +6,7 @@ local act = wezterm.action
 local config = {}
 
 -- Color and Appearance
-config.color_scheme = "Obsidian"
+config.color_scheme = "OneHalfDark"
 
 -- Fonts
 config.font = wezterm.font_with_fallback({
@@ -23,17 +23,17 @@ config.keys = {
 	{
 		key = "-",
 		mods = "ALT",
-		action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
+		action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
 	},
 	{
 		key = "=",
 		mods = "ALT",
-		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+		action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
 	},
 	{
 		key = "w",
 		mods = "CTRL",
-		action = wezterm.action.CloseCurrentPane({ confirm = false }),
+		action = act.CloseCurrentPane({ confirm = false }),
 	},
 	{
 		key = "LeftArrow",
@@ -61,7 +61,7 @@ for i = 1, 8 do
 	table.insert(config.keys, {
 		key = tostring(i),
 		mods = "ALT",
-		action = wezterm.action.ActivateTab(i - 1),
+		action = act.ActivateTab(i - 1),
 	})
 end
 
