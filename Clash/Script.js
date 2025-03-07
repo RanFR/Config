@@ -5,72 +5,59 @@
 const ruleProviderCommon = {
   type: "http",
   format: "yaml",
-  interval: 86400
+  interval: 86400,
+  behavior: "classical"
 }
+const ruleBaseUrl = "/release/rule/Clash/"
 const selfRuleProviders = {
   "Bing": {
     ...ruleProviderCommon,
-    behavior: "classical",
-    url: "https://proxy-rule-provider/Bing/Bing.yaml",
+    url: ruleBaseUrl + "Bing/Bing.yaml",
     path: "RuleProvider/Bing.yaml"
   },
   "China": {
     ...ruleProviderCommon,
-    behavior: "classical",
-    url: "https://proxy-rule-provider/China/China_Classical.yaml",
+    url: ruleBaseUrl + "China/China_Classical.yaml",
     path: "RuleProvider/China.yaml"
-  },
-  "Custom": {
-    type: "file",
-    behavior: "classical",
-    path: "Custom/Custom.yaml"
   },
   "Docker": {
     ...ruleProviderCommon,
-    behavior: "classical",
-    url: "https://proxy-rule-provider/Docker/Docker.yaml",
+    url: ruleBaseUrl + "Docker/Docker.yaml",
     "path": "RuleProvider/Docker.yaml"
   },
   "GitHub": {
     ...ruleProviderCommon,
-    behavior: "classical",
-    url: "https://proxy-rule-provider/GitHub/GitHub.yaml",
+    url: ruleBaseUrl + "GitHub/GitHub.yaml",
     path: "RuleProvider/GitHub.yaml"
   },
   "Google": {
     ...ruleProviderCommon,
-    behavior: "classical",
-    url: "https://proxy-rule-provider/Google/Google.yaml",
+    url: ruleBaseUrl + "Google/Google.yaml",
     path: "RuleProvider/Google.yaml"
   },
   "Microsoft": {
     ...ruleProviderCommon,
-    behavior: "classical",
-    url: "https://proxy-rule-provider/Microsoft/Microsoft.yaml",
+    url: ruleBaseUrl + "Microsoft/Microsoft.yaml",
     path: "RuleProvider/Microsoft.yaml"
   },
   "Mozilla": {
     ...ruleProviderCommon,
-    "behavior": "classical",
-    url: "https://proxy-rule-provider/Mozilla/Mozilla.yaml",
+    url: ruleBaseUrl + "Mozilla/Mozilla.yaml",
     path: "RuleProvider/Mozilla.yaml"
   },
   "OpenAI": {
     ...ruleProviderCommon,
-    behavior: "classical",
-    url: "https://proxy-rule-provider/OpenAI/OpenAI.yaml",
+    url: ruleBaseUrl + "OpenAI/OpenAI.yaml",
     path: "RuleProvider/OpenAI.yaml"
   },
   "Scholar": {
     ...ruleProviderCommon,
-    behavior: "classical",
-    url: "https://proxy-rule-provider/Scholar/Scholar.yaml",
+    url: ruleBaseUrl + "Scholar/Scholar.yaml",
     path: "RuleProvider/Scholar.yaml"
   },
   "YouTube": {
     ...ruleProviderCommon,
-    behavior: "classical",
-    url: "https://proxy-rule-provider/YouTube/YouTube.yaml",
+    url: ruleBaseUrl + "YouTube/YouTube.yaml",
     path: "RuleProvider/YouTube.yaml"
   },
 };
@@ -78,25 +65,21 @@ const selfRuleProviders = {
 // Add self rules.
 const selfRules = [
   "RULE-SET,Bing,DIRECT",
-  "RULE-SET,Custom,proxy",
-  "RULE-SET,Docker,proxy",
-  "RULE-SET,GitHub,proxy",
-  "RULE-SET,Google,proxy",
-  "RULE-SET,Microsoft,proxy",
-  "RULE-SET,Mozilla,proxy",
-  "RULE-SET,OpenAI,proxy",
-  "RULE-SET,Scholar,proxy",
-  "RULE-SET,YouTube,proxy",
+  "RULE-SET,Microsoft,DIRECT",
+  "RULE-SET,Docker,Proxy",
+  "RULE-SET,GitHub,Proxy",
+  "RULE-SET,Google,Proxy",
+  "RULE-SET,Mozilla,Proxy",
+  "RULE-SET,OpenAI,Proxy",
+  "RULE-SET,Scholar,Proxy",
+  "RULE-SET,YouTube,Proxy",
   "RULE-SET,China,DIRECT"
 ]
 const endRules = [
   "GEOIP,CN,DIRECT",
   "GEOIP,LAN,DIRECT",
-  "MATCH,proxy"
+  "MATCH,Proxy"
 ]
-
-// Rules and rule providers to remove.
-const stringsToRemove = ["Bing", "Microsoft", "GEOIP,CN", "GEOIP,LAN", "MATCH"]
 
 // DNS
 const demosticNameservers = [
@@ -109,7 +92,8 @@ const demosticNameservers = [
 const foreignNameservers = [
   "1.1.1.1", // Cloudflare, main
   "1.0.0.1", // Cloudflare, backup
-  "8.8.8.8" // Google
+  "8.8.8.8", // Google, main
+  "8.8.4.4"  // Google, backup
 ]
 const dnsConfig = {
   "enable": true,
@@ -121,37 +105,24 @@ const dnsConfig = {
   "default-nameserver": ["1.1.1.1", "1.0.0.1"],
   "nameserver": [...demosticNameservers, ...foreignNameservers],
   "fake-ip-filter": [
-    "*.lan", // local network/domain
+    "*.lan", // Local network/domain
     "*.local",
-    "localhost.ptlogin2.qq.com", // qq login check
-    "dns.msftncsi.com", // microsoft ncsi
-    "*.srv.nintendo.net", // nintendo
-    "*.stun.playstation.net", // playstation
-    "xbox.*.microsoft.com", // xbox
-    "*.xboxlive.com" // xbox
+    "localhost.ptlogin2.qq.com", // QQ login check
+    "dns.msftncsi.com", // Microsoft ncsi
+    "*.srv.nintendo.net", // Nintendo
+    "*.stun.playstation.net", // Playstation
+    "xbox.*.microsoft.com", // Xbox
+    "*.xboxlive.com" // Xbox
   ]
 }
 
 function main(config, profileName) {
-  // Get old rules and rule providers
-  let oldRules = config["rules"] || [];
-  let oldRuleProviders = config["rule-providers"] || [];
+  // Overwrite rules and rule providers
+  config["rules"] = selfRules.concat(endRules);
+  config["rule-providers"] = { ...selfRuleProviders }
 
-  // Delete obsolete rules and rule providers.
-  // Rules.
-  oldRules = oldRules.filter(rule => !stringsToRemove.some(str => rule.includes(str)));
-  // Rule providers.
-  stringsToRemove.forEach(provider => {
-    delete oldRuleProviders[provider];
-  });
-
-  // Merge rules and rule providers.
-  config["rules"] = selfRules.concat(oldRules.concat(endRules));
-  config["rule-providers"] = { ...selfRuleProviders, ...oldRuleProviders }
-
-  // overwrite dns config
+  // Overwrite dns config
   config["dns"] = dnsConfig;
 
   return config;
 }
-
