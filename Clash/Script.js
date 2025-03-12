@@ -59,12 +59,11 @@ const selfRuleProviders = {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "YouTube/YouTube.yaml",
     path: "RuleProvider/YouTube.yaml"
-  },
+  }
 };
 
 // Add self rules.
 const selfRules = [
-  "RULE-SET,Bing,DIRECT",
   "RULE-SET,Docker,Proxy",
   "RULE-SET,GitHub,Proxy",
   "RULE-SET,Google,Proxy",
