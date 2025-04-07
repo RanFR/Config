@@ -56,10 +56,15 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+# Function to parse the current git branch
+parse_git_branch() {
+    git branch 2>/dev/null | grep '^*' | sed 's/^* //'
+}
+
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:   \[\033[01;34m\]\w\[\033[00m\]\n\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]   \[\033[01;34m\]\w\[\033[00m\]   \[\033[01;33m\][ $(parse_git_branch)]\[\033[00m\]\n\$ '
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\n\$ '
 fi
 unset color_prompt force_color_prompt
 
@@ -76,11 +81,12 @@ esac
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
+
     alias grep='grep --color=auto'
 fi
 
 # colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
 alias ll='ls -alF'
@@ -107,4 +113,38 @@ if ! shopt -oq posix; then
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
   fi
+fi
+
+# >>> Conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/ranfr/Softwares/Miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/ranfr/Softwares/Miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/ranfr/Softwares/Miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/ranfr/Softwares/Miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< Conda initialize <<<
+
+# Ros environment setup
+if [[ $- == *i* ]]; then
+    echo "Please choose your ROS version:"
+    echo "  1) noetic"
+    echo "  2) galactic"
+    read -p "Enter option (1 or 2): " ros_choice
+    case "$ros_choice" in
+        1)
+            source /opt/ros/noetic/setup.bash
+            ;;
+        2)
+            source /opt/ros/galactic/setup.bash
+            ;;
+        *)
+            echo "Invalid input. No ROS environment loaded."
+            ;;
+    esac
 fi
