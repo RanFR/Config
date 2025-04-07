@@ -58,11 +58,25 @@ fi
 
 # Function to parse the current git branch
 parse_git_branch() {
-    git branch 2>/dev/null | grep '^*' | sed 's/^* //'
+    branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+    if [ -n "$branch" ]; then
+        # Display the branch name in yellow
+        echo "$branch"
+    fi
+}
+
+# Function to parse the current ros environment
+parse_ros_env() {
+    # Display the ROS distribution name in cyan
+    # Check if ROS is installed and the environment variable is set
+    if [ -n "$ROS_DISTRO" ]; then
+        echo "🤖$ROS_DISTRO"
+    fi
 }
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]   \[\033[01;34m\]\w\[\033[00m\]   \[\033[01;33m\][ $(parse_git_branch)]\[\033[00m\]\n\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]   \[\033[01;34m\]\w\[\033[00m\]   \[\033[01;33m\]$(parse_ros_env)\[\033[00m\]   \[\033[01;36m\]$(parse_git_branch)\[\033[00m\]\n\$ '
+
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\n\$ '
 fi
