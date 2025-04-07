@@ -2,13 +2,17 @@
 
 ## Bash
 
+Bash profiles require nerd fonts to display correctly
+
 - .bashrc
 - .bash_aliases
 - .bash_profile
 
 ## Clang
 
-Google style, created by *clang-format-10*.
+Google style, created by
+
+`clang-format-10 --style Google --dump-config > .clang-format`
 
 ## Clash
 
