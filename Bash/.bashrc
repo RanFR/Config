@@ -62,6 +62,12 @@ parse_git_branch() {
     if [ -n "$branch" ]; then
         # Display the branch name in yellow
         echo "$branch"
+    else
+	# detached HEAD 状态，尝试获取标签或者commit hash
+	ref=$(git describe --tags --exact-match HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+	if [ -n "$ref" ]; then
+	    echo "➤ $ref" # 使用不同符号表示detached状态
+	fi
     fi
 }
 
@@ -147,18 +153,25 @@ unset __conda_setup
 # Ros environment setup
 if [[ $- == *i* ]]; then
     echo "Please choose your ROS version:"
-    echo "  1) noetic"
+    echo "  1) noetic (default)"
     echo "  2) galactic"
-    read -p "Enter option (1 or 2): " ros_choice
+    echo "  no) skip ROS setup"
+    read -p "Enter option (1/2/no, default=1): " ros_choice
+    
     case "$ros_choice" in
-        1)
-            source /opt/ros/noetic/setup.bash
+        1|"")
+            echo "Setting up ROS noetic..."
+	    source /opt/ros/noetic/setup.bash
             ;;
         2)
+	    echo "Setting up ROS galactic..."
             source /opt/ros/galactic/setup.bash
             ;;
+        [Nn][Oo]|"no")
+	    echo "Skipping ROS environment setup."
+	    ;;
         *)
-            echo "Invalid input. No ROS environment loaded."
+            echo "Invalid input '$ros_choice'. No ROS environment loaded."
             ;;
     esac
 fi

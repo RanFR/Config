@@ -5,3 +5,6 @@ alias cmc="catkin_make clean"
 
 # du
 alias dush="du -sh * | sort -h"
+
+# Softwares
+alias mycmake="/home/ranfr/Softwares/CMake/bin/cmake"
