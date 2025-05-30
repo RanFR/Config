@@ -22,6 +22,8 @@ Clash config files.
 
 For [PX4-Autopilot](https://github.com/PX4/PX4-Autopilot) environment.
 
+Tested on Px4 version **v1.12.3**.
+
 Change *SRC_DIR* and *BUILD_DIR* to the path you use, and then execute the following command
 
 ```bash
