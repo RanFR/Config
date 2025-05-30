@@ -1,7 +1,3 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
-
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -71,17 +67,8 @@ parse_git_branch() {
     fi
 }
 
-# Function to parse the current ros environment
-parse_ros_env() {
-    # Display the ROS distribution name in cyan
-    # Check if ROS is installed and the environment variable is set
-    if [ -n "$ROS_DISTRO" ]; then
-        echo "🤖$ROS_DISTRO"
-    fi
-}
-
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]   \[\033[01;34m\]\w\[\033[00m\]   \[\033[01;33m\]$(parse_ros_env)\[\033[00m\]   \[\033[01;36m\]$(parse_git_branch)\[\033[00m\]\n\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]   \[\033[01;34m\]\w\[\033[00m\]   \[\033[01;36m\]$(parse_git_branch)\[\033[00m\]\n\$ '
 
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\n\$ '
@@ -97,20 +84,8 @@ xterm*|rxvt*)
     ;;
 esac
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-
-    alias grep='grep --color=auto'
-fi
-
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -135,43 +110,19 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# >>> Conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/ranfr/Softwares/Miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/ranfr/Softwares/Miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/ranfr/Softwares/Miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/ranfr/Softwares/Miniconda3/bin:$PATH"
-    fi
+# Proxy
+if [ -z "$HTTP_PROXY" ]; then
+    export HTTP_PROXY="http://127.0.0.1:7897"
 fi
-unset __conda_setup
-# <<< Conda initialize <<<
+if [ -z "$HTTPS_PROXY" ]; then
+    export HTTPS_PROXY="http://127.0.0.1:7897"
+fi
 
-# Ros environment setup
-if [[ $- == *i* ]]; then
-    echo "Please choose your ROS version:"
-    echo "  1) noetic (default)"
-    echo "  2) galactic"
-    echo "  no) skip ROS setup"
-    read -p "Enter option (1/2/no, default=1): " ros_choice
-    
-    case "$ros_choice" in
-        1|"")
-            echo "Setting up ROS noetic..."
-	    source /opt/ros/noetic/setup.bash
-            ;;
-        2)
-	    echo "Setting up ROS galactic..."
-            source /opt/ros/galactic/setup.bash
-            ;;
-        [Nn][Oo]|"no")
-	    echo "Skipping ROS environment setup."
-	    ;;
-        *)
-            echo "Invalid input '$ros_choice'. No ROS environment loaded."
-            ;;
-    esac
-fi
+# # Ros environment setup
+# source /opt/ros/noetic/setup.bash
+
+# # Acados
+# if [[ ":$LD_LIBRARY_PATH:" != *":$HOME/.local/lib:"* ]]; then
+#     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$HOME/.local/lib"
+# fi
+# export ACADOS_SOURCE_DIR="$HOME/.local"

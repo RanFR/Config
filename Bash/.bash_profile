@@ -9,6 +9,16 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 # set PATH so it includes user's private sh files if it exists
+if [ -d "$HOME/.local/bin" ]; then
+  PATH="$HOME/.local/bin:$PATH"
+fi
+
+# set PATH so it includes user's private sh files if it exists
 if [ -d "$HOME/.local/bin/sh" ]; then
   PATH="$HOME/.local/bin/sh:$PATH"
+fi
+
+# Load RVM into a shell session *as a function*
+if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
+  . "$HOME/.rvm/scripts/rvm"
 fi
