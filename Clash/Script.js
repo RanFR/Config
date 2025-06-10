@@ -7,69 +7,69 @@ const ruleProviderCommon = {
   type: "http",
   format: "yaml",
   interval: 86400,
-  behavior: "classical"
+  behavior: "classical",
 };
 const selfRuleProviders = {
-  "Bing": {
+  Bing: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Bing/Binc.yaml",
-    path: "RuleProvider/Bing.yaml"
+    path: "RuleProvider/Bing.yaml",
   },
-  "China": {
+  China: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "China/China_Classical.yaml",
-    path: "RuleProvider/China.yaml"
+    path: "RuleProvider/China.yaml",
   },
-  "Docker": {
+  Docker: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Docker/Docker.yaml",
-    path: "RuleProvider/Docker.yaml"
+    path: "RuleProvider/Docker.yaml",
   },
-  "GitHub": {
+  GitHub: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "GitHub/GitHub.yaml",
-    path: "RuleProvider/GitHub.yaml"
+    path: "RuleProvider/GitHub.yaml",
   },
-  "Google": {
+  Google: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Google/Google.yaml",
-    path: "RuleProvider/Google.yaml"
+    path: "RuleProvider/Google.yaml",
   },
-  "Lan": {
+  Lan: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Lan/Lan.yaml",
-    path: "RuleProvider/Lan.yaml"
+    path: "RuleProvider/Lan.yaml",
   },
-  "Microsoft": {
+  Microsoft: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Microsoft/Microsoft.yaml",
-    path: "RuleProvider/Microsoft.yaml"
+    path: "RuleProvider/Microsoft.yaml",
   },
-  "Mozilla": {
+  Mozilla: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Mozilla/Mozilla.yaml",
-    path: "RuleProvider/Mozilla.yaml"
+    path: "RuleProvider/Mozilla.yaml",
   },
-  "OpenAI": {
+  OpenAI: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "OpenAI/OpenAI.yaml",
-    path: "RuleProvider/OpenAI.yaml"
+    path: "RuleProvider/OpenAI.yaml",
   },
-  "Python": {
+  Python: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Python/Python.yaml",
-    path: "RuleProvider/Python.yaml"
+    path: "RuleProvider/Python.yaml",
   },
-  "Scholar": {
+  Scholar: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Scholar/Scholar.yaml",
-    path: "RuleProvider/Scholar.yaml"
+    path: "RuleProvider/Scholar.yaml",
   },
-  "YouTube": {
+  YouTube: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "YouTube/YouTube.yaml",
-    path: "RuleProvider/YouTube.yaml"
-  }
+    path: "RuleProvider/YouTube.yaml",
+  },
 };
 
 // Add self rules.
@@ -86,7 +86,7 @@ const selfRules = [
   "RULE-SET,Python," + ruleProviderName,
   "RULE-SET,Scholar," + ruleProviderName,
   "RULE-SET,YouTube," + ruleProviderName,
-  "MATCH,DIRECT"
+  "MATCH,DIRECT",
 ];
 
 function main(config, profileName) {
