@@ -3,6 +3,7 @@
 // Define rule provider for China, which can easily write yaml file to add rules
 const ruleProviderName = "";
 const ruleBaseUrl = "";
+const ruleSelfUrl = "";
 const ruleProviderCommon = {
   type: "http",
   format: "yaml",
@@ -10,6 +11,11 @@ const ruleProviderCommon = {
   behavior: "classical",
 };
 const selfRuleProviders = {
+  SelfProxy: {
+    ...ruleProviderCommon,
+    url: ruleSelfUrl + "Clash/SelfProxy.yaml",
+    path: "RuleProvider/SelfProxy.yaml",
+  },
   Bing: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Bing/Binc.yaml",
@@ -65,6 +71,11 @@ const selfRuleProviders = {
     url: ruleBaseUrl + "Scholar/Scholar.yaml",
     path: "RuleProvider/Scholar.yaml",
   },
+  Wikipedia: {
+    ...ruleProviderCommon,
+    url: ruleBaseUrl + "Wikipedia/Wikipedia.yaml",
+    path: "RuleProvider/Wikipedia.yaml",
+  },
   YouTube: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "YouTube/YouTube.yaml",
@@ -85,6 +96,7 @@ const selfRules = [
   "RULE-SET,OpenAI," + ruleProviderName,
   "RULE-SET,Python," + ruleProviderName,
   "RULE-SET,Scholar," + ruleProviderName,
+  "RULE-SET,Wikipedia," + ruleProviderName,
   "RULE-SET,YouTube," + ruleProviderName,
   "MATCH,DIRECT",
 ];

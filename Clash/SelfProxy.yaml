@@ -1,0 +1,5 @@
+# NAME: SelfProxy
+# AUTHOR: RanFR
+# UPDATED: 2025-06-12
+payload:
+  - DOMAIN-SUFFIX,wandb.ai
