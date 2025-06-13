@@ -13,12 +13,17 @@ const ruleProviderCommon = {
 const selfRuleProviders = {
   SelfProxy: {
     ...ruleProviderCommon,
-    url: ruleSelfUrl + "Clash/SelfProxy.yaml",
+    url: ruleSelfUrl + "SelfProxy.yaml",
     path: "RuleProvider/SelfProxy.yaml",
+  },
+  Amazon: {
+    ...ruleProviderCommon,
+    url: ruleBaseUrl + "Amazon/Amazon.yaml",
+    path: "RuleProvider/Amazon.yaml",
   },
   Bing: {
     ...ruleProviderCommon,
-    url: ruleBaseUrl + "Bing/Binc.yaml",
+    url: ruleBaseUrl + "Bing/Bing.yaml",
     path: "RuleProvider/Bing.yaml",
   },
   China: {
@@ -56,6 +61,11 @@ const selfRuleProviders = {
     url: ruleBaseUrl + "Mozilla/Mozilla.yaml",
     path: "RuleProvider/Mozilla.yaml",
   },
+  Nvidia: {
+    ...ruleProviderCommon,
+    url: ruleBaseUrl + "Nvidia/Nvidia.yaml",
+    path: "RuleProvider/Nvidia.yaml",
+  },
   OpenAI: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "OpenAI/OpenAI.yaml",
@@ -88,11 +98,14 @@ const selfRules = [
   "RULE-SET,Bing,DIRECT",
   "RULE-SET,China,DIRECT",
   "RULE-SET,Lan,DIRECT",
-  "RULE-SET,Microsoft,DIRECT",
+  "RULE-SET,SelfProxy," + ruleProviderName,
+  "RULE-SET,Amazon," + ruleProviderName,
   "RULE-SET,Docker," + ruleProviderName,
   "RULE-SET,GitHub," + ruleProviderName,
   "RULE-SET,Google," + ruleProviderName,
+  "RULE-SET,Microsoft," + ruleProviderName,
   "RULE-SET,Mozilla," + ruleProviderName,
+  "RULE-SET,Nvidia," + ruleProviderName,
   "RULE-SET,OpenAI," + ruleProviderName,
   "RULE-SET,Python," + ruleProviderName,
   "RULE-SET,Scholar," + ruleProviderName,

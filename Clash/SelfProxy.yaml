@@ -2,4 +2,6 @@
 # AUTHOR: RanFR
 # UPDATED: 2025-06-12
 payload:
+  - DOMAIN-SUFFIX,cppreference.com
+  - DOMAIN-SUFFIX,ros.org
   - DOMAIN-SUFFIX,wandb.ai
