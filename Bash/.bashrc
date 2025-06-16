@@ -1,7 +1,7 @@
 # If not running interactively, don't do anything
 case $- in
-    *i*) ;;
-      *) return;;
+  *i*) ;;
+    *) return;;
 esac
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -28,12 +28,12 @@ shopt -s checkwinsize
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
+  debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
+  xterm-color|*-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -42,61 +42,56 @@ esac
 #force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
+  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+    # We have color support; assume it's compliant with Ecma-48
+    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+    # a case would tend to support setf rather than setaf.)
+    color_prompt=yes
+  else
+    color_prompt=
+  fi
 fi
 
 # Function to parse the current git branch
 parse_git_branch() {
-    branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-    if [ -n "$branch" ]; then
-        # Display the branch name in yellow
-        echo "$branch"
-    else
-	# detached HEAD 状态，尝试获取标签或者commit hash
-	ref=$(git describe --tags --exact-match HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
-	if [ -n "$ref" ]; then
-	    echo "➤ $ref" # 使用不同符号表示detached状态
-	fi
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+  if [ -n "$branch" ]; then
+    # Display the branch name in yellow
+    echo "$branch"
+  else
+    # Detached HEAD state, try to get tag or commit hash
+    ref=$(git describe --tags --exact-match HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+    if [ -n "$ref" ]; then
+        echo "➤ $ref" # Use a different symbol to indicate detached state
     fi
+  fi
 }
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]   \[\033[01;34m\]\w\[\033[00m\]   \[\033[01;36m\]$(parse_git_branch)\[\033[00m\]\n\$ '
-
+  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]   \[\033[01;34m\]\w\[\033[00m\]   \[\033[01;36m\]$(parse_git_branch)\[\033[00m\]\n\[\033[01;33m\]➔\[\033[00m\] '
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\n\$ '
+  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\n➔ '
 fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
+  PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+  ;;
 *)
-    ;;
+  ;;
 esac
 
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+  . ~/.bash_aliases
 fi
 
 # enable programmable completion features (you don't need to enable
@@ -110,13 +105,13 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Proxy
-if [ -z "$HTTP_PROXY" ]; then
-    export HTTP_PROXY="http://127.0.0.1:7897"
-fi
-if [ -z "$HTTPS_PROXY" ]; then
-    export HTTPS_PROXY="http://127.0.0.1:7897"
-fi
+# # Proxy
+# if [ -z "$HTTP_PROXY" ]; then
+#     export HTTP_PROXY="http://127.0.0.1:7897"
+# fi
+# if [ -z "$HTTPS_PROXY" ]; then
+#     export HTTPS_PROXY="http://127.0.0.1:7897"
+# fi
 
 # # Ros environment setup
 # source /opt/ros/noetic/setup.bash
