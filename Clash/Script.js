@@ -1,15 +1,19 @@
 // Define main function (script entry)
 
-// Define rule provider for China, which can easily write yaml file to add rules
+// Rule Provider Name
 const ruleProviderName = "";
+// Base rule url
 const ruleBaseUrl = "";
+// Self rule url
 const ruleSelfUrl = "";
+// Rule provider common properties (type, format, interval, behavior)
 const ruleProviderCommon = {
   type: "http",
   format: "yaml",
   interval: 86400,
   behavior: "classical",
 };
+// Define self rule providers
 const selfRuleProviders = {
   SelfProxy: {
     ...ruleProviderCommon,
@@ -81,6 +85,11 @@ const selfRuleProviders = {
     url: ruleBaseUrl + "Scholar/Scholar.yaml",
     path: "RuleProvider/Scholar.yaml",
   },
+  Ubuntu: {
+    ...ruleProviderCommon,
+    url: ruleBaseUrl + "Ubuntu/Ubuntu.yaml",
+    path: "RuleProvider/Ubuntu.yaml",
+  },
   Wikipedia: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Wikipedia/Wikipedia.yaml",
@@ -92,8 +101,7 @@ const selfRuleProviders = {
     path: "RuleProvider/YouTube.yaml",
   },
 };
-
-// Add self rules.
+// Add self rules
 const selfRules = [
   "RULE-SET,Bing,DIRECT",
   "RULE-SET,China,DIRECT",
@@ -109,6 +117,7 @@ const selfRules = [
   "RULE-SET,OpenAI," + ruleProviderName,
   "RULE-SET,Python," + ruleProviderName,
   "RULE-SET,Scholar," + ruleProviderName,
+  "RULE-SET,Ubuntu," + ruleProviderName,
   "RULE-SET,Wikipedia," + ruleProviderName,
   "RULE-SET,YouTube," + ruleProviderName,
   "MATCH,DIRECT",
