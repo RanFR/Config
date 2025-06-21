@@ -55,6 +55,11 @@ const selfRuleProviders = {
     url: ruleBaseUrl + "Lan/Lan.yaml",
     path: "RuleProvider/Lan.yaml",
   },
+  Logitech: {
+    ...ruleProviderCommon,
+    url: ruleBaseUrl + "Logitech/Logitech.yaml",
+    path: "RuleProvider/Logitech.yaml",
+  },
   Microsoft: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Microsoft/Microsoft.yaml",
@@ -111,6 +116,7 @@ const selfRules = [
   "RULE-SET,Docker," + ruleProviderName,
   "RULE-SET,GitHub," + ruleProviderName,
   "RULE-SET,Google," + ruleProviderName,
+  "RULE-SET,Logitech," + ruleProviderName,
   "RULE-SET,Microsoft," + ruleProviderName,
   "RULE-SET,Mozilla," + ruleProviderName,
   "RULE-SET,Nvidia," + ruleProviderName,
