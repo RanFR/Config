@@ -35,6 +35,11 @@ const selfRuleProviders = {
     url: ruleBaseUrl + "China/China_Classical.yaml",
     path: "RuleProvider/China.yaml",
   },
+  Developer: {
+    ...ruleProviderCommon,
+    url: ruleBaseUrl + "Developer/Developer.yaml",
+    path: "RuleProvider/Developer.yaml",
+  },
   Docker: {
     ...ruleProviderCommon,
     url: ruleBaseUrl + "Docker/Docker.yaml",
@@ -113,6 +118,7 @@ const selfRules = [
   "RULE-SET,Lan,DIRECT",
   "RULE-SET,SelfProxy," + ruleProviderName,
   "RULE-SET,Amazon," + ruleProviderName,
+  "RULE-SET,Developer," + ruleProviderName,
   "RULE-SET,Docker," + ruleProviderName,
   "RULE-SET,GitHub," + ruleProviderName,
   "RULE-SET,Google," + ruleProviderName,
