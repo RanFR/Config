@@ -24,6 +24,10 @@ Change _SRC_DIR_ and _BUILD_DIR_ to the path you use, and then execute the follo
 . setup_px4_autopilot.sh
 ```
 
+## VSCode
+
+settings for VSCode.
+
 ## WezTerm
 
 WezTerm config file.

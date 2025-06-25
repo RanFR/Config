@@ -1,0 +1,171 @@
+{
+  /* C/C++ */
+  "C_Cpp.clang_format_style": "Google",
+
+  /* CMake */
+  "cmake.ignoreCMakeListsMissing": true,
+
+  /* Editor */
+  "editor.acceptSuggestionOnEnter": "off", // Only accept suggestion by <tab>
+  "editor.fontLigatures": true, // ligature
+  "editor.fontFamily": "Maple Mono NF CN",
+  "editor.fontSize": 16,
+  "editor.guides.bracketPairs": "active", // Display bracket pairs
+  "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
+  // Wrodwrap
+  "editor.wordWrap": "bounded",
+  "editor.wordWrapColumn": 120, // 120 characters
+
+  /* Explorer */
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+
+  /* Files */
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.associations": {
+    "*.launch": "xml" // Set ros launch file type as xml
+  },
+
+  /* Formatter */
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode", // Default formatter for all files
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "[latex]": {
+    "editor.defaultFormatter": "James-Yu.latex-workshop"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+
+  /* Git */
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.openRepositoryInParentFolders": "never",
+
+  /* Github Copilot */
+  "github.copilot.nextEditSuggestions.enabled": true,
+
+  /* Integrated terminal */
+  "terminal.integrated.fontFamily": "'Cascadia Mono NF', 'Noto Sans SC'",
+  "terminal.integrated.fontSize": 16,
+
+  /* Jupyter */
+  "jupyter.askForKernelRestart": false,
+
+  /* Latex */
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-xelatex",
+        "-outdir=%OUTDIR%",
+        "-cd",
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "xelatex",
+      "command": "xelatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-shell-escape",
+        "%DOCFILE%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "bibtex",
+      "command": "bibtex",
+      "args": ["%DOCFILE%"],
+      "env": {}
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "xelatex",
+      "tools": ["xelatex"]
+    },
+    {
+      "name": "pdflatex",
+      "tools": ["pdflatex"]
+    },
+    {
+      "name": "latexmk",
+      "tools": ["latexmk"]
+    },
+    {
+      "name": "pdflatex -> bibtex -> pdflatex * 2",
+      "tools": ["pdflatex", "bibtex", "pdflatex", "pdflatex"]
+    }
+  ],
+  "latex-workshop.latex.autoBuild.run": "never",
+  "latex-workshop.latex.autoClean.run": "onFailed",
+  "latex-workshop.latex.recipe.default": "lastUsed",
+  "latex-workshop.formatting.latex": "latexindent",
+  "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
+
+  /* Markdown */
+  "markdown.preview.fontFamily": "Noto Sans SC",
+  "markdown.preview.fontSize": 16,
+
+  /* Python */
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "standard",
+
+  /* Remote */
+  "remote.autoForwardPortsSource": "hybrid",
+  "remote.SSH.remotePlatform": {
+    "Nuc3": "linux",
+    "YuGrp": "linux",
+    "ThinkStation": "linux"
+  },
+
+  /* Search settings */
+  "search.exclude": {
+    // Clangd cache
+    "**/.cache": true,
+    // Git
+    "**/.git": true,
+    // IDEs
+    "**/.vscode": true,
+    "**/.idea": true,
+    // Ros build folder
+    "**/build": true,
+    "**/devel": true,
+    "**/logs": true,
+    // Python
+    "**/__pycache__": true
+  },
+
+  /* Workbench */
+  // Tree indent
+  "workbench.tree.renderIndentGuides": "onHover"
+}
