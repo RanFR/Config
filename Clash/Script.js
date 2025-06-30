@@ -15,10 +15,10 @@ const ruleProviderCommon = {
 };
 // Define self rule providers
 const selfRuleProviders = {
-  SelfProxy: {
+  Misc: {
     ...ruleProviderCommon,
-    url: ruleSelfUrl + "SelfProxy.yaml",
-    path: "RuleProvider/SelfProxy.yaml",
+    url: ruleSelfUrl + "Misc.yaml",
+    path: "RuleProvider/Misc.yaml",
   },
   Amazon: {
     ...ruleProviderCommon,
@@ -110,13 +110,18 @@ const selfRuleProviders = {
     url: ruleBaseUrl + "YouTube/YouTube.yaml",
     path: "RuleProvider/YouTube.yaml",
   },
+  Zoom: {
+    ...ruleProviderCommon,
+    url: ruleSelfUrl + "Zoom.yaml",
+    path: "RuleProvider/Zoom.yaml",
+  },
 };
 // Add self rules
 const selfRules = [
   "RULE-SET,Bing,DIRECT",
   "RULE-SET,China,DIRECT",
   "RULE-SET,Lan,DIRECT",
-  "RULE-SET,SelfProxy," + ruleProviderName,
+  "RULE-SET,Misc," + ruleProviderName,
   "RULE-SET,Amazon," + ruleProviderName,
   "RULE-SET,Developer," + ruleProviderName,
   "RULE-SET,Docker," + ruleProviderName,
@@ -132,6 +137,7 @@ const selfRules = [
   "RULE-SET,Ubuntu," + ruleProviderName,
   "RULE-SET,Wikipedia," + ruleProviderName,
   "RULE-SET,YouTube," + ruleProviderName,
+  "RULE-SET,Zoom," + ruleProviderName,
   "MATCH,DIRECT",
 ];
 
