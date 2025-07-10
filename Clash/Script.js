@@ -2,8 +2,8 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.0
- * @date 2025-07-08
+ * @version 1.1
+ * @date 2025-07-10
  */
 
 // ==================== 常量定义 ====================
@@ -47,9 +47,9 @@ const DNS_SERVERS = {
   ],
   // DoH服务器
   DOH: [
-    "https://dns.alidns.com/dns-query", // 阿里
-    "https://doh.pub/dns-query", // 腾讯
-    "https://cloudflare-dns.com/dns-query", // Cloudflare
+    "https://dns.alidns.com/dns-query",
+    "https://doh.pub/dns-query",
+    "https://cloudflare-dns.com/dns-query",
   ],
 };
 
@@ -81,7 +81,7 @@ const FALLBACK_FILTER = {
 function createDnsConfig() {
   return {
     enable: true,
-    listen: "127.0.0.1:1053",
+    listen: ":1053",
     "enhanced-mode": "fake-ip",
     "fake-ip-range": "198.18.0.1/16",
     "fake-ip-filter-mode": "blacklist",
@@ -115,20 +115,16 @@ const RULE_PROVIDER_COMMON = {
 
 /** 规则提供器定义 */
 const RULE_PROVIDERS_CONFIG = {
-  // 自定义规则
-  custom: [
-    { name: "Misc", source: "self" },
-    { name: "Zoom", source: "self" },
-  ],
   // 直连规则 (使用DIRECT)
   direct: [
     { name: "Bing", source: "base" },
-    { name: "China", source: "base", path: "China/China_Classical.yaml" },
+    { name: "China", source: "self", path: "China.yaml" },
     { name: "Lan", source: "base" },
   ],
   // 代理规则 (使用代理组)
   proxy: [
     { name: "Amazon", source: "base" },
+    { name: "Claude", source: "self", path: "Claude.yaml" },
     { name: "Cloudflare", source: "base" },
     { name: "Developer", source: "base" },
     { name: "Docker", source: "base" },
@@ -136,14 +132,17 @@ const RULE_PROVIDERS_CONFIG = {
     { name: "Google", source: "base" },
     { name: "Logitech", source: "base" },
     { name: "Microsoft", source: "base" },
+    { name: "Misc", source: "self", path: "Misc.yaml" },
     { name: "Mozilla", source: "base" },
     { name: "Nvidia", source: "base" },
     { name: "OpenAI", source: "base" },
+    { name: "Overleaf", source: "self", path: "Overleaf.yaml" },
     { name: "Python", source: "base" },
     { name: "Scholar", source: "base" },
     { name: "Ubuntu", source: "base" },
     { name: "Wikipedia", source: "base" },
     { name: "YouTube", source: "base" },
+    { name: "Zoom", source: "self", path: "Zoom.yaml" },
   ],
 };
 
@@ -182,7 +181,6 @@ function createAllRuleProviders() {
 
   // 合并所有规则配置
   const allRules = [
-    ...RULE_PROVIDERS_CONFIG.custom,
     ...RULE_PROVIDERS_CONFIG.direct,
     ...RULE_PROVIDERS_CONFIG.proxy,
   ];
@@ -207,16 +205,13 @@ function createRoutingRules() {
     rules.push(`RULE-SET,${rule.name},DIRECT`);
   });
 
-  // 添加自定义和代理规则
-  [...RULE_PROVIDERS_CONFIG.custom, ...RULE_PROVIDERS_CONFIG.proxy].forEach(
-    (rule) => {
-      rules.push(`RULE-SET,${rule.name},${PROXY_GROUP_NAME}`);
-    }
-  );
+  // 添加代理规则
+  RULE_PROVIDERS_CONFIG.proxy.forEach((rule) => {
+    rules.push(`RULE-SET,${rule.name},${PROXY_GROUP_NAME}`);
+  });
 
   // 添加默认规则
-  rules.push("DOMAIN-SUFFIX,lunarg.com,SSRDOG");
-  rules.push("MATCH,SSRDOG");
+  rules.push("MATCH,DIRECT");
 
   return rules;
 }

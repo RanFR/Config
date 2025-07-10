@@ -54,6 +54,11 @@
 
   /* Github Copilot */
   "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Use conventional Chinese commit message conventions."
+    }
+  ],
 
   /* Integrated terminal */
   "terminal.integrated.fontFamily": "'Cascadia Mono NF', 'Noto Sans SC'",
@@ -166,6 +171,8 @@
   },
 
   /* Workbench */
+  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.iconTheme": "vscode-icons",
   // Tree indent
   "workbench.tree.renderIndentGuides": "onHover"
 }
