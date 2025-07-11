@@ -2,8 +2,8 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.1
- * @date 2025-07-10
+ * @version 1.2.0
+ * @date 2025-07-11
  */
 
 // ==================== 常量定义 ====================
@@ -120,6 +120,7 @@ const RULE_PROVIDERS_CONFIG = {
     { name: "Bing", source: "base" },
     { name: "China", source: "self", path: "China.yaml" },
     { name: "Lan", source: "base" },
+    { name: "SteamCN", source: "base" },
   ],
   // 代理规则 (使用代理组)
   proxy: [
@@ -139,6 +140,7 @@ const RULE_PROVIDERS_CONFIG = {
     { name: "Overleaf", source: "self", path: "Overleaf.yaml" },
     { name: "Python", source: "base" },
     { name: "Scholar", source: "base" },
+    { name: "Steam", source: "base" },
     { name: "Ubuntu", source: "base" },
     { name: "Wikipedia", source: "base" },
     { name: "YouTube", source: "base" },
