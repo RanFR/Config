@@ -55,9 +55,15 @@
   /* Github Copilot */
   "github.copilot.nextEditSuggestions.enabled": true,
   "github.copilot.chat.commitMessageGeneration.instructions": [
-    {
-      "text": "Use conventional Chinese commit message conventions."
-    }
+    { "text": "Analyze staged code changes only. " },
+    { "text": "Use imperative mood (e.g., fix, add, update)" },
+    { "text": "Follow Conventional Commits: type: summary" },
+    { "text": "Keep subject under 72 characters" },
+    { "text": "No punctuation at the end of subject" },
+    { "text": "Include body if explanation is helpful" },
+    { "text": "Skip body if change is trivial" },
+    { "text": "List breaking changes explicitly if any" },
+    { "text": "Use English only" }
   ],
 
   /* Integrated terminal */
