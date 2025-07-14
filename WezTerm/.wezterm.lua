@@ -5,18 +5,30 @@ local act = wezterm.action
 -- This will hold the configuration.
 local config = {}
 
+-- Check updates
+config.check_for_updates = true
+config.check_for_updates_interval_seconds = 86400
+
 -- Color and Appearance
 config.color_scheme = "OneHalfDark"
 
+-- Scroll bar
+config.enable_scroll_bar = true
+
+-- Front end
+-- If you experience issues with the default WebGpu renderer, you can switch to 'OpenGL' or 'Software'.
+config.front_end = "WebGpu"
+
 -- Fonts
 config.font = wezterm.font_with_fallback({
+	"Maple Mono NF CN",
 	"Cascadia Mono NF",
 	"Noto Sans SC"
 })
 config.font_size = 16
 
--- Scroll bar
-config.enable_scroll_bar = true
+-- If only one tab is open, disable the tab bar
+config.hide_tab_bar_if_only_one_tab = true
 
 -- Keys
 config.keys = {
