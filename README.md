@@ -1,8 +1,8 @@
-# Config 配置
+# Config
 
 ## Bash
 
-注意，Bash 配置文件需要 Nerd 字体以便正确显示。
+Note: Bash configuration files require Nerd Fonts for proper display.
 
 - .bashrc
 - .bash_aliases
@@ -10,15 +10,15 @@
 
 ## Clash
 
-Clash 配置文件。
+Clash configuration files.
 
 ## PX4
 
-针对 [PX4-Autopilot](https://github.com/PX4/PX4-Autopilot) 仿真环境使用。
+For use with [PX4-Autopilot](https://github.com/PX4/PX4-Autopilot) simulation environment.
 
-在 PX4 **v1.12.3**版本上经过测试。
+Tested on PX4 **v1.12.3** version.
 
-修改脚本中的 _SRC_DIR_ and _BUILD_DIR_ 路径，然后按照下面的命令运行即可：
+Modify the _SRC_DIR_ and _BUILD_DIR_ paths in the script, then run the following command:
 
 ```bash
 . setup_px4_autopilot.sh
@@ -26,8 +26,8 @@ Clash 配置文件。
 
 ## VSCode
 
-VSCode 的配置文件。
+VSCode configuration files.
 
 ## WezTerm
 
-WezTerm 的配置文件。
+WezTerm configuration files.
