@@ -131,6 +131,7 @@ const RULE_PROVIDERS_CONFIG = {
     { name: "Docker", source: "base" },
     { name: "GitHub", source: "base" },
     { name: "Google", source: "base" },
+    { name: "Intel", source: "self", path: "intel.yaml" },
     { name: "Logitech", source: "base" },
     { name: "Microsoft", source: "base" },
     { name: "Misc", source: "self", path: "Misc.yaml" },
