@@ -2,7 +2,7 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.4.0
+ * @version 1.4.1
  * @date 2025-07-22
  */
 
@@ -268,12 +268,18 @@ function modifyProxyGroups(proxyGroups) {
     "香港",
     "台湾",
     "新加坡",
+    "日本",
+    "韩国",
     "Hong Kong",
     "Taiwan",
     "Singapore",
+    "Japan",
+    "South Korea",
     "hk",
     "tw",
     "sg",
+    "jp",
+    "kr",
   ];
 
   let targetGroupProxies = [];
@@ -301,9 +307,15 @@ function modifyProxyGroups(proxyGroups) {
           (proxy) => !regionProxies.includes(proxy)
         );
 
+        // 将LoadBalance组添加到代理组的proxies列表中
+        const updatedProxies = [...remainingProxies];
+        if (regionProxies.length > 0) {
+          updatedProxies.unshift("LoadBalance"); // 将LoadBalance添加到列表开头
+        }
+
         return {
           ...group,
-          proxies: remainingProxies,
+          proxies: updatedProxies,
         };
       }
     }
@@ -325,7 +337,7 @@ function modifyProxyGroups(proxyGroups) {
     };
 
     console.log(
-      `创建负载均衡组 "LoadBalance"，包含 ${targetGroupProxies.length} 个节点`
+      `创建负载均衡组 "LoadBalance"，包含 ${targetGroupProxies.length} 个节点，并已添加到 ${PROXY_GROUP_NAME} 组中`
     );
 
     // 将负载均衡组添加到代理组列表中
