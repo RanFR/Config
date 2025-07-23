@@ -2,7 +2,7 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.5.0
+ * @version 1.5.1
  * @date 2025-07-23
  */
 
@@ -231,7 +231,6 @@ function createAllRuleProviders() {
   allRules.forEach((rule) => {
     const provider = createRuleProvider(rule);
     providers[rule.name] = provider;
-    console.log(`规则提供器 ${rule.name}: ${provider.url}`);
   });
 
   return providers;
@@ -249,7 +248,6 @@ function createRoutingRules() {
   RULE_PROVIDERS_CONFIG.direct.forEach((rule) => {
     const ruleStr = `RULE-SET,${rule.name},DIRECT`;
     rules.push(ruleStr);
-    console.log(`直连规则: ${ruleStr}`);
   });
 
   // 添加代理规则
@@ -257,7 +255,6 @@ function createRoutingRules() {
   RULE_PROVIDERS_CONFIG.proxy.forEach((rule) => {
     const ruleStr = `RULE-SET,${rule.name},${PROXY_GROUP_NAME}`;
     rules.push(ruleStr);
-    console.log(`代理规则: ${ruleStr}`);
   });
 
   // 添加 GEOIP 策略
