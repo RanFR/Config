@@ -2,8 +2,8 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.5.1
- * @date 2025-07-23
+ * @version 1.5.2
+ * @date 2025-07-26
  */
 
 // ==================== 常量定义 ====================
@@ -166,7 +166,7 @@ const RULE_PROVIDERS_CONFIG = {
     { name: "Docker", source: "base" },
     { name: "GitHub", source: "base" },
     { name: "Google", source: "base" },
-    { name: "Intel", source: "self", path: "intel.yaml" },
+    { name: "Intel", source: "self", path: "Intel.yaml" },
     { name: "Logitech", source: "base" },
     { name: "Microsoft", source: "base" },
     { name: "Misc", source: "self", path: "Misc.yaml" },
