@@ -2,21 +2,33 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.5.2
- * @date 2025-07-26
+ * @version 1.6.0
+ * @date 2025-07-30
  */
 
 // ==================== 常量定义 ====================
 
-/** 代理服务器组名称 - 设置要处理的代理组名称，例如 "Auto" 或 "PROXY" */
+/** 代理服务器组名称 - 设置要处理的代理组名称 */
 const PROXY_GROUP_NAME = "";
+
+/** 基础URL配置 */
+const URLS = {
+  BASE_RULE: "",
+  SELF_RULE: "",
+};
+
+/** 规则更新间隔 (秒) */
+const RULE_UPDATE_INTERVAL = 86400; // 24小时
+
+/** 是否启用可选代理组 */
+const ENABLE_OPTIONAL_PROXY_GROUP = true;
 
 /** 负载均衡配置选项 */
 const LOAD_BALANCE_CONFIG = {
-  /** 最小节点数量阈值 - 当主要地区节点少于此数量时，会添加可选地区节点 */
+  /** 最小节点数量阈值 - 当主要地区节点少于此数量时，会考虑可选地区节点 */
   MIN_NODES_THRESHOLD: 5,
-  /** 是否允许添加可选地区节点（日本、韩国） */
-  ALLOW_OPTIONAL_REGIONS: true,
+  /** 是否允许添加可选地区节点（日本、韩国）*/
+  ALLOW_OPTIONAL_REGIONS: false,
   /** 负载均衡组名称 */
   GROUP_NAME: "LoadBalance",
   /** 负载均衡策略 */
@@ -45,15 +57,6 @@ const REGION_CONFIG = {
   ],
   /** 可选地区关键词（日本、韩国） */
   OPTIONAL: ["日本", "韩国", "Japan", "South Korea", "jp", "kr"],
-};
-
-/** 规则更新间隔 (秒) */
-const RULE_UPDATE_INTERVAL = 86400; // 24小时
-
-/** 基础URL配置 */
-const URLS = {
-  BASE_RULE: "",
-  SELF_RULE: "",
 };
 
 /** DNS服务器配置 */
@@ -159,29 +162,33 @@ const RULE_PROVIDERS_CONFIG = {
 
   // 代理规则 (使用代理组)
   proxy: [
-    { name: "Amazon", source: "base" },
     { name: "Claude", source: "self", path: "Claude.yaml" },
-    { name: "Cloudflare", source: "base" },
-    { name: "Developer", source: "base" },
     { name: "Docker", source: "base" },
     { name: "GitHub", source: "base" },
     { name: "Google", source: "base" },
-    { name: "Intel", source: "self", path: "Intel.yaml" },
-    { name: "Logitech", source: "base" },
-    { name: "Microsoft", source: "base" },
     { name: "Misc", source: "self", path: "Misc.yaml" },
-    { name: "Mozilla", source: "base" },
-    { name: "Nvidia", source: "base" },
     { name: "OpenAI", source: "base" },
     { name: "Overleaf", source: "self", path: "Overleaf.yaml" },
     { name: "Python", source: "base" },
-    { name: "Ruby", source: "self", path: "Ruby.yaml" },
     { name: "Scholar", source: "base" },
     { name: "SourceForge", source: "base" },
     { name: "Steam", source: "base" },
-    { name: "Ubuntu", source: "base" },
     { name: "Wikipedia", source: "base" },
     { name: "YouTube", source: "base" },
+  ],
+
+  // 可选代理规则 (可根据需要添加)
+  optional_proxy: [
+    { name: "Amazon", source: "base" },
+    { name: "Cloudflare", source: "base" },
+    { name: "Developer", source: "base" },
+    { name: "Intel", source: "self", path: "Intel.yaml" },
+    { name: "Logitech", source: "base" },
+    { name: "Microsoft", source: "base" },
+    { name: "Mozilla", source: "base" },
+    { name: "Nvidia", source: "base" },
+    { name: "Ruby", source: "self", path: "Ruby.yaml" },
+    { name: "Ubuntu", source: "base" },
     { name: "Zoom", source: "self", path: "Zoom.yaml" },
   ],
 };
@@ -220,11 +227,10 @@ function createAllRuleProviders() {
   const providers = {};
 
   // 合并所有规则配置
-  const allRules = [
-    ...RULE_PROVIDERS_CONFIG.direct,
-    ...RULE_PROVIDERS_CONFIG.proxy,
-  ];
-
+  allRules = [...RULE_PROVIDERS_CONFIG.direct, ...RULE_PROVIDERS_CONFIG.proxy];
+  if (ENABLE_OPTIONAL_PROXY_GROUP) {
+    allRules.push(...RULE_PROVIDERS_CONFIG.optional_proxy);
+  }
   console.log(`正在生成 ${allRules.length} 个规则提供器`);
 
   // 生成每个规则提供器
@@ -257,11 +263,22 @@ function createRoutingRules() {
     rules.push(ruleStr);
   });
 
+  // 添加可选代理规则
+  if (ENABLE_OPTIONAL_PROXY_GROUP) {
+    console.log(
+      `添加 ${RULE_PROVIDERS_CONFIG.optional_proxy.length} 个可选代理规则`
+    );
+    RULE_PROVIDERS_CONFIG.optional_proxy.forEach((rule) => {
+      const ruleStr = `RULE-SET,${rule.name},${PROXY_GROUP_NAME}`;
+      rules.push(ruleStr);
+    });
+  }
+
   // 添加 GEOIP 策略
   rules.push("GEOIP,CN,DIRECT");
   rules.push("GEOIP,LAN,DIRECT");
 
-  // 添加默认规则
+  // 添加默认直连规则
   rules.push("MATCH,DIRECT");
 
   console.log(`总共生成了 ${rules.length} 条路由规则`);
