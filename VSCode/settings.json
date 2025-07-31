@@ -31,8 +31,14 @@
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode", // Default formatter for all files
+  "[c]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
   "[cpp]": {
     "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
   },
   "[latex]": {
     "editor.defaultFormatter": "James-Yu.latex-workshop"
@@ -58,37 +64,24 @@
     { "text": "Analyze staged code changes only. " },
     { "text": "Use imperative mood (e.g., fix, add, update)" },
     { "text": "Follow Conventional Commits: type: summary" },
-    { "text": "Keep subject under 72 characters" },
     { "text": "No punctuation at the end of subject" },
     { "text": "Include body if explanation is helpful" },
     { "text": "Skip body if change is trivial" },
     { "text": "List breaking changes explicitly if any" },
     { "text": "Use English only" }
   ],
+  "github.copilot.chat.agent.thinkingTool": true,
 
   /* Integrated terminal */
-  "terminal.integrated.fontFamily": "'Cascadia Mono NF', 'Noto Sans SC'",
+  "terminal.integrated.fontFamily": "Maple Mono NF CN",
   "terminal.integrated.fontSize": 16,
 
   /* Jupyter */
   "jupyter.askForKernelRestart": false,
 
   /* Latex */
+  "latex-workshop.latex.outDir": "build",
   "latex-workshop.latex.tools": [
-    {
-      "name": "latexmk",
-      "command": "latexmk",
-      "args": [
-        "-synctex=1",
-        "-interaction=nonstopmode",
-        "-file-line-error",
-        "-xelatex",
-        "-outdir=%OUTDIR%",
-        "-cd",
-        "%DOC%"
-      ],
-      "env": {}
-    },
     {
       "name": "xelatex",
       "command": "xelatex",
@@ -97,44 +90,30 @@
         "-interaction=nonstopmode",
         "-file-line-error",
         "-shell-escape",
+        "-output-directory=%OUTDIR%",
         "%DOCFILE%"
       ],
       "env": {}
     },
     {
-      "name": "pdflatex",
-      "command": "pdflatex",
+      "name": "biber",
+      "command": "biber",
       "args": [
-        "-synctex=1",
-        "-interaction=nonstopmode",
-        "-file-line-error",
-        "%DOC%"
+        "--input-directory=%OUTDIR%",
+        "--output-directory=%OUTDIR%",
+        "%DOCFILE%"
       ],
-      "env": {}
-    },
-    {
-      "name": "bibtex",
-      "command": "bibtex",
-      "args": ["%DOCFILE%"],
       "env": {}
     }
   ],
   "latex-workshop.latex.recipes": [
     {
       "name": "xelatex",
-      "tools": ["xelatex"]
+      "tools": ["xelatex", "xelatex"]
     },
     {
-      "name": "pdflatex",
-      "tools": ["pdflatex"]
-    },
-    {
-      "name": "latexmk",
-      "tools": ["latexmk"]
-    },
-    {
-      "name": "pdflatex -> bibtex -> pdflatex * 2",
-      "tools": ["pdflatex", "bibtex", "pdflatex", "pdflatex"]
+      "name": "xelatex+biber",
+      "tools": ["xelatex", "biber", "xelatex", "xelatex"]
     }
   ],
   "latex-workshop.latex.autoBuild.run": "never",
@@ -156,7 +135,8 @@
   "remote.SSH.remotePlatform": {
     "Nuc3": "linux",
     "YuGrp": "linux",
-    "ThinkStation": "linux"
+    "ThinkStation": "linux",
+    "Server": "linux"
   },
 
   /* Search settings */
@@ -177,8 +157,9 @@
   },
 
   /* Workbench */
-  "workbench.colorTheme": "Default Dark Modern",
-  "workbench.iconTheme": "vscode-icons",
+  "workbench.colorTheme": "Default Dark Modern", // Color theme
+  "workbench.iconTheme": "vscode-icons", // Icon theme
   // Tree indent
-  "workbench.tree.renderIndentGuides": "onHover"
+  "workbench.tree.renderIndentGuides": "onHover",
+  "workbench.tree.indent": 16
 }
