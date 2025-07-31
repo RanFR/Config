@@ -4,75 +4,53 @@ case $- in
     *) return;;
 esac
 
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
+# History settings
+# Set the maximum number of lines in the history file
+HISTSIZE=1000
+# Set the maximum number of lines in the history file on disk
+HISTFILESIZE=2000
+# Don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
-
-# append to the history file, don't overwrite it
+# Append to the history file, don't overwrite it
 shopt -s histappend
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
-
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+# Check the window size after each command and.
+# If necessary, update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
-
-# make less more friendly for non-text input files, see lesspipe(1)
+# Make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
+# Set variable identifying the chroot you work in
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
   debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
+# Bash function
+if [ -f ~/.bash_function ]; then
+  source ~/.bash_function
+fi
+
+# Set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
   xterm-color|*-256color) color_prompt=yes;;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    # We have color support; assume it's compliant with Ecma-48
-    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-    # a case would tend to support setf rather than setaf.)
-    color_prompt=yes
-  else
-    color_prompt=
-  fi
+if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+  # We have color support; assume it's compliant with Ecma-48
+  # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+  # a case would tend to support setf rather than setaf.)
+  color_prompt=yes
+else
+  color_prompt=
 fi
-
-# Function to parse the current git branch
-parse_git_branch() {
-  branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-  if [ -n "$branch" ]; then
-    # Display the branch name in yellow
-    echo "$branch"
-  else
-    # Detached HEAD state, try to get tag or commit hash
-    ref=$(git describe --tags --exact-match HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
-    if [ -n "$ref" ]; then
-        echo "➤ $ref" # Use a different symbol to indicate detached state
-    fi
-  fi
-}
 
 if [ "$color_prompt" = yes ]; then
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]   \[\033[01;34m\]\w\[\033[00m\]   \[\033[01;36m\]$(parse_git_branch)\[\033[00m\]\n\[\033[01;33m\]➔\[\033[00m\] '
 else
   PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\n➔ '
 fi
-unset color_prompt force_color_prompt
+unset color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -83,41 +61,32 @@ xterm*|rxvt*)
   ;;
 esac
 
-# colored GCC warnings and errors
-export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
 # Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
 if [ -f ~/.bash_aliases ]; then
   . ~/.bash_aliases
 fi
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+# Ros environment setup
+source /opt/ros/noetic/setup.bash
+# Disable ROS1 Rviz EOL warnings
+export DISABLE_ROS1_EOL_WARNINGS=true
+
+# ACADOS
+if [[ ":$LD_LIBRARY_PATH:" != *":$HOME/.local/lib:"* ]]; then
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$HOME/.local/lib"
 fi
+export ACADOS_SOURCE_DIR="$HOME/.local"
 
-# # Proxy
-# if [ -z "$HTTP_PROXY" ]; then
-#     export HTTP_PROXY="http://127.0.0.1:7897"
-# fi
-# if [ -z "$HTTPS_PROXY" ]; then
-#     export HTTPS_PROXY="http://127.0.0.1:7897"
-# fi
+# Nvidia Isaac
+export ISAACSIM_PATH="$HOME/Softwares/IsaacSim"
 
-# # Ros environment setup
-# source /opt/ros/noetic/setup.bash
+# NVM
+export GEM_HOME="$HOME/.gem"
 
-# # Acados
-# if [[ ":$LD_LIBRARY_PATH:" != *":$HOME/.local/lib:"* ]]; then
-#     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$HOME/.local/lib"
-# fi
-# export ACADOS_SOURCE_DIR="$HOME/.local"
+# CUDA
+if [[ ":$PATH:" != *":/usr/local/cuda/bin:"* ]]; then
+  export PATH=${PATH}:/usr/local/cuda/bin
+fi
+if [[ ":$LD_LIBRARY_PATH:" != *":/usr/local/cuda/lib:"* ]]; then
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/local/cuda/lib"
+fi
