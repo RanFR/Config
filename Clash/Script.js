@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.7.0
- * @date 2025-08-06
- * @description 优化版本 - 提升性能和可读性
+ * @version 1.7.1
+ * @date 2025-08-16
+ * @description 新增Yandex和Reddit规则
  **/
 
 // 代理服务器组名称
@@ -133,6 +133,7 @@ const rulesConfig = {
     "Scholar",
     "SourceForge",
     "Wikipedia",
+    "Yandex",
     "YouTube",
   ],
 };
