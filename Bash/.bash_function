@@ -1,3 +1,8 @@
+# Function to mkdir folder and cd it
+mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
+
 # Function to parse the current git branch
 parse_git_branch() {
   branch=$(git symbolic-ref --short HEAD 2>/dev/null)

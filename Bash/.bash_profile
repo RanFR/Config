@@ -4,7 +4,7 @@
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
-        . "$HOME/.bashrc"
+        source "$HOME/.bashrc"
     fi
 fi
 
@@ -13,7 +13,7 @@ if [ -d "$HOME/.local/bin" ]; then
   PATH="$HOME/.local/bin:$PATH"
 fi
 
-# set PATH so it includes user's private sh files if it exists
-if [ -d "$HOME/.local/bin/sh" ]; then
-  PATH="$HOME/.local/bin/sh:$PATH"
+# set PATH so it includes user's private bash files if it exists
+if [ -d "$HOME/.local/bin/bash" ]; then
+  PATH="$HOME/.local/bin/bash:$PATH"
 fi

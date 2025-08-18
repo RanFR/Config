@@ -66,6 +66,10 @@ if [ -f ~/.bash_aliases ]; then
   . ~/.bash_aliases
 fi
 
+# Proxy
+export HTTP_PROXY=http://example.com:port
+export HTTPS_PROXY=http://example.com:port
+
 # Ros environment setup
 source /opt/ros/noetic/setup.bash
 # Disable ROS1 Rviz EOL warnings
