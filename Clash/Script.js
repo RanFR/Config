@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.7.1
- * @date 2025-08-16
- * @description 新增Yandex和Reddit规则
+ * @version 1.7.2
+ * @date 2025-08-18
+ * @description 新增规则
  **/
 
 // 代理服务器组名称
@@ -86,9 +86,9 @@ const loadBalanceConfig = {
     // 健康检查URL
     healthCheckUrl: "http://www.gstatic.com/generate_204",
     // 健康检查间隔（秒）
-    healthCheckInterval: 300,
-    // 容错阈值（毫秒）
-    tolerance: 300,
+    healthCheckInterval: 600,
+    // 时间限制（毫秒）
+    timeout: 1000,
   },
   // 负载均衡地区节点配置
   region: {
@@ -129,6 +129,7 @@ const rulesConfig = {
     "JsDelivr",
     "Microsoft",
     "Misc",
+    "Mozilla",
     "Overleaf",
     "Scholar",
     "SourceForge",
@@ -314,7 +315,7 @@ function createLoadBalanceGroup(proxies) {
     proxies: proxies,
     url: loadBalanceConfig.base.healthCheckUrl,
     interval: loadBalanceConfig.base.healthCheckInterval,
-    tolerance: loadBalanceConfig.base.tolerance,
+    timeout: loadBalanceConfig.base.timeout,
     lazy: true,
   };
 
