@@ -2,7 +2,7 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.8.0
+ * @version 1.8.1
  * @date 2025-08-19
  * @description 修改了DNS配置
  **/
@@ -87,7 +87,12 @@ const dnsConfig = {
       "0.0.0.0/32", // 无效地址
     ],
     // 避免可能受到污染的地址解析到国内
-    domain: ["+.google.com", "+.youtube.com", "+.github.com"],
+    domain: [
+      "+.google.com",
+      "+.youtube.com",
+      "+.github.com",
+      "+.githubusercontent.com",
+    ],
   },
 };
 
