@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.7.3
+ * @version 1.8.0
  * @date 2025-08-19
- * @description 修改测试链接为HTTPS
+ * @description 修改了DNS配置
  **/
 
 // 代理服务器组名称
@@ -16,35 +16,53 @@ const RULE_URL = "";
 /** DNS配置 */
 const dnsConfig = {
   nameservers: {
-    // 国内DNS服务器
-    domestic: [
-      "223.5.5.5", // 阿里
-      "223.6.6.6", // 阿里
-      "119.29.29.29", // 腾讯
-      "182.254.116.116", // 腾讯
-    ],
-    // 国外DNS服务器
-    international: [
-      "1.1.1.1", // Cloudflare
-      "1.0.0.1", // Cloudflare
-      "8.8.8.8", // Google
-      "8.8.4.4", // Google
-    ],
-    // IPv6 DNS服务器
-    ipv6: [
-      "2400:3200::1", // 阿里
-      "2400:3200:baba::1", // 阿里
-      "2606:4700:4700::1111", // Cloudflare
-      "2606:4700:4700::1001", // Cloudflare
-      "2001:4860:4860::8888", // Google
-      "2001:4860:4860::8844", // Google
-    ],
-    // DoH服务器
-    doh: [
-      "https://dns.alidns.com/dns-query",
-      "https://doh.pub/dns-query",
-      "https://cloudflare-dns.com/dns-query",
-    ],
+    // IPV4 的DNS服务器配置
+    ipv4: {
+      default: [
+        "223.5.5.5", // 阿里
+        "119.29.29.29", // 腾讯
+      ],
+      domestic: [
+        "223.5.5.5", // 阿里
+        "223.6.6.6", // 阿里
+        "119.29.29.29", // 腾讯
+      ],
+      foreign: [
+        "1.1.1.1", // Cloudflare
+        "1.0.0.1", // Cloudflare
+        "8.8.8.8", // Google
+        "8.8.4.4", // Google
+      ],
+    },
+    // IPV6 的DNS服务器配置
+    ipv6: {
+      default: [
+        "2400:3200::1", // 阿里
+        "2402:4e00::", // 腾讯
+      ],
+      domestic: [
+        "2400:3200::1", // 阿里
+        "2400:3200:baba::1", // 阿里
+        "2402:4e00::", // 腾讯
+      ],
+      foreign: [
+        "2606:4700:4700::1111", // Cloudflare
+        "2606:4700:4700::1001", // Cloudflare
+        "2001:4860:4860::8888", // Google
+        "2001:4860:4860::8844", // Google
+      ],
+    },
+    // DoH 服务器
+    doh: {
+      domestic: [
+        "https://dns.alidns.com/dns-query", // 阿里
+        "https://doh.pub/dns-query", // 腾讯
+      ],
+      foreign: [
+        "https://cloudflare-dns.com/dns-query", // Cloudflare
+        "https://dns.google/dns-query", // Google
+      ],
+    },
   },
   // Fake IP过滤列表
   fakeIpFilters: [
@@ -55,6 +73,7 @@ const dnsConfig = {
     // NTP时间同步
     "time.*.com",
     "ntp.*.com",
+    "*.ntp.org",
     // 网络检测
     "*.msftncsi.com",
     "www.msftconnecttest.com",
@@ -67,6 +86,8 @@ const dnsConfig = {
       "240.0.0.0/4", // 保留地址段
       "0.0.0.0/32", // 无效地址
     ],
+    // 避免可能受到污染的地址解析到国内
+    domain: ["+.google.com", "+.youtube.com", "+.github.com"],
   },
 };
 
@@ -144,14 +165,19 @@ const rulesConfig = {
  * @returns {Object} DNS配置对象
  */
 function createDnsConfig() {
-  // 定义DNS服务器配置
-  let allNameservers = [
-    ...dnsConfig.nameservers.domestic,
-    ...dnsConfig.nameservers.international,
-    ...dnsConfig.nameservers.ipv6,
-    ...dnsConfig.nameservers.doh,
+  // 组建包含 IPV4 和 IPV6 的默认 DNS 服务器
+  let defaultDns = [
+    ...dnsConfig.nameservers.ipv4.default,
+    ...dnsConfig.nameservers.ipv6.default,
   ];
 
+  // 组合国内与国外的DoH服务器
+  let allDoH = [
+    ...dnsConfig.nameservers.doh.domestic,
+    ...dnsConfig.nameservers.doh.foreign,
+  ];
+
+  // 最终的DNS配置
   let config = {
     enable: true,
     ipv6: true,
@@ -159,12 +185,15 @@ function createDnsConfig() {
     "enhanced-mode": "fake-ip",
     "fake-ip-range": "198.18.0.1/16",
     "use-hosts": true,
-    "default-nameserver": dnsConfig.nameservers.domestic,
-    nameserver: allNameservers,
+    // 默认走国内递归
+    "default-nameserver": defaultDns,
+    // 默认走加密DNS（DoH/DoT）
+    nameserver: allDoH,
     "fake-ip-filter": dnsConfig.fakeIpFilters,
-    fallback: dnsConfig.nameservers.international,
+    // 回退走国外的DoH
+    fallback: dnsConfig.nameservers.doh.foreign,
     "fallback-filter": dnsConfig.fallbackFilter,
-    "proxy-server-nameserver": dnsConfig.nameservers.doh,
+    "proxy-server-nameserver": allDoH,
   };
 
   return config;
