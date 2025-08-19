@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.7.2
- * @date 2025-08-18
- * @description 新增规则
+ * @version 1.7.3
+ * @date 2025-08-19
+ * @description 修改测试链接为HTTPS
  **/
 
 // 代理服务器组名称
@@ -84,7 +84,7 @@ const loadBalanceConfig = {
     // 负载均衡策略
     strategy: "consistent-hashing",
     // 健康检查URL
-    healthCheckUrl: "http://www.gstatic.com/generate_204",
+    healthCheckUrl: "https://www.gstatic.com/generate_204",
     // 健康检查间隔（秒）
     healthCheckInterval: 600,
     // 时间限制（毫秒）
