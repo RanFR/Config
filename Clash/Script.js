@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.8.1
- * @date 2025-08-19
- * @description 修改了DNS配置
+ * @version 1.8.2
+ * @date 2025-08-20
+ * @description 修改了默认匹配规则
  **/
 
 // 代理服务器组名称
@@ -267,9 +267,9 @@ function createRoutingRules() {
   rules.push("GEOIP,CN,DIRECT");
   rules.push("GEOSITE,CN,DIRECT");
 
-  // 添加默认直连规则
-  console.log("添加默认直连规则");
-  rules.push("MATCH,DIRECT");
+  // 添加默认匹配规则
+  console.log("添加默认匹配规则");
+  rules.push(`MATCH,${PROXY_GROUP_NAME}`);
 
   console.log(`总共生成了 ${rules.length} 条路由规则`);
   return rules;
