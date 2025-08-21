@@ -2,9 +2,10 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.9.0
+ * @version 1.9.1
  * @date 2025-08-21
  * @description 重新调整了负载均衡组的生成，并默认代理走该组
+ * @description 修改默认的回退DNS为IP地址
  **/
 
 // 代理提供商名称
@@ -180,6 +181,12 @@ function createDnsConfig() {
     defaultDns.push(...dnsConfig.nameservers.ipv6.default);
   }
 
+  // 组建包含 IPV4 和 IPV6 的回退 DNS 服务器
+  let fallbackDns = [...dnsConfig.nameservers.ipv4.foreign];
+  if (dnsConfig.ipv6) {
+    fallbackDns.push(...dnsConfig.nameservers.ipv6.foreign);
+  }
+
   // 组合国内与国外的DoH服务器
   let allDoH = [
     ...dnsConfig.nameservers.doh.domestic,
@@ -200,7 +207,7 @@ function createDnsConfig() {
     nameserver: dnsConfig.nameservers.doh.domestic,
     "fake-ip-filter": dnsConfig.fakeIpFilters,
     // 回退走国外的DoH
-    fallback: dnsConfig.nameservers.doh.foreign,
+    fallback: fallbackDns,
     "fallback-filter": dnsConfig.fallbackFilter,
     "proxy-server-nameserver": allDoH,
   };
