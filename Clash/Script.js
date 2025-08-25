@@ -2,75 +2,66 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 1.9.1
- * @date 2025-08-21
- * @description 重新调整了负载均衡组的生成，并默认代理走该组
- * @description 修改默认的回退DNS为IP地址
+ * @version 2.0.0
+ * @date 2025-08-25
+ * @description 重构了规则组构建，并移除了冗余的规则文件判断
  **/
 
-// 代理提供商名称
-const PROXY_PROVIDER_NAME = "";
-
-// 代理服务器组名称
-const PROXY_GROUP_NAME = "LoadBalance";
-
-// 规则URL配置
+// 规则仓库地址
 const RULE_URL = "";
 
-/** DNS配置 */
-const dnsConfig = {
-  ipv6: true,
-  nameservers: {
-    // IPV4 的DNS服务器配置
-    ipv4: {
-      default: [
-        "223.5.5.5", // 阿里
-        "119.29.29.29", // 腾讯
-      ],
-      domestic: [
-        "223.5.5.5", // 阿里
-        "223.6.6.6", // 阿里
-        "119.29.29.29", // 腾讯
-      ],
-      foreign: [
-        "1.1.1.1", // Cloudflare
-        "1.0.0.1", // Cloudflare
-        "8.8.8.8", // Google
-        "8.8.4.4", // Google
-      ],
-    },
-    // IPV6 的DNS服务器配置
-    ipv6: {
-      default: [
-        "2400:3200::1", // 阿里
-        "2402:4e00::", // 腾讯
-      ],
-      domestic: [
-        "2400:3200::1", // 阿里
-        "2400:3200:baba::1", // 阿里
-        "2402:4e00::", // 腾讯
-      ],
-      foreign: [
-        "2606:4700:4700::1111", // Cloudflare
-        "2606:4700:4700::1001", // Cloudflare
-        "2001:4860:4860::8888", // Google
-        "2001:4860:4860::8844", // Google
-      ],
-    },
-    // DoH 服务器
-    doh: {
-      domestic: [
-        "https://dns.alidns.com/dns-query", // 阿里
-        "https://doh.pub/dns-query", // 腾讯
-      ],
-      foreign: [
-        "https://cloudflare-dns.com/dns-query", // Cloudflare
-        "https://dns.google/dns-query", // Google
-      ],
-    },
-  },
-  // Fake IP过滤列表
-  fakeIpFilters: [
+// 健康检查链接
+const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
+
+// 直连规则
+const DIRECT_RULES = ["Bing", "China"];
+
+// 代理规则
+const PROXY_RULES = [
+  "AI",
+  "Cloudflare",
+  "DevSites",
+  "Docker",
+  "GitHub",
+  "Google",
+  "JsDelivr",
+  "Microsoft",
+  "Misc",
+  "Mozilla",
+  "Overleaf",
+  "Scholar",
+  "SourceForge",
+  "Wikipedia",
+  "Yandex",
+  "YouTube",
+];
+
+// 最小的负载均衡节点数量
+const MIN_LOAD_BALANCE_NODES = 5;
+
+// 负载均衡提取提取的节点，主要为中文地区
+const LOAD_BALANCE_REGIONS = [
+  "香港",
+  "台湾",
+  "新加坡",
+  "Hong Kong",
+  "Taiwan",
+  "Singapore",
+  "hk",
+  "tw",
+  "sg",
+];
+
+/**
+ * 生成DNS配置
+ * @returns {Object} DNS配置对象
+ */
+function createDnsConfig() {
+  // 默认 DNS
+  let defaultDns = ["223.5.5.5"];
+
+  // fake ip 过滤
+  let fakeIpFilters = [
     // 局域网和本地地址
     "*.lan",
     "*.local",
@@ -82,14 +73,23 @@ const dnsConfig = {
     // 网络检测
     "*.msftncsi.com",
     "www.msftconnecttest.com",
-  ],
-  // 回退过滤器配置
-  fallbackFilter: {
+  ];
+
+  // 默认的域名解析服务器
+  let nameservers = [
+    "https://doh.pub/dns-query",
+    "https://dns.alidns.com/dns-query",
+  ];
+
+  // 后备域名解析服务器
+  let fallbackDns = ["1.1.1.1", "8.8.8.8"];
+
+  // 后备域名解析服务器筛选
+  let fallbackFilter = {
     geoip: true, // 启用地理位置过滤
     "geoip-code": "CN", // 仅针对中国地区
     ipcidr: [
       "240.0.0.0/4", // 保留地址段
-      "0.0.0.0/32", // 无效地址
     ],
     // 避免可能受到污染的地址解析到国内
     domain: [
@@ -98,132 +98,23 @@ const dnsConfig = {
       "+.github.com",
       "+.githubusercontent.com",
     ],
-  },
-};
-
-// 负载均衡配置
-const loadBalanceConfig = {
-  // 基础负载均衡配置
-  base: {
-    // 最小节点数量阈值
-    minNodesThreshold: 5,
-    // 负载均衡组名称
-    groupName: "LoadBalance",
-    // 负载均衡策略
-    strategy: "consistent-hashing",
-    // 健康检查URL
-    healthCheckUrl: "https://www.gstatic.com/generate_204",
-    // 健康检查间隔（秒）
-    healthCheckInterval: 600,
-    // 时间限制（毫秒）
-    timeout: 1500,
-  },
-  // 负载均衡地区节点配置
-  region: {
-    // 主要地区关键词（香港、台湾、新加坡）
-    primary: [
-      "香港",
-      "台湾",
-      "新加坡",
-      "Hong Kong",
-      "Taiwan",
-      "Singapore",
-      "hk",
-      "tw",
-      "sg",
-    ],
-    // 可选地区关键词（日本、韩国）
-    optional: ["日本", "韩国", "Japan", "South Korea", "jp", "kr"],
-  },
-};
-
-// 规则配置
-const rulesConfig = {
-  // 通用属性
-  common: {
-    type: "http",
-    format: "yaml",
-    interval: 86400, // 24小时
-    behavior: "classical",
-  },
-  // 规则提供
-  ruleProviders: {
-    proxy: [
-      "AI",
-      "Cloudflare",
-      "DevSites",
-      "Docker",
-      "GitHub",
-      "Google",
-      "JsDelivr",
-      "Microsoft",
-      "Misc",
-      "Mozilla",
-      "Overleaf",
-      "Scholar",
-      "SourceForge",
-      "Wikipedia",
-      "Yandex",
-      "YouTube",
-    ],
-    direct: ["Bing", "China"],
-  },
-};
-
-/**
- * 生成DNS配置
- * @returns {Object} DNS配置对象
- */
-function createDnsConfig() {
-  // 组建包含 IPV4 和 IPV6 的默认 DNS 服务器
-  let defaultDns = [...dnsConfig.nameservers.ipv4.default];
-  if (dnsConfig.ipv6) {
-    defaultDns.push(...dnsConfig.nameservers.ipv6.default);
-  }
-
-  // 组建包含 IPV4 和 IPV6 的回退 DNS 服务器
-  let fallbackDns = [...dnsConfig.nameservers.ipv4.foreign];
-  if (dnsConfig.ipv6) {
-    fallbackDns.push(...dnsConfig.nameservers.ipv6.foreign);
-  }
-
-  // 组合国内与国外的DoH服务器
-  let allDoH = [
-    ...dnsConfig.nameservers.doh.domestic,
-    ...dnsConfig.nameservers.doh.foreign,
-  ];
+  };
 
   // 最终的DNS配置
   let config = {
     enable: true,
-    ipv6: dnsConfig.ipv6,
+    ipv6: true,
     listen: ":1053",
+    "default-nameserver": defaultDns,
     "enhanced-mode": "fake-ip",
     "fake-ip-range": "198.18.0.1/16",
-    "use-hosts": true,
-    // 默认
-    "default-nameserver": defaultDns,
-    // 默认走加密DNS（DoH/DoT）
-    nameserver: dnsConfig.nameservers.doh.domestic,
-    "fake-ip-filter": dnsConfig.fakeIpFilters,
-    // 回退走国外的DoH
+    "fake-ip-filter": fakeIpFilters,
+    nameserver: nameservers,
     fallback: fallbackDns,
-    "fallback-filter": dnsConfig.fallbackFilter,
-    "proxy-server-nameserver": allDoH,
+    "fallback-filter": fallbackFilter,
   };
 
   return config;
-}
-
-/**
- * 高效生成规则提供器URL
- * @param {string} name - 规则名称
- * @returns {string} 完整的URL
- */
-function createRuleUrl(name) {
-  let baseUrl = RULE_URL;
-  const path = `${name}.yaml`;
-  return `${baseUrl}${path}`;
 }
 
 /**
@@ -233,8 +124,11 @@ function createRuleUrl(name) {
  */
 function createRuleProvider(name) {
   let ruleProvider = {
-    ...rulesConfig.common,
-    url: createRuleUrl(name),
+    type: "http",
+    format: "yaml",
+    interval: 86400, // 每天更新
+    behavior: "classical",
+    url: `${RULE_URL}${name}.yaml`,
     path: `RuleProvider/${name}.yaml`,
   };
   return ruleProvider;
@@ -247,20 +141,14 @@ function createRuleProvider(name) {
 function createAllRuleProviders() {
   let providers = {};
 
-  console.log(
-    `正在生成 ${rulesConfig.ruleProviders.direct.length} 个直连规则提供器`
-  );
   // 获取直连规则
-  rulesConfig.ruleProviders.direct.forEach((name) => {
+  DIRECT_RULES.forEach((name) => {
     const provider = createRuleProvider(name);
     providers[name] = provider;
   });
 
-  console.log(
-    `正在生成 ${rulesConfig.ruleProviders.proxy.length} 个代理规则提供器`
-  );
   // 获取代理规则
-  rulesConfig.ruleProviders.proxy.forEach((name) => {
+  PROXY_RULES.forEach((name) => {
     const provider = createRuleProvider(name);
     providers[name] = provider;
   });
@@ -276,16 +164,16 @@ function createRoutingRules() {
   const rules = [];
 
   // 添加直连规则
-  console.log(`添加 ${rulesConfig.ruleProviders.direct.length} 个直连规则`);
-  rulesConfig.ruleProviders.direct.forEach((name) => {
+  console.log(`添加 ${DIRECT_RULES.length} 个直连规则`);
+  DIRECT_RULES.forEach((name) => {
     const ruleStr = `RULE-SET,${name},DIRECT`;
     rules.push(ruleStr);
   });
 
   // 添加代理规则
-  console.log(`添加 ${rulesConfig.ruleProviders.proxy.length} 个代理规则`);
-  rulesConfig.ruleProviders.proxy.forEach((name) => {
-    const ruleStr = `RULE-SET,${name},${PROXY_GROUP_NAME}`;
+  console.log(`添加 ${PROXY_RULES.length} 个代理规则`);
+  PROXY_RULES.forEach((name) => {
+    const ruleStr = `RULE-SET,${name},Default`;
     rules.push(ruleStr);
   });
 
@@ -297,7 +185,7 @@ function createRoutingRules() {
 
   // 添加匹配代理规则
   console.log("添加匹配代理规则");
-  rules.push(`MATCH,${PROXY_GROUP_NAME}`);
+  rules.push(`MATCH,Default`);
 
   console.log(`总共生成了 ${rules.length} 条路由规则`);
   return rules;
@@ -310,16 +198,6 @@ function createRoutingRules() {
  * @returns {Array} 匹配的字符串数组
  */
 function filterByKeywords(items, keywords) {
-  // 判断传入参数是否有效且为数组类型
-  if (
-    !Array.isArray(items) ||
-    !Array.isArray(keywords) ||
-    items.length === 0 ||
-    keywords.length === 0
-  ) {
-    return [];
-  }
-
   const matchedNames = [];
   items.forEach((item) => {
     if (item && typeof item.name === "string") {
@@ -338,27 +216,22 @@ function filterByKeywords(items, keywords) {
 /**
  * 按地区类型提取节点
  * @param {Array} proxies - 节点列表
- * @param {string} regionType - 地区类型 ('PRIMARY'|'OPTIONAL'|'ALL')
+ * @param {string} regionType - 地区类型 ('PRIMARY'|'ALL')
  * @returns {Array} 匹配的节点组
  */
 function extractRegionProxies(proxies, regionType) {
-  // 判断是否传入有效的代理列表
-  if (!Array.isArray(proxies) || proxies.length === 0) return [];
-
   // 如果地区类型为 ALL，返回所有节点
   if (regionType == "ALL") {
     return proxies.map((item) => item.name).filter(Boolean);
   }
 
-  // 如果地区类型为 PRIMARY 或 OPTIONAL，提取对应的关键词
+  // 如果地区类型为 PRIMARY ，提取对应的关键词
   let keywords;
   if (regionType === "PRIMARY") {
-    keywords = loadBalanceConfig.region.primary;
-  } else if (regionType === "OPTIONAL") {
-    keywords = loadBalanceConfig.region.optional;
+    keywords = LOAD_BALANCE_REGIONS;
   } else {
-    console.warn(`未知的地区类型: ${regionType}`);
-    return [];
+    console.warn(`未知的地区类型: ${regionType}，默认返回所有节点`);
+    return proxies.map((item) => item.name).filter(Boolean);
   }
 
   // 匹配的代理节点组
@@ -368,23 +241,51 @@ function extractRegionProxies(proxies, regionType) {
 }
 
 /**
- * 创建负载均衡组配置
- * @param {Array} proxies - 节点列表
- * @returns {Object} 负载均衡组配置对象
+ * 创建手动选择组
+ * @param {Array} proxies - 代理节点列表
+ * @returns {Object} 手动选择组
  */
+const createSelectGroup = (proxies) => {
+  // 获取目标节点，默认将所有节点作为手动选择对象
+  let targetGroupProxies = extractRegionProxies(proxies, "ALL");
+
+  // 创建手动选择组
+  const selectGroup = {
+    name: "Select",
+    type: "select",
+    proxies: targetGroupProxies,
+  };
+
+  return selectGroup;
+};
 
 /**
- * 记录节点提取结果
- * @param {string} groupName - 代理组名称
- * @param {number} primaryCount - 主要地区节点数量
- * @param {number} optionalCount - 可选地区节点数量
- * @param {number} totalCount - 总节点数量
+ * 创建延迟选优组
+ * @param {Array} proxies - 代理节点列表
+ * @returns {Object} 延迟选优组
  */
-function logExtractionResults(primaryCount, optionalCount, totalCount) {
-  console.log(`提取到 ${primaryCount} 个主要地区节点（香港、台湾、新加坡）`);
-  console.log(`提取到 ${optionalCount} 个可选地区节点（日本、韩国）`);
-  console.log(`总计提取到 ${totalCount} 个负载均衡节点`);
-}
+const createUrlTestGroup = (proxies) => {
+  if (!Array.isArray(proxies)) {
+    console.warn(`代理组没有有效的 proxies 列表`);
+    return null;
+  }
+
+  // 获取目标节点，默认将所有节点作为延迟选优对象
+  let targetGroupProxies = extractRegionProxies(proxies, "ALL");
+
+  // 创建延迟选优组
+  const urlTestGroup = {
+    name: "UrlTest",
+    type: "url-test",
+    proxies: targetGroupProxies,
+    url: HEALTH_CHECK_URL,
+    interval: 900, // 检查时间间隔
+    tolerance: 150, // 偏差小于tolerance的节点不主动切换
+    lazy: true, // 没有选中时不主动检测延迟
+  };
+
+  return urlTestGroup;
+};
 
 /**
  * 创建负载均衡组
@@ -392,14 +293,8 @@ function logExtractionResults(primaryCount, optionalCount, totalCount) {
  * @returns {Object} 处理结果 loadBalanceGroup
  */
 const createLoadBalanceGroup = (proxies) => {
-  if (!Array.isArray(proxies)) {
-    console.warn(`代理组没有有效的 proxies 列表`);
-    return null;
-  }
-
   // 记录提取的节点个数
   let primaryCount = 0;
-  let optionalCount = 0;
   let targetCount = 0;
 
   // 提取主要地区节点
@@ -409,39 +304,52 @@ const createLoadBalanceGroup = (proxies) => {
   let targetGroupProxies = [...primaryProxies];
   targetCount = targetGroupProxies.length;
 
-  // 如果主要地区节点不足，尝试添加可选地区节点
-  if (primaryCount < loadBalanceConfig.base.minNodesThreshold) {
-    console.log("主要地区节点不足，尝试添加可选地区节点");
-    const optionalProxies = extractRegionProxies(proxies, "OPTIONAL");
-    targetGroupProxies.push(...optionalProxies);
-    optionalCount = optionalProxies.length;
-    targetCount = targetGroupProxies.length;
-  }
-
-  // 如果主要地区节点和可选节点均不足，考虑添加所有节点到负载均衡组
-  if (primaryCount + optionalCount < loadBalanceConfig.base.minNodesThreshold) {
-    console.log("主要地区节点和可选地区节点均不足，添加所有节点");
+  // 如果主要地区节点不足，考虑添加所有节点到负载均衡组
+  if (primaryCount < MIN_LOAD_BALANCE_NODES) {
+    console.log("主要地区节点不足，添加所有节点");
     const allProxies = extractRegionProxies(proxies, "ALL");
     targetGroupProxies = allProxies;
     targetCount = targetGroupProxies.length;
   }
 
   // 记录提取结果
-  logExtractionResults(primaryCount, optionalCount, targetCount);
+  console.log(`提取到 ${primaryCount} 个主要地区节点（香港、台湾、新加坡）`);
+  console.log(`总计提取到 ${targetCount} 个负载均衡节点`);
 
   // 记录负载均衡组的节点信息
   const loadBalanceGroup = {
-    name: loadBalanceConfig.base.groupName,
+    name: "LoadBalance",
     type: "load-balance",
-    strategy: loadBalanceConfig.base.strategy,
+    strategy: "consistent-hashing",
     proxies: targetGroupProxies,
-    url: loadBalanceConfig.base.healthCheckUrl,
-    interval: loadBalanceConfig.base.healthCheckInterval,
-    timeout: loadBalanceConfig.base.timeout,
+    url: HEALTH_CHECK_URL,
+    interval: 900,
     lazy: true,
   };
 
   return loadBalanceGroup;
+};
+
+/**
+ * 创建故障转移组
+ * @param {Array} proxies - 代理节点列表
+ * @returns {Object} 故障转移组
+ */
+const createFallbackGroup = (proxies) => {
+  // 获取目标节点，默认将所有节点作为故障转移对象
+  let targetGroupProxies = extractRegionProxies(proxies, "ALL");
+
+  // 创建故障转移组
+  const fallbackGroup = {
+    name: "Fallback",
+    type: "fallback",
+    proxies: targetGroupProxies,
+    url: HEALTH_CHECK_URL,
+    interval: 300, // 每5分钟检查1次
+    lazy: true, // 没有选中时不主动检测延迟
+  };
+
+  return fallbackGroup;
 };
 
 // ==================== 主函数 ====================
@@ -456,6 +364,12 @@ function isValidConfig(config) {
   if (!config || typeof config !== "object") {
     return true;
   }
+
+  // 检查 proxies 是否有效
+  if (!Array.isArray(config.proxies) || config.proxies.length === 0) {
+    return true;
+  }
+
   return false;
 }
 
@@ -465,39 +379,39 @@ function isValidConfig(config) {
  * @returns {Object} 新的代理组配置
  */
 const processProxyGroupsConfig = (config) => {
-  if (!Array.isArray(config["proxy-groups"])) {
-    console.warn("配置中未找到 proxy-groups，跳过代理组修改");
-    return [];
-  }
+  // 新的代理组
+  console.log("正在处理代理组配置...");
+  let newProxyGroups = [];
+
+  // 创建默认组
+  let defaultGroup = {
+    name: "Default",
+    type: "select",
+    proxies: ["Select", "UrlTest", "LoadBalance", "Fallback", "DIRECT"],
+  };
+  newProxyGroups.push(defaultGroup);
+
+  // 创建手动选择组
+  console.log("正在创建手动选择组...");
+  const selectGroup = createSelectGroup(config["proxies"]);
+  newProxyGroups.push(selectGroup);
+
+  // 创建延迟选优组
+  console.log("正在创建延迟选优组...");
+  const urlTestGroup = createUrlTestGroup(config["proxies"]);
+  newProxyGroups.push(urlTestGroup);
 
   // 创建负载均衡组
   console.log("正在创建负载均衡组...");
   const loadBalanceGroup = createLoadBalanceGroup(config["proxies"]);
+  newProxyGroups.push(loadBalanceGroup);
 
-  // 如果负载均衡组存在，则添加到配置中
-  let proxyGroups = config["proxy-groups"];
-  if (loadBalanceGroup) {
-    console.log(`负载均衡组已创建: ${loadBalanceGroup.name}，并添加到代理组中`);
-    proxyGroups.push(loadBalanceGroup);
-  }
+  // 创建故障转移组
+  console.log("正在创建故障转移组...");
+  const fallbackGroup = createFallbackGroup(config["proxies"]);
+  newProxyGroups.push(fallbackGroup);
 
-  return proxyGroups;
-};
-
-/**
- * 生成配置摘要
- * @param {Object} configurations - 配置对象
- * @param {number} executionTime - 执行时间
- * @returns {void}
- */
-const logConfigurationSummary = (configurations, executionTime) => {
-  console.log("配置处理完成");
-  console.log("DNS配置: 已更新");
-  console.log(
-    `规则提供器: ${Object.keys(configurations["rule-providers"]).length} 个`
-  );
-  console.log(`路由规则: ${configurations.rules.length} 条`);
-  console.log(`执行时间: ${executionTime}ms`);
+  return newProxyGroups;
 };
 
 /**
@@ -506,7 +420,7 @@ const logConfigurationSummary = (configurations, executionTime) => {
  * @param {string} [profileName] - 配置文件名称
  * @returns {Object} 修改后的配置对象
  */
-function main(config, profileName = "Unknown") {
+function main(config, profileName) {
   const startTime = Date.now();
 
   try {
@@ -527,9 +441,10 @@ function main(config, profileName = "Unknown") {
     // 应用配置
     Object.assign(config, configurations);
 
-    // 记录执行结果
+    // 执行时间
     const executionTime = Date.now() - startTime;
-    logConfigurationSummary(configurations, executionTime);
+    console.log("配置处理完成");
+    console.log(`执行时间: ${executionTime}ms`);
 
     return config;
   } catch (error) {
@@ -539,6 +454,3 @@ function main(config, profileName = "Unknown") {
     return config;
   }
 }
-
-// 导出main函数，方便程序调试
-// module.exports = { main };
