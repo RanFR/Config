@@ -12,6 +12,21 @@ Note: Bash configuration files require Nerd Fonts for proper display.
 
 Clash configuration files.
 
+### Script.js
+
+Convert rules.
+
+### Debug.js
+
+Debug.
+
+Need add codes below in `Script.js`.
+
+```javascript
+// Export main function
+module.exports = { main };
+```
+
 ## PX4
 
 For use with [PX4-Autopilot](https://github.com/PX4/PX4-Autopilot) simulation environment.
