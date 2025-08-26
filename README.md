@@ -27,6 +27,10 @@ Need add codes below in `Script.js`.
 module.exports = { main };
 ```
 
+## KissTranslator
+
+For custom translator api settings.
+
 ## PX4
 
 For use with [PX4-Autopilot](https://github.com/PX4/PX4-Autopilot) simulation environment.
