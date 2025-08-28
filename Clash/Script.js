@@ -2,9 +2,11 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.0.0
+ * @version 2.0.1
  * @date 2025-08-25
  * @description 重构了规则组构建，并移除了冗余的规则文件判断
+ * @description 增加了Telegram规则组
+ * @description 增加了JetBrains规则组和Kotlin规则
  **/
 
 // 规则仓库地址
@@ -24,6 +26,7 @@ const PROXY_RULES = [
   "Docker",
   "GitHub",
   "Google",
+  "JetBrains",
   "JsDelivr",
   "Microsoft",
   "Misc",
@@ -31,6 +34,7 @@ const PROXY_RULES = [
   "Overleaf",
   "Scholar",
   "SourceForge",
+  "Telegram",
   "Wikipedia",
   "Yandex",
   "YouTube",
