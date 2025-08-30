@@ -2,11 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.0.1
- * @date 2025-08-25
- * @description 重构了规则组构建，并移除了冗余的规则文件判断
- * @description 增加了Telegram规则组
- * @description 增加了JetBrains规则组和Kotlin规则
+ * @version 2.1.0
+ * @date 2025-08-30
+ * @description 修改了负载均衡、故障转移组的节点提取逻辑
  **/
 
 // 规则仓库地址
@@ -43,18 +41,18 @@ const PROXY_RULES = [
 // 最小的负载均衡节点数量
 const MIN_LOAD_BALANCE_NODES = 5;
 
-// 负载均衡提取提取的节点，主要为中文地区
-const LOAD_BALANCE_REGIONS = [
-  "香港",
-  "台湾",
-  "新加坡",
-  "Hong Kong",
-  "Taiwan",
-  "Singapore",
-  "hk",
-  "tw",
-  "sg",
-];
+// 负载均衡提取提取的节点，选取一个主要地区
+const LOAD_BALANCE_REGIONS = "hk";
+
+// 节点地区关键词
+const NODE_REGION_KEYWORDS = {
+  hk: ["香港", "Hong Kong", "hk"],
+  tw: ["台湾", "Taiwan", "tw"],
+  sg: ["新加坡", "Singapore", "sg"],
+  jp: ["日本", "Japan", "jp"],
+  kr: ["韩国", "Korea", "kr"],
+  us: ["美国", "United States", "us"],
+};
 
 /**
  * 生成DNS配置
@@ -220,7 +218,7 @@ function filterByKeywords(items, keywords) {
 /**
  * 按地区类型提取节点
  * @param {Array} proxies - 节点列表
- * @param {string} regionType - 地区类型 ('PRIMARY'|'ALL')
+ * @param {string} regionType - 地区类型 ('LoadBalance'|'PRIMARY'|'ALL')
  * @returns {Array} 匹配的节点组
  */
 function extractRegionProxies(proxies, regionType) {
@@ -229,13 +227,18 @@ function extractRegionProxies(proxies, regionType) {
     return proxies.map((item) => item.name).filter(Boolean);
   }
 
+  // 如果地区类型类LoadBalance，则为负载均衡组提取节点
+  let keywords = [];
+  if (regionType === "LoadBalance") {
+    keywords.push(...NODE_REGION_KEYWORDS[LOAD_BALANCE_REGIONS]);
+  }
+
   // 如果地区类型为 PRIMARY ，提取对应的关键词
-  let keywords;
   if (regionType === "PRIMARY") {
-    keywords = LOAD_BALANCE_REGIONS;
-  } else {
-    console.warn(`未知的地区类型: ${regionType}，默认返回所有节点`);
-    return proxies.map((item) => item.name).filter(Boolean);
+    keywords = [];
+    Object.values(NODE_REGION_KEYWORDS).forEach((regionKeywords) => {
+      keywords.push(...regionKeywords);
+    });
   }
 
   // 匹配的代理节点组
@@ -269,13 +272,8 @@ const createSelectGroup = (proxies) => {
  * @returns {Object} 延迟选优组
  */
 const createUrlTestGroup = (proxies) => {
-  if (!Array.isArray(proxies)) {
-    console.warn(`代理组没有有效的 proxies 列表`);
-    return null;
-  }
-
   // 获取目标节点，默认将所有节点作为延迟选优对象
-  let targetGroupProxies = extractRegionProxies(proxies, "ALL");
+  let targetGroupProxies = extractRegionProxies(proxies, "PRIMARY");
 
   // 创建延迟选优组
   const urlTestGroup = {
@@ -303,7 +301,7 @@ const createLoadBalanceGroup = (proxies) => {
 
   // 提取主要地区节点
   console.log("提取主要地区节点");
-  const primaryProxies = extractRegionProxies(proxies, "PRIMARY");
+  const primaryProxies = extractRegionProxies(proxies, "LoadBalance");
   primaryCount = primaryProxies.length;
   let targetGroupProxies = [...primaryProxies];
   targetCount = targetGroupProxies.length;
@@ -317,7 +315,7 @@ const createLoadBalanceGroup = (proxies) => {
   }
 
   // 记录提取结果
-  console.log(`提取到 ${primaryCount} 个主要地区节点（香港、台湾、新加坡）`);
+  console.log(`提取到 ${primaryCount} 个主要地区节点`);
   console.log(`总计提取到 ${targetCount} 个负载均衡节点`);
 
   // 记录负载均衡组的节点信息
@@ -341,7 +339,7 @@ const createLoadBalanceGroup = (proxies) => {
  */
 const createFallbackGroup = (proxies) => {
   // 获取目标节点，默认将所有节点作为故障转移对象
-  let targetGroupProxies = extractRegionProxies(proxies, "ALL");
+  let targetGroupProxies = extractRegionProxies(proxies, "PRIMARY");
 
   // 创建故障转移组
   const fallbackGroup = {
@@ -424,7 +422,7 @@ const processProxyGroupsConfig = (config) => {
  * @param {string} [profileName] - 配置文件名称
  * @returns {Object} 修改后的配置对象
  */
-function main(config, profileName) {
+function main(config, profileName = "Default") {
   const startTime = Date.now();
 
   try {
