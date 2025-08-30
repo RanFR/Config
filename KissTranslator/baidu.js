@@ -227,10 +227,24 @@
   // 计算MD5签名
   const sign = MD5(signStr);
 
+  // 根据目标语言调整参数
+  if (to === "zh-CN" || to === "zh-TW") {
+    to = "zh";
+  }
+
+  // 如果from为空，则设置为auto
+  if (!from) {
+    from = "auto";
+  } else if (from === "zh-CN" || from === "zh-TW") {
+    from = "zh";
+  } else if (from !== "en") {
+    from = "auto";
+  }
+
   // 构建请求参数
   const params = new URLSearchParams({
     q: text,
-    from: from === "auto" ? "auto" : from,
+    from: from,
     to: to,
     appid: appid,
     salt: salt,
@@ -256,7 +270,8 @@
 
   // 检查是否有错误
   if (data.error_code) {
-    return [text, false];
+    // 返回错误码
+    return [data.error_code, false];
   }
 
   // 获取翻译结果
