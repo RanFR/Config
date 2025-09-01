@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.1.0
- * @date 2025-08-30
- * @description 修改了负载均衡、故障转移组的节点提取逻辑
+ * @version 2.2.0
+ * @date 2025-09-01
+ * @description 修改了AI规则组的代理节点，如ChatGPT、Gemini等等，使用给定的ChatGPT组而非通用代理节点组
  **/
 
 // 规则仓库地址
@@ -54,13 +54,21 @@ const NODE_REGION_KEYWORDS = {
   us: ["美国", "United States", "us"],
 };
 
+// AI组的关键词
+const AI_GROUP_KEYWORDS = ["ChatGPT", "Claude"];
+
 /**
  * 生成DNS配置
  * @returns {Object} DNS配置对象
  */
 function createDnsConfig() {
   // 默认 DNS
-  let defaultDns = ["223.5.5.5"];
+  let defaultDns = [
+    "223.5.5.5",
+    "223.6.6.6",
+    "2400:3200::1",
+    "2400:3200:baba::1",
+  ];
 
   // fake ip 过滤
   let fakeIpFilters = [
@@ -84,7 +92,7 @@ function createDnsConfig() {
   ];
 
   // 后备域名解析服务器
-  let fallbackDns = ["1.1.1.1", "8.8.8.8"];
+  let fallbackDns = ["1.1.1.1", "1.0.0.1", "8.8.8.8", "8.8.4.4"];
 
   // 后备域名解析服务器筛选
   let fallbackFilter = {
@@ -175,7 +183,11 @@ function createRoutingRules() {
   // 添加代理规则
   console.log(`添加 ${PROXY_RULES.length} 个代理规则`);
   PROXY_RULES.forEach((name) => {
-    const ruleStr = `RULE-SET,${name},Default`;
+    let ruleStr = `RULE-SET,${name},Default`;
+    // 为AI类单独建立一个代理组
+    if (name === "AI") {
+      ruleStr = `RULE-SET,${name},AI`;
+    }
     rules.push(ruleStr);
   });
 
@@ -354,6 +366,42 @@ const createFallbackGroup = (proxies) => {
   return fallbackGroup;
 };
 
+/**
+ * 创建AI组
+ * @param {Array} config - 配置文件对象
+ * @returns {Object} AI组
+ */
+const createAIGroup = (config) => {
+  // 检查是否存在包含ChatGPT字样的代理组
+  let targetGroupProxies = [];
+  const existingGroups = config["proxy-groups"] || [];
+  const chatgptGroup = existingGroups.find((group) => {
+    if (!group.name) return false;
+    return AI_GROUP_KEYWORDS.some((keyword) => group.name.includes(keyword));
+  });
+
+  if (chatgptGroup && chatgptGroup.proxies) {
+    console.log(`找到ChatGPT代理组: ${chatgptGroup.name}`);
+    targetGroupProxies = chatgptGroup.proxies;
+  } else {
+    console.log("未找到ChatGPT代理组，使用负载均衡节点");
+    targetGroupProxies = extractRegionProxies(config["proxies"], "LoadBalance");
+  }
+
+  // 创建AI组，基于负载均衡设置
+  const aiGroup = {
+    name: "AI",
+    type: "load-balance",
+    strategy: "consistent-hashing",
+    proxies: targetGroupProxies,
+    url: HEALTH_CHECK_URL,
+    interval: 900,
+    lazy: true,
+  };
+
+  return aiGroup;
+};
+
 // ==================== 主函数 ====================
 
 /**
@@ -389,7 +437,7 @@ const processProxyGroupsConfig = (config) => {
   let defaultGroup = {
     name: "Default",
     type: "select",
-    proxies: ["Select", "UrlTest", "LoadBalance", "Fallback", "DIRECT"],
+    proxies: ["Select", "UrlTest", "LoadBalance", "Fallback", "AI", "DIRECT"],
   };
   newProxyGroups.push(defaultGroup);
 
@@ -412,6 +460,11 @@ const processProxyGroupsConfig = (config) => {
   console.log("正在创建故障转移组...");
   const fallbackGroup = createFallbackGroup(config["proxies"]);
   newProxyGroups.push(fallbackGroup);
+
+  // 创建AI组
+  console.log("正在创建AI组...");
+  const aiGroup = createAIGroup(config);
+  newProxyGroups.push(aiGroup);
 
   return newProxyGroups;
 };
