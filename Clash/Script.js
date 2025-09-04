@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.2.0
- * @date 2025-09-01
- * @description 修改了AI规则组的代理节点，如ChatGPT、Gemini等等，使用给定的ChatGPT组而非通用代理节点组
+ * @version 2.3.0
+ * @date 2025-09-02
+ * @description 删除了负载均衡组，专注于延迟选优和故障转移组的配置
  **/
 
 // 规则仓库地址
@@ -38,12 +38,6 @@ const PROXY_RULES = [
   "YouTube",
 ];
 
-// 最小的负载均衡节点数量
-const MIN_LOAD_BALANCE_NODES = 5;
-
-// 负载均衡提取提取的节点，选取一个主要地区
-const LOAD_BALANCE_REGIONS = "hk";
-
 // 节点地区关键词
 const NODE_REGION_KEYWORDS = {
   hk: ["香港", "Hong Kong", "hk"],
@@ -53,6 +47,9 @@ const NODE_REGION_KEYWORDS = {
   kr: ["韩国", "Korea", "kr"],
   us: ["美国", "United States", "us"],
 };
+
+// 自动选择组关键词
+const URLTEST_KEYWORDS = ["自动选择", "Auto"];
 
 // AI组的关键词
 const AI_GROUP_KEYWORDS = ["ChatGPT", "Claude"];
@@ -92,7 +89,10 @@ function createDnsConfig() {
   ];
 
   // 后备域名解析服务器
-  let fallbackDns = ["1.1.1.1", "1.0.0.1", "8.8.8.8", "8.8.4.4"];
+  let fallbackDns = [
+    "https://dns.cloudflare.com/dns-query",
+    "https://dns.google/dns-query",
+  ];
 
   // 后备域名解析服务器筛选
   let fallbackFilter = {
@@ -113,7 +113,7 @@ function createDnsConfig() {
   // 最终的DNS配置
   let config = {
     enable: true,
-    ipv6: true,
+    // ipv6设置参考原有文件，不进行覆写
     listen: ":1053",
     "default-nameserver": defaultDns,
     "enhanced-mode": "fake-ip",
@@ -230,7 +230,7 @@ function filterByKeywords(items, keywords) {
 /**
  * 按地区类型提取节点
  * @param {Array} proxies - 节点列表
- * @param {string} regionType - 地区类型 ('LoadBalance'|'PRIMARY'|'ALL')
+ * @param {string} regionType - 地区类型 ('PRIMARY'|'ALL')
  * @returns {Array} 匹配的节点组
  */
 function extractRegionProxies(proxies, regionType) {
@@ -239,15 +239,15 @@ function extractRegionProxies(proxies, regionType) {
     return proxies.map((item) => item.name).filter(Boolean);
   }
 
-  // 如果地区类型类LoadBalance，则为负载均衡组提取节点
   let keywords = [];
-  if (regionType === "LoadBalance") {
-    keywords.push(...NODE_REGION_KEYWORDS[LOAD_BALANCE_REGIONS]);
+
+  // 如果地区类型为UrlTest，则为自动选择组提取节点
+  if (regionType === "UrlTest") {
+    keywords.push(...URLTEST_KEYWORDS);
   }
 
   // 如果地区类型为 PRIMARY ，提取对应的关键词
   if (regionType === "PRIMARY") {
-    keywords = [];
     Object.values(NODE_REGION_KEYWORDS).forEach((regionKeywords) => {
       keywords.push(...regionKeywords);
     });
@@ -279,13 +279,99 @@ const createSelectGroup = (proxies) => {
 };
 
 /**
+ * 递归查找代理组中的实际节点
+ * @param {string} proxyName - 代理名称
+ * @param {Array} allProxies - 所有代理节点
+ * @param {Array} allGroups - 所有代理组
+ * @param {Set} visited - 已访问的代理组（防止循环引用）
+ * @returns {Array} 实际节点列表
+ */
+const resolveProxyNodes = (
+  proxyName,
+  allProxies,
+  allGroups,
+  visited = new Set()
+) => {
+  // 防止循环引用
+  if (visited.has(proxyName)) {
+    console.warn(`检测到循环引用: ${proxyName}`);
+    return [];
+  }
+
+  // 检查是否是实际节点
+  const isRealNode = allProxies.some((proxy) => proxy.name === proxyName);
+  if (isRealNode) {
+    return [proxyName];
+  }
+
+  // 检查是否是代理组
+  const proxyGroup = allGroups.find((group) => group.name === proxyName);
+  if (proxyGroup && proxyGroup.proxies) {
+    visited.add(proxyName);
+    const resolvedNodes = [];
+
+    // 递归解析组中的每个代理
+    proxyGroup.proxies.forEach((subProxy) => {
+      const subNodes = resolveProxyNodes(
+        subProxy,
+        allProxies,
+        allGroups,
+        new Set(visited)
+      );
+      resolvedNodes.push(...subNodes);
+    });
+
+    return resolvedNodes;
+  }
+
+  // 如果既不是节点也不是组，可能是内置代理（如DIRECT、REJECT）
+  console.warn(`未找到代理: ${proxyName}`);
+  return [];
+};
+
+/**
  * 创建延迟选优组
- * @param {Array} proxies - 代理节点列表
+ * @param {Object} config - 配置文件对象
  * @returns {Object} 延迟选优组
  */
-const createUrlTestGroup = (proxies) => {
-  // 获取目标节点，默认将所有节点作为延迟选优对象
-  let targetGroupProxies = extractRegionProxies(proxies, "PRIMARY");
+const createUrlTestGroup = (config) => {
+  // 检查是否存在包含URLTEST_KEYWORDS字样的代理组
+  let targetGroupProxies = [];
+  const existingGroups = config["proxy-groups"] || [];
+  const allProxies = config["proxies"] || [];
+
+  const searchedGroup = existingGroups.find((group) => {
+    if (!group.name) return false;
+    return URLTEST_KEYWORDS.some((keyword) => group.name.includes(keyword));
+  });
+
+  if (searchedGroup && searchedGroup.proxies) {
+    console.log(`找到UrlTest代理组: ${searchedGroup.name}`);
+
+    // 解析代理组中的实际节点
+    const resolvedNodes = [];
+    searchedGroup.proxies.forEach((proxyName) => {
+      const nodes = resolveProxyNodes(proxyName, allProxies, existingGroups);
+      resolvedNodes.push(...nodes);
+    });
+
+    // 去重并过滤掉内置代理
+    const uniqueNodes = [...new Set(resolvedNodes)].filter((nodeName) => {
+      return !["DIRECT", "REJECT", "PASS"].includes(nodeName);
+    });
+
+    targetGroupProxies = uniqueNodes;
+    console.log(`解析得到 ${targetGroupProxies.length} 个实际节点`);
+  } else {
+    console.log("未找到UrlTest代理组，使用所有节点");
+    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
+  }
+
+  // 如果没有找到任何节点，使用所有节点作为后备
+  if (targetGroupProxies.length === 0) {
+    console.warn("未找到任何可用节点，使用所有节点作为后备");
+    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
+  }
 
   // 创建延迟选优组
   const urlTestGroup = {
@@ -299,49 +385,6 @@ const createUrlTestGroup = (proxies) => {
   };
 
   return urlTestGroup;
-};
-
-/**
- * 创建负载均衡组
- * @param {Array} proxies - 代理节点列表
- * @returns {Object} 处理结果 loadBalanceGroup
- */
-const createLoadBalanceGroup = (proxies) => {
-  // 记录提取的节点个数
-  let primaryCount = 0;
-  let targetCount = 0;
-
-  // 提取主要地区节点
-  console.log("提取主要地区节点");
-  const primaryProxies = extractRegionProxies(proxies, "LoadBalance");
-  primaryCount = primaryProxies.length;
-  let targetGroupProxies = [...primaryProxies];
-  targetCount = targetGroupProxies.length;
-
-  // 如果主要地区节点不足，考虑添加所有节点到负载均衡组
-  if (primaryCount < MIN_LOAD_BALANCE_NODES) {
-    console.log("主要地区节点不足，添加所有节点");
-    const allProxies = extractRegionProxies(proxies, "ALL");
-    targetGroupProxies = allProxies;
-    targetCount = targetGroupProxies.length;
-  }
-
-  // 记录提取结果
-  console.log(`提取到 ${primaryCount} 个主要地区节点`);
-  console.log(`总计提取到 ${targetCount} 个负载均衡节点`);
-
-  // 记录负载均衡组的节点信息
-  const loadBalanceGroup = {
-    name: "LoadBalance",
-    type: "load-balance",
-    strategy: "consistent-hashing",
-    proxies: targetGroupProxies,
-    url: HEALTH_CHECK_URL,
-    interval: 900,
-    lazy: true,
-  };
-
-  return loadBalanceGroup;
 };
 
 /**
@@ -375,6 +418,8 @@ const createAIGroup = (config) => {
   // 检查是否存在包含ChatGPT字样的代理组
   let targetGroupProxies = [];
   const existingGroups = config["proxy-groups"] || [];
+  const allProxies = config["proxies"] || [];
+
   const chatgptGroup = existingGroups.find((group) => {
     if (!group.name) return false;
     return AI_GROUP_KEYWORDS.some((keyword) => group.name.includes(keyword));
@@ -382,21 +427,37 @@ const createAIGroup = (config) => {
 
   if (chatgptGroup && chatgptGroup.proxies) {
     console.log(`找到ChatGPT代理组: ${chatgptGroup.name}`);
-    targetGroupProxies = chatgptGroup.proxies;
+
+    // 解析代理组中的实际节点
+    const resolvedNodes = [];
+    chatgptGroup.proxies.forEach((proxyName) => {
+      const nodes = resolveProxyNodes(proxyName, allProxies, existingGroups);
+      resolvedNodes.push(...nodes);
+    });
+
+    // 去重并过滤掉内置代理
+    const uniqueNodes = [...new Set(resolvedNodes)].filter((nodeName) => {
+      return !["DIRECT", "REJECT", "PASS"].includes(nodeName);
+    });
+
+    targetGroupProxies = uniqueNodes;
+    console.log(`AI组解析得到 ${targetGroupProxies.length} 个实际节点`);
   } else {
-    console.log("未找到ChatGPT代理组，使用负载均衡节点");
-    targetGroupProxies = extractRegionProxies(config["proxies"], "LoadBalance");
+    console.log("未找到ChatGPT代理组，使用所有节点");
+    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
   }
 
-  // 创建AI组，基于负载均衡设置
+  // 如果没有找到任何节点，使用所有节点作为后备
+  if (targetGroupProxies.length === 0) {
+    console.warn("AI组未找到任何可用节点，使用所有节点作为后备");
+    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
+  }
+
+  // 创建AI组，基于选择设置
   const aiGroup = {
     name: "AI",
-    type: "load-balance",
-    strategy: "consistent-hashing",
+    type: "select",
     proxies: targetGroupProxies,
-    url: HEALTH_CHECK_URL,
-    interval: 900,
-    lazy: true,
   };
 
   return aiGroup;
@@ -437,7 +498,7 @@ const processProxyGroupsConfig = (config) => {
   let defaultGroup = {
     name: "Default",
     type: "select",
-    proxies: ["Select", "UrlTest", "LoadBalance", "Fallback", "AI", "DIRECT"],
+    proxies: ["Select", "UrlTest", "Fallback", "DIRECT"],
   };
   newProxyGroups.push(defaultGroup);
 
@@ -448,13 +509,8 @@ const processProxyGroupsConfig = (config) => {
 
   // 创建延迟选优组
   console.log("正在创建延迟选优组...");
-  const urlTestGroup = createUrlTestGroup(config["proxies"]);
+  const urlTestGroup = createUrlTestGroup(config);
   newProxyGroups.push(urlTestGroup);
-
-  // 创建负载均衡组
-  console.log("正在创建负载均衡组...");
-  const loadBalanceGroup = createLoadBalanceGroup(config["proxies"]);
-  newProxyGroups.push(loadBalanceGroup);
 
   // 创建故障转移组
   console.log("正在创建故障转移组...");
