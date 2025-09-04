@@ -66,6 +66,11 @@ if [ -f ~/.bash_aliases ]; then
   . ~/.bash_aliases
 fi
 
+# Private bash configuration, such as API_KEY
+if [ -f ~/.bash_private ]; then
+  . ~/.bash_private
+fi
+
 # Proxy
 export HTTP_PROXY=http://example.com:port
 export HTTPS_PROXY=http://example.com:port
@@ -81,11 +86,35 @@ if [[ ":$LD_LIBRARY_PATH:" != *":$HOME/.local/lib:"* ]]; then
 fi
 export ACADOS_SOURCE_DIR="$HOME/.local"
 
+# Claude Code
+export ANTHROPIC_BASE_URL="https://open.bigmodel.cn/api/anthropic"
+export ANTHROPIC_AUTH_TOKEN="${BIGMODEL_API_KEY:-}"
+export ANTHROPIC_MODEL="glm-4.5"
+export ANTHROPIC_SMALL_FAST_MODEL="glm-4.5-air"
+export API_TIMEOUT_MS=600000
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('$HOME/Softwares/Miniconda3/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
+if [ $? -eq 0 ]; then
+  eval "$__conda_setup"
+else
+  if [ -f "$HOME/Softwares/Miniconda3/etc/profile.d/conda.sh" ]; then
+    . "$HOME/Softwares/Miniconda3/etc/profile.d/conda.sh"
+  else
+    export PATH="$HOME/Softwares/Miniconda3/bin:$PATH"
+  fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
 # Nvidia Isaac
 export ISAACSIM_PATH="$HOME/Softwares/IsaacSim"
 
 # NVM
-export GEM_HOME="$HOME/.gem"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # CUDA
 if [[ ":$PATH:" != *":/usr/local/cuda/bin:"* ]]; then
