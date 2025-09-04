@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.3.0
+ * @version 2.4.0
  * @date 2025-09-02
- * @description 删除了负载均衡组，专注于延迟选优和故障转移组的配置
+ * @description 修改了AI组的创建逻辑，确保其基于选择设置
  **/
 
 // 规则仓库地址
@@ -50,6 +50,9 @@ const NODE_REGION_KEYWORDS = {
 
 // 自动选择组关键词
 const URLTEST_KEYWORDS = ["自动选择", "Auto"];
+
+// 故障转移组关键词
+const FALLBACK_KEYWORDS = ["故障转移", "Fallback", "故障切换"];
 
 // AI组的关键词
 const AI_GROUP_KEYWORDS = ["ChatGPT", "Claude"];
@@ -389,12 +392,47 @@ const createUrlTestGroup = (config) => {
 
 /**
  * 创建故障转移组
- * @param {Array} proxies - 代理节点列表
+ * @param {Object} config - 配置文件对象
  * @returns {Object} 故障转移组
  */
-const createFallbackGroup = (proxies) => {
-  // 获取目标节点，默认将所有节点作为故障转移对象
-  let targetGroupProxies = extractRegionProxies(proxies, "PRIMARY");
+const createFallbackGroup = (config) => {
+  // 检查是否存在包含FALLBACK_KEYWORDS字样的代理组
+  let targetGroupProxies = [];
+  const existingGroups = config["proxy-groups"] || [];
+  const allProxies = config["proxies"] || [];
+
+  const searchedGroup = existingGroups.find((group) => {
+    if (!group.name) return false;
+    return FALLBACK_KEYWORDS.some((keyword) => group.name.includes(keyword));
+  });
+
+  if (searchedGroup && searchedGroup.proxies) {
+    console.log(`找到Fallback代理组: ${searchedGroup.name}`);
+
+    // 解析代理组中的实际节点
+    const resolvedNodes = [];
+    searchedGroup.proxies.forEach((proxyName) => {
+      const nodes = resolveProxyNodes(proxyName, allProxies, existingGroups);
+      resolvedNodes.push(...nodes);
+    });
+
+    // 去重并过滤掉内置代理
+    const uniqueNodes = [...new Set(resolvedNodes)].filter((nodeName) => {
+      return !["DIRECT", "REJECT", "PASS"].includes(nodeName);
+    });
+
+    targetGroupProxies = uniqueNodes;
+    console.log(`解析得到 ${targetGroupProxies.length} 个实际节点`);
+  } else {
+    console.log("未找到Fallback代理组，使用所有节点");
+    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
+  }
+
+  // 如果没有找到任何节点，使用所有节点作为后备
+  if (targetGroupProxies.length === 0) {
+    console.warn("未找到任何可用节点，使用所有节点作为后备");
+    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
+  }
 
   // 创建故障转移组
   const fallbackGroup = {
@@ -411,26 +449,26 @@ const createFallbackGroup = (proxies) => {
 
 /**
  * 创建AI组
- * @param {Array} config - 配置文件对象
+ * @param {Object} config - 配置文件对象
  * @returns {Object} AI组
  */
 const createAIGroup = (config) => {
-  // 检查是否存在包含ChatGPT字样的代理组
+  // 检查是否存在包含AI_GROUP_KEYWORDS字样的代理组
   let targetGroupProxies = [];
   const existingGroups = config["proxy-groups"] || [];
   const allProxies = config["proxies"] || [];
 
-  const chatgptGroup = existingGroups.find((group) => {
+  const searchedGroup = existingGroups.find((group) => {
     if (!group.name) return false;
     return AI_GROUP_KEYWORDS.some((keyword) => group.name.includes(keyword));
   });
 
-  if (chatgptGroup && chatgptGroup.proxies) {
-    console.log(`找到ChatGPT代理组: ${chatgptGroup.name}`);
+  if (searchedGroup && searchedGroup.proxies) {
+    console.log(`找到AI代理组: ${searchedGroup.name}`);
 
     // 解析代理组中的实际节点
     const resolvedNodes = [];
-    chatgptGroup.proxies.forEach((proxyName) => {
+    searchedGroup.proxies.forEach((proxyName) => {
       const nodes = resolveProxyNodes(proxyName, allProxies, existingGroups);
       resolvedNodes.push(...nodes);
     });
@@ -443,7 +481,7 @@ const createAIGroup = (config) => {
     targetGroupProxies = uniqueNodes;
     console.log(`AI组解析得到 ${targetGroupProxies.length} 个实际节点`);
   } else {
-    console.log("未找到ChatGPT代理组，使用所有节点");
+    console.log("未找到AI代理组，使用所有节点");
     targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
   }
 
@@ -514,7 +552,7 @@ const processProxyGroupsConfig = (config) => {
 
   // 创建故障转移组
   console.log("正在创建故障转移组...");
-  const fallbackGroup = createFallbackGroup(config["proxies"]);
+  const fallbackGroup = createFallbackGroup(config);
   newProxyGroups.push(fallbackGroup);
 
   // 创建AI组
