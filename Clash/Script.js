@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.5.0
+ * @version 2.5.1
  * @date 2025-09-02
- * @description 重构函数，精简了部分表达
+ * @description 修改AI组为fallback模式，在尽可能降低IP风险的同时，保证使用体验
  **/
 
 // 规则仓库地址
@@ -348,7 +348,7 @@ const createProxyGroup = (
 const createUrlTestGroup = (config) => {
   return createProxyGroup(config, "UrlTest", "url-test", URLTEST_KEYWORDS, {
     url: HEALTH_CHECK_URL,
-    interval: 900, // 检查时间间隔
+    interval: 600, // 检查时间间隔10分钟
     tolerance: 150, // 偏差小于tolerance的节点不主动切换
     lazy: true, // 没有选中时不主动检测延迟
   });
@@ -362,7 +362,7 @@ const createUrlTestGroup = (config) => {
 const createFallbackGroup = (config) => {
   return createProxyGroup(config, "Fallback", "fallback", FALLBACK_KEYWORDS, {
     url: HEALTH_CHECK_URL,
-    interval: 300, // 每5分钟检查1次
+    interval: 450, // 每7.5分钟检查1次
     lazy: true, // 没有选中时不主动检测延迟
   });
 };
@@ -373,7 +373,10 @@ const createFallbackGroup = (config) => {
  * @returns {Object} AI组
  */
 const createAIGroup = (config) => {
-  return createProxyGroup(config, "AI", "select", AI_GROUP_KEYWORDS);
+  return createProxyGroup(config, "AI", "fallback", AI_GROUP_KEYWORDS, {
+    url: HEALTH_CHECK_URL,
+    interval: 900, // 15分钟检查一次
+  });
 };
 
 // ==================== 主函数 ====================
