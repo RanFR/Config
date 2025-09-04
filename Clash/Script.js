@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.6.0
+ * @version 2.7.0
  * @date 2025-09-04
- * @description 将ChatGPT、Claude等AI节点自动归类到AI组
+ * @description 删除了DNS配置相关代码，保留规则提供器和路由规则的自动配置功能
  **/
 
 // 规则仓库地址
@@ -48,79 +48,6 @@ const FALLBACK_KEYWORDS = ["故障转移", "Fallback", "故障切换"];
 
 // AI组的关键词
 const AI_GROUP_KEYWORDS = ["ChatGPT", "Claude"];
-
-/**
- * 生成DNS配置
- * @returns {Object} DNS配置对象
- */
-function createDnsConfig() {
-  // 默认 DNS
-  let defaultDns = [
-    "223.5.5.5",
-    "223.6.6.6",
-    "2400:3200::1",
-    "2400:3200:baba::1",
-  ];
-
-  // fake ip 过滤
-  let fakeIpFilters = [
-    // 局域网和本地地址
-    "*.lan",
-    "*.local",
-    "*.arpa",
-    // NTP时间同步
-    "time.*.com",
-    "ntp.*.com",
-    "*.ntp.org",
-    // 网络检测
-    "*.msftncsi.com",
-    "www.msftconnecttest.com",
-  ];
-
-  // 默认的域名解析服务器
-  let nameservers = [
-    "https://dns.alidns.com/dns-query",
-    "https://doh.pub/dns-query",
-  ];
-
-  // 后备域名解析服务器
-  let fallbackDns = [
-    "https://cloudflare-dns.com/dns-query",
-    "https://dns.google/dns-query",
-  ];
-
-  // 后备域名解析服务器筛选
-  let fallbackFilter = {
-    geoip: true, // 启用地理位置过滤
-    "geoip-code": "CN", // 仅针对中国地区
-    ipcidr: [
-      "240.0.0.0/4", // 保留地址段
-    ],
-    // 避免可能受到污染的地址解析到国内
-    domain: [
-      "+.google.com",
-      "+.youtube.com",
-      "+.github.com",
-      "+.githubusercontent.com",
-    ],
-  };
-
-  // 最终的DNS配置
-  let config = {
-    enable: true,
-    // ipv6设置参考原有文件，不进行覆写
-    listen: ":1053",
-    "default-nameserver": defaultDns,
-    "enhanced-mode": "fake-ip",
-    "fake-ip-range": "198.18.0.1/16",
-    "fake-ip-filter": fakeIpFilters,
-    nameserver: nameservers,
-    fallback: fallbackDns,
-    "fallback-filter": fallbackFilter,
-  };
-
-  return config;
-}
 
 /**
  * 生成单个规则提供器配置
@@ -464,7 +391,6 @@ function main(config, profileName = "Default") {
 
     // 生成核心配置
     const configurations = {
-      dns: createDnsConfig(),
       "rule-providers": createAllRuleProviders(),
       rules: createRoutingRules(),
       "proxy-groups": processProxyGroupsConfig(config),
