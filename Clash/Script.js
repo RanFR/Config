@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.4.0
+ * @version 2.5.0
  * @date 2025-09-02
- * @description 修改了AI组的创建逻辑，确保其基于选择设置
+ * @description 重构函数，精简了部分表达
  **/
 
 // 规则仓库地址
@@ -37,16 +37,6 @@ const PROXY_RULES = [
   "Yandex",
   "YouTube",
 ];
-
-// 节点地区关键词
-const NODE_REGION_KEYWORDS = {
-  hk: ["香港", "Hong Kong", "hk"],
-  tw: ["台湾", "Taiwan", "tw"],
-  sg: ["新加坡", "Singapore", "sg"],
-  jp: ["日本", "Japan", "jp"],
-  kr: ["韩国", "Korea", "kr"],
-  us: ["美国", "United States", "us"],
-};
 
 // 自动选择组关键词
 const URLTEST_KEYWORDS = ["自动选择", "Auto"];
@@ -154,14 +144,10 @@ function createRuleProvider(name) {
 function createAllRuleProviders() {
   let providers = {};
 
-  // 获取直连规则
-  DIRECT_RULES.forEach((name) => {
-    const provider = createRuleProvider(name);
-    providers[name] = provider;
-  });
+  // 合并直连规则和代理规则
+  const allRules = [...DIRECT_RULES, ...PROXY_RULES];
 
-  // 获取代理规则
-  PROXY_RULES.forEach((name) => {
+  allRules.forEach((name) => {
     const provider = createRuleProvider(name);
     providers[name] = provider;
   });
@@ -209,57 +195,12 @@ function createRoutingRules() {
 }
 
 /**
- * 通用关键词过滤函数
- * @param {Array} items - 待过滤的字符串数组
- * @param {Array} keywords - 关键词数组
- * @returns {Array} 匹配的字符串数组
- */
-function filterByKeywords(items, keywords) {
-  const matchedNames = [];
-  items.forEach((item) => {
-    if (item && typeof item.name === "string") {
-      for (const keyword of keywords) {
-        if (item.name.includes(keyword)) {
-          matchedNames.push(item.name);
-          break;
-        }
-      }
-    }
-  });
-
-  return matchedNames;
-}
-
-/**
- * 按地区类型提取节点
+ * 提取所有节点名称
  * @param {Array} proxies - 节点列表
- * @param {string} regionType - 地区类型 ('PRIMARY'|'ALL')
- * @returns {Array} 匹配的节点组
+ * @returns {Array} 所有节点名称
  */
-function extractRegionProxies(proxies, regionType) {
-  // 如果地区类型为 ALL，返回所有节点
-  if (regionType == "ALL") {
-    return proxies.map((item) => item.name).filter(Boolean);
-  }
-
-  let keywords = [];
-
-  // 如果地区类型为UrlTest，则为自动选择组提取节点
-  if (regionType === "UrlTest") {
-    keywords.push(...URLTEST_KEYWORDS);
-  }
-
-  // 如果地区类型为 PRIMARY ，提取对应的关键词
-  if (regionType === "PRIMARY") {
-    Object.values(NODE_REGION_KEYWORDS).forEach((regionKeywords) => {
-      keywords.push(...regionKeywords);
-    });
-  }
-
-  // 匹配的代理节点组
-  const matchedProxies = filterByKeywords(proxies, keywords);
-
-  return matchedProxies;
+function extractAllProxies(proxies) {
+  return proxies.map((item) => item.name).filter(Boolean);
 }
 
 /**
@@ -269,7 +210,7 @@ function extractRegionProxies(proxies, regionType) {
  */
 const createSelectGroup = (proxies) => {
   // 获取目标节点，默认将所有节点作为手动选择对象
-  let targetGroupProxies = extractRegionProxies(proxies, "ALL");
+  let targetGroupProxies = extractAllProxies(proxies);
 
   // 创建手动选择组
   const selectGroup = {
@@ -333,23 +274,33 @@ const resolveProxyNodes = (
 };
 
 /**
- * 创建延迟选优组
+ * 通用代理组创建函数
  * @param {Object} config - 配置文件对象
- * @returns {Object} 延迟选优组
+ * @param {string} groupName - 代理组名称
+ * @param {string} groupType - 代理组类型
+ * @param {Array} keywords - 匹配关键词
+ * @param {Object} extraOptions - 额外配置选项
+ * @returns {Object} 代理组配置
  */
-const createUrlTestGroup = (config) => {
-  // 检查是否存在包含URLTEST_KEYWORDS字样的代理组
+const createProxyGroup = (
+  config,
+  groupName,
+  groupType,
+  keywords,
+  extraOptions = {}
+) => {
   let targetGroupProxies = [];
   const existingGroups = config["proxy-groups"] || [];
   const allProxies = config["proxies"] || [];
 
+  // 查找匹配的代理组
   const searchedGroup = existingGroups.find((group) => {
     if (!group.name) return false;
-    return URLTEST_KEYWORDS.some((keyword) => group.name.includes(keyword));
+    return keywords.some((keyword) => group.name.includes(keyword));
   });
 
   if (searchedGroup && searchedGroup.proxies) {
-    console.log(`找到UrlTest代理组: ${searchedGroup.name}`);
+    console.log(`找到${groupName}代理组: ${searchedGroup.name}`);
 
     // 解析代理组中的实际节点
     const resolvedNodes = [];
@@ -364,30 +315,43 @@ const createUrlTestGroup = (config) => {
     });
 
     targetGroupProxies = uniqueNodes;
-    console.log(`解析得到 ${targetGroupProxies.length} 个实际节点`);
+    console.log(
+      `${groupName}组解析得到 ${targetGroupProxies.length} 个实际节点`
+    );
   } else {
-    console.log("未找到UrlTest代理组，使用所有节点");
-    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
+    console.log(`未找到${groupName}代理组，使用所有节点`);
+    targetGroupProxies = extractAllProxies(config["proxies"]);
   }
 
   // 如果没有找到任何节点，使用所有节点作为后备
   if (targetGroupProxies.length === 0) {
-    console.warn("未找到任何可用节点，使用所有节点作为后备");
-    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
+    console.warn(`${groupName}组未找到任何可用节点，使用所有节点作为后备`);
+    targetGroupProxies = extractAllProxies(config["proxies"]);
   }
 
-  // 创建延迟选优组
-  const urlTestGroup = {
-    name: "UrlTest",
-    type: "url-test",
+  // 创建代理组基础配置
+  const proxyGroup = {
+    name: groupName,
+    type: groupType,
     proxies: targetGroupProxies,
+    ...extraOptions,
+  };
+
+  return proxyGroup;
+};
+
+/**
+ * 创建延迟选优组
+ * @param {Object} config - 配置文件对象
+ * @returns {Object} 延迟选优组
+ */
+const createUrlTestGroup = (config) => {
+  return createProxyGroup(config, "UrlTest", "url-test", URLTEST_KEYWORDS, {
     url: HEALTH_CHECK_URL,
     interval: 900, // 检查时间间隔
     tolerance: 150, // 偏差小于tolerance的节点不主动切换
     lazy: true, // 没有选中时不主动检测延迟
-  };
-
-  return urlTestGroup;
+  });
 };
 
 /**
@@ -396,55 +360,11 @@ const createUrlTestGroup = (config) => {
  * @returns {Object} 故障转移组
  */
 const createFallbackGroup = (config) => {
-  // 检查是否存在包含FALLBACK_KEYWORDS字样的代理组
-  let targetGroupProxies = [];
-  const existingGroups = config["proxy-groups"] || [];
-  const allProxies = config["proxies"] || [];
-
-  const searchedGroup = existingGroups.find((group) => {
-    if (!group.name) return false;
-    return FALLBACK_KEYWORDS.some((keyword) => group.name.includes(keyword));
-  });
-
-  if (searchedGroup && searchedGroup.proxies) {
-    console.log(`找到Fallback代理组: ${searchedGroup.name}`);
-
-    // 解析代理组中的实际节点
-    const resolvedNodes = [];
-    searchedGroup.proxies.forEach((proxyName) => {
-      const nodes = resolveProxyNodes(proxyName, allProxies, existingGroups);
-      resolvedNodes.push(...nodes);
-    });
-
-    // 去重并过滤掉内置代理
-    const uniqueNodes = [...new Set(resolvedNodes)].filter((nodeName) => {
-      return !["DIRECT", "REJECT", "PASS"].includes(nodeName);
-    });
-
-    targetGroupProxies = uniqueNodes;
-    console.log(`解析得到 ${targetGroupProxies.length} 个实际节点`);
-  } else {
-    console.log("未找到Fallback代理组，使用所有节点");
-    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
-  }
-
-  // 如果没有找到任何节点，使用所有节点作为后备
-  if (targetGroupProxies.length === 0) {
-    console.warn("未找到任何可用节点，使用所有节点作为后备");
-    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
-  }
-
-  // 创建故障转移组
-  const fallbackGroup = {
-    name: "Fallback",
-    type: "fallback",
-    proxies: targetGroupProxies,
+  return createProxyGroup(config, "Fallback", "fallback", FALLBACK_KEYWORDS, {
     url: HEALTH_CHECK_URL,
     interval: 300, // 每5分钟检查1次
     lazy: true, // 没有选中时不主动检测延迟
-  };
-
-  return fallbackGroup;
+  });
 };
 
 /**
@@ -453,52 +373,7 @@ const createFallbackGroup = (config) => {
  * @returns {Object} AI组
  */
 const createAIGroup = (config) => {
-  // 检查是否存在包含AI_GROUP_KEYWORDS字样的代理组
-  let targetGroupProxies = [];
-  const existingGroups = config["proxy-groups"] || [];
-  const allProxies = config["proxies"] || [];
-
-  const searchedGroup = existingGroups.find((group) => {
-    if (!group.name) return false;
-    return AI_GROUP_KEYWORDS.some((keyword) => group.name.includes(keyword));
-  });
-
-  if (searchedGroup && searchedGroup.proxies) {
-    console.log(`找到AI代理组: ${searchedGroup.name}`);
-
-    // 解析代理组中的实际节点
-    const resolvedNodes = [];
-    searchedGroup.proxies.forEach((proxyName) => {
-      const nodes = resolveProxyNodes(proxyName, allProxies, existingGroups);
-      resolvedNodes.push(...nodes);
-    });
-
-    // 去重并过滤掉内置代理
-    const uniqueNodes = [...new Set(resolvedNodes)].filter((nodeName) => {
-      return !["DIRECT", "REJECT", "PASS"].includes(nodeName);
-    });
-
-    targetGroupProxies = uniqueNodes;
-    console.log(`AI组解析得到 ${targetGroupProxies.length} 个实际节点`);
-  } else {
-    console.log("未找到AI代理组，使用所有节点");
-    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
-  }
-
-  // 如果没有找到任何节点，使用所有节点作为后备
-  if (targetGroupProxies.length === 0) {
-    console.warn("AI组未找到任何可用节点，使用所有节点作为后备");
-    targetGroupProxies = extractRegionProxies(config["proxies"], "ALL");
-  }
-
-  // 创建AI组，基于选择设置
-  const aiGroup = {
-    name: "AI",
-    type: "select",
-    proxies: targetGroupProxies,
-  };
-
-  return aiGroup;
+  return createProxyGroup(config, "AI", "select", AI_GROUP_KEYWORDS);
 };
 
 // ==================== 主函数 ====================
