@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.5.1
- * @date 2025-09-02
- * @description 修改AI组为fallback模式，在尽可能降低IP风险的同时，保证使用体验
+ * @version 2.6.0
+ * @date 2025-09-04
+ * @description 将ChatGPT、Claude等AI节点自动归类到AI组
  **/
 
 // 规则仓库地址
@@ -16,9 +16,11 @@ const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
 // 直连规则
 const DIRECT_RULES = ["Bing", "China"];
 
+// AI组专用规则
+const AI_RULES = ["AI"];
+
 // 代理规则
 const PROXY_RULES = [
-  "AI",
   "Cloudflare",
   "DevSites",
   "Docker",
@@ -77,13 +79,13 @@ function createDnsConfig() {
 
   // 默认的域名解析服务器
   let nameservers = [
-    "https://doh.pub/dns-query",
     "https://dns.alidns.com/dns-query",
+    "https://doh.pub/dns-query",
   ];
 
   // 后备域名解析服务器
   let fallbackDns = [
-    "https://dns.cloudflare.com/dns-query",
+    "https://cloudflare-dns.com/dns-query",
     "https://dns.google/dns-query",
   ];
 
@@ -144,8 +146,8 @@ function createRuleProvider(name) {
 function createAllRuleProviders() {
   let providers = {};
 
-  // 合并直连规则和代理规则
-  const allRules = [...DIRECT_RULES, ...PROXY_RULES];
+  // 合并直连规则、AI规则和代理规则
+  const allRules = [...DIRECT_RULES, ...AI_RULES, ...PROXY_RULES];
 
   allRules.forEach((name) => {
     const provider = createRuleProvider(name);
@@ -169,14 +171,17 @@ function createRoutingRules() {
     rules.push(ruleStr);
   });
 
+  // 添加AI规则
+  console.log(`添加 ${AI_RULES.length} 个AI规则`);
+  AI_RULES.forEach((name) => {
+    const ruleStr = `RULE-SET,${name},AI`;
+    rules.push(ruleStr);
+  });
+
   // 添加代理规则
   console.log(`添加 ${PROXY_RULES.length} 个代理规则`);
   PROXY_RULES.forEach((name) => {
-    let ruleStr = `RULE-SET,${name},Default`;
-    // 为AI类单独建立一个代理组
-    if (name === "AI") {
-      ruleStr = `RULE-SET,${name},AI`;
-    }
+    const ruleStr = `RULE-SET,${name},Default`;
     rules.push(ruleStr);
   });
 
