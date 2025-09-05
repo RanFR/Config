@@ -72,8 +72,10 @@ if [ -f ~/.bash_private ]; then
 fi
 
 # Proxy
-export HTTP_PROXY=http://example.com:port
-export HTTPS_PROXY=http://example.com:port
+export http_proxy="http://example.com:port"
+export https_proxy="http://example.com:port"
+export HTTP_PROXY=$http_proxy
+export HTTPS_PROXY=$https_proxy
 
 # Ros environment setup
 source /opt/ros/noetic/setup.bash
@@ -108,14 +110,6 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-# Nvidia Isaac
-export ISAACSIM_PATH="$HOME/Softwares/IsaacSim"
-
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 # CUDA
 if [[ ":$PATH:" != *":/usr/local/cuda/bin:"* ]]; then
   export PATH=${PATH}:/usr/local/cuda/bin
@@ -123,3 +117,11 @@ fi
 if [[ ":$LD_LIBRARY_PATH:" != *":/usr/local/cuda/lib:"* ]]; then
   export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/local/cuda/lib"
 fi
+
+# Nvidia Isaac
+export ISAACSIM_PATH="$HOME/Softwares/IsaacSim"
+
+# NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
