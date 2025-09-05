@@ -14,7 +14,7 @@
   "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
   // Wrodwrap
   "editor.wordWrap": "bounded",
-  "editor.wordWrapColumn": 120, // 120 characters
+  "editor.wordWrapColumn": 80, // 120 characters
 
   /* Explorer */
   "explorer.confirmDelete": false,
@@ -60,17 +60,6 @@
 
   /* Github Copilot */
   "github.copilot.nextEditSuggestions.enabled": true,
-  "github.copilot.chat.commitMessageGeneration.instructions": [
-    { "text": "Analyze staged code changes only. " },
-    { "text": "Use imperative mood (e.g., fix, add, update)" },
-    { "text": "Follow Conventional Commits: type: summary" },
-    { "text": "No punctuation at the end of subject" },
-    { "text": "Include body if explanation is helpful" },
-    { "text": "Skip body if change is trivial" },
-    { "text": "List breaking changes explicitly if any" },
-    { "text": "Use English only" }
-  ],
-  "github.copilot.chat.agent.thinkingTool": true,
 
   /* Integrated terminal */
   "terminal.integrated.fontFamily": "Maple Mono NF CN",
@@ -124,7 +113,7 @@
 
   /* Markdown */
   "markdown.preview.fontFamily": "Noto Sans SC",
-  "markdown.preview.fontSize": 16,
+  "markdown.preview.fontSize": 14,
 
   /* Python */
   "python.analysis.autoImportCompletions": true,
@@ -132,12 +121,6 @@
 
   /* Remote */
   "remote.autoForwardPortsSource": "hybrid",
-  "remote.SSH.remotePlatform": {
-    "Nuc3": "linux",
-    "YuGrp": "linux",
-    "ThinkStation": "linux",
-    "Server": "linux"
-  },
 
   /* Search settings */
   "search.exclude": {
