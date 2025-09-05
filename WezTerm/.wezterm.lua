@@ -20,11 +20,7 @@ config.enable_scroll_bar = true
 config.front_end = "WebGpu"
 
 -- Fonts
-config.font = wezterm.font_with_fallback({
-	"Maple Mono NF CN",
-	"Cascadia Mono NF",
-	"Noto Sans SC"
-})
+config.font = wezterm.font("Maple Mono NF CN")
 config.font_size = 16
 
 -- If only one tab is open, disable the tab bar
