@@ -1,0 +1,3 @@
+keybinding:
+  universal:
+    confirmInEditor: <c-s> # Remap <ctrl-s> to confirm a commit
