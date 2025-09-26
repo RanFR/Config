@@ -2,10 +2,11 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.7.1
- * @date 2025-09-04
+ * @version 2.7.2
+ * @date 2025-09-26
  * @description 删除了DNS配置相关代码，保留规则提供器和路由规则的自动配置功能
  * @description 将ChatGPT、Claude等AI节点自动归类到AI组
+ * @description 修改了部分关键词，方便匹配
  **/
 
 // 规则仓库地址
@@ -42,10 +43,10 @@ const PROXY_RULES = [
 ];
 
 // 自动选择组关键词
-const URLTEST_KEYWORDS = ["自动选择", "Auto"];
+const URLTEST_KEYWORDS = ["自动", "Auto"];
 
 // 故障转移组关键词
-const FALLBACK_KEYWORDS = ["故障转移", "Fallback", "故障切换"];
+const FALLBACK_KEYWORDS = ["故障", "Fallback"];
 
 // AI组的关键词
 const AI_GROUP_KEYWORDS = ["ChatGPT", "Claude"];
