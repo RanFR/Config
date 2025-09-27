@@ -2,11 +2,12 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.7.2
+ * @version 2.7.3
  * @date 2025-09-26
  * @description 删除了DNS配置相关代码，保留规则提供器和路由规则的自动配置功能
  * @description 将ChatGPT、Claude等AI节点自动归类到AI组
  * @description 修改了部分关键词，方便匹配
+ * @description 新增了Steam和SteamCN规则配置
  **/
 
 // 规则仓库地址
@@ -16,7 +17,7 @@ const RULE_URL = "";
 const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
 
 // 直连规则
-const DIRECT_RULES = ["Bing", "China"];
+const DIRECT_RULES = ["Bing", "China", "SteamCN"];
 
 // AI组专用规则
 const AI_RULES = ["Claude", "Gemini", "OpenAI"];
@@ -36,6 +37,7 @@ const PROXY_RULES = [
   "Overleaf",
   "Scholar",
   "SourceForge",
+  "Steam",
   "Telegram",
   "Wikipedia",
   "Yandex",
