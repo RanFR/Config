@@ -71,11 +71,32 @@ if [ -f ~/.bash_private ]; then
   . ~/.bash_private
 fi
 
-# Proxy
-export http_proxy="http://example.com:port"
-export https_proxy="http://example.com:port"
-export HTTP_PROXY=$http_proxy
-export HTTPS_PROXY=$https_proxy
+# Proxy — set sensible defaults only when not already configured
+# Replace the example URL with your proxy (do NOT commit credentials).
+: "${HTTP_PROXY:=http://proxy.example.com:port}"
+: "${HTTPS_PROXY:=${HTTP_PROXY}}"
+# If you use a SOCKS proxy, set ALL_PROXY (example left empty by default).
+: "${ALL_PROXY:=}"
+# NO_PROXY: some clients support CIDR (e.g. 192.168.0.0/16), but many
+# tools only accept hostnames or suffixes (e.g. .local). Adjust as needed.
+: "${NO_PROXY:=localhost,127.0.0.1,::1,.local}"
+
+# Export both uppercase and lowercase variants for maximum compatibility
+export HTTP_PROXY
+export HTTPS_PROXY
+export http_proxy="$HTTP_PROXY"
+export https_proxy="$HTTPS_PROXY"
+export ALL_PROXY
+export all_proxy="$ALL_PROXY"
+export NO_PROXY
+export no_proxy="$NO_PROXY"
+
+# Node
+export NODE_USE_ENV_PROXY="1"
+
+# Note: .bashrc only affects interactive shells. For system services,
+# consider /etc/environment or systemd drop-ins so non-interactive services
+# also see the proxy variables.
 
 # Ros environment setup
 source /opt/ros/noetic/setup.bash
