@@ -2,12 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.7.3
- * @date 2025-09-26
- * @description 删除了DNS配置相关代码，保留规则提供器和路由规则的自动配置功能
- * @description 将ChatGPT、Claude等AI节点自动归类到AI组
- * @description 修改了部分关键词，方便匹配
- * @description 新增了Steam和SteamCN规则配置
+ * @version 2.8.0
+ * @date 2025-10-11
+ * @description 优化了自动回退组和AI组的节点选择逻辑，优先选取香港和台湾节点
  **/
 
 // 规则仓库地址
@@ -137,6 +134,46 @@ function createRoutingRules() {
  */
 function extractAllProxies(proxies) {
   return proxies.map((item) => item.name).filter(Boolean);
+}
+
+/**
+ * 将香港/台湾节点优先置前，保持各分组内的原始相对顺序
+ * @param {Array<string>} names - 节点名称列表
+ * @returns {Array<string>} 重新排序后的节点名称
+ */
+function prioritizeHKAndTW(names) {
+  const HK_PATTERNS = [
+    /香港/,
+    /hong\s*kong/i,
+    /\bHK\b/i,
+    /\bHKG\b/i,
+    /\[(\s*)HK(\s*)\]/i,
+    /\((\s*)HK(\s*)\)/i,
+  ];
+
+  const TW_PATTERNS = [
+    /台湾|台灣/,
+    /tai\s*wan/i,
+    /\bTW\b/i,
+    /\bTWN\b/i,
+    /\bTPE\b/i,
+    /taipei/i,
+  ];
+
+  const isMatch = (s, patterns) => patterns.some((re) => re.test(s));
+
+  const hk = [];
+  const tw = [];
+  const others = [];
+
+  names.forEach((n) => {
+    const name = String(n);
+    if (isMatch(name, HK_PATTERNS)) hk.push(n);
+    else if (isMatch(name, TW_PATTERNS)) tw.push(n);
+    else others.push(n);
+  });
+
+  return [...hk, ...tw, ...others];
 }
 
 /**
@@ -296,11 +333,21 @@ const createUrlTestGroup = (config) => {
  * @returns {Object} 故障转移组
  */
 const createFallbackGroup = (config) => {
-  return createProxyGroup(config, "Fallback", "fallback", FALLBACK_KEYWORDS, {
-    url: HEALTH_CHECK_URL,
-    interval: 450, // 每7.5分钟检查1次
-    lazy: true, // 没有选中时不主动检测延迟
-  });
+  const group = createProxyGroup(
+    config,
+    "Fallback",
+    "fallback",
+    FALLBACK_KEYWORDS,
+    {
+      url: HEALTH_CHECK_URL,
+      interval: 450, // 每7.5分钟检查1次
+      lazy: true, // 没有选中时不主动检测延迟
+    }
+  );
+  if (Array.isArray(group.proxies)) {
+    group.proxies = prioritizeHKAndTW(group.proxies);
+  }
+  return group;
 };
 
 /**
@@ -309,10 +356,14 @@ const createFallbackGroup = (config) => {
  * @returns {Object} AI组
  */
 const createAIGroup = (config) => {
-  return createProxyGroup(config, "AI", "fallback", AI_GROUP_KEYWORDS, {
+  const group = createProxyGroup(config, "AI", "fallback", AI_GROUP_KEYWORDS, {
     url: HEALTH_CHECK_URL,
     interval: 900, // 15分钟检查一次
   });
+  if (Array.isArray(group.proxies)) {
+    group.proxies = prioritizeHKAndTW(group.proxies);
+  }
+  return group;
 };
 
 // ==================== 主函数 ====================
