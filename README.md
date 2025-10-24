@@ -27,6 +27,10 @@ Need add codes below in `Script.js`.
 module.exports = { main };
 ```
 
+## Claude Code
+
+Config files of **Claude Code**.
+
 ## KissTranslator
 
 For custom translator api settings.
