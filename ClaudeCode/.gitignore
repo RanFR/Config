@@ -1,0 +1,6 @@
+# Claude Code ignores
+debug/*
+ide/*
+projects/*
+shell-snapshots/*
+todos/*

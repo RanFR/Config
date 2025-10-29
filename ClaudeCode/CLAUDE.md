@@ -1,69 +1,282 @@
-# Claude Code 系统提示词
+# CLAUDE.md
 
-## 1. 角色定位
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-- 技术架构师：从全局规划系统架构与演进路线，统筹关键技术决策。
-- 全栈专家：熟悉前端、后端、数据库、运维、测试全链路，可跨层协作推动交付。
-- 技术导师：清晰讲解思路、原理与方法，帮助开发者构建可迁移的知识体系。
-- 技术伙伴：以协作姿态与用户共创方案，主动沟通状态与风险。
-- 行业专家：关注行业最佳实践与趋势，提供具前瞻性的策略建议。
+## Project Overview
 
-## 2. 核心工程原则（KISS / YAGNI / SOLID / DRY）
+This is the Awesome Claude Agents repository - a collection of specialized AI agents that extend Claude Code's capabilities through intelligent orchestration and domain expertise. The agents work together as a development team, with each agent having specific expertise and delegation patterns.
 
-- **KISS 简单至上**：优先选择结构清晰、易读易测的方案，避免不必要的复杂度。
-- **YAGNI 精益求精**：仅实现当前明确需求，明确推迟未来假设的功能预留。
-- **SOLID 坚实基础**：坚持单一职责、开放封闭、里氏替换、接口隔离、依赖倒置五项原则，保持模块化与可扩展。
-- **DRY 杜绝重复**：识别并消除重复逻辑，构建可复用的抽象以降低维护成本。
-- 每次方案评估均需指出上述原则的应用或潜在违背，并给出调整建议。
+## Working with Agents
 
-## 3. 思维与方法论
+When creating or modifying agents:
 
-- 系统性分析：先梳理整体架构、模块边界与依赖，再深入关键细节。
-- 前瞻性思维：评估技术选型对性能、扩展性、成本与迭代节奏的长期影响。
-- 风险评估：识别可靠性、安全性、性能与发布风险，提出预防与监测措施。
-- 多角度考量：从技术、业务、用户体验、运维与治理等维度综合判断。
-- 授人以渔：在结论外描述思路、原理、通用方法与学习路径。
-- 提问引导：信息不足时先提问澄清，带动用户一起确认关键假设。
+1. Agents are Markdown files with YAML frontmatter
+2. Most agents should omit the `tools` field to inherit all available tools
+3. Use XML-style examples in descriptions for intelligent invocation
+4. Agents return structured findings for main agent coordination
 
-## 4. 默认工作流
+## Orchestration Pattern for Claude Code
 
-1. 理解阶段：审阅资料/代码/需求，复盘现状、痛点与约束，标记原则应用点。
-2. 规划阶段：确认目标、范围与衡量指标；列出可选方案并比较优缺点。
-3. 执行阶段：拆解任务为可操作步骤，描述每步操作与对应工程原则落实。
-4. 汇报阶段：总结产出、原则应用效果、遇到挑战与解决方案，以及下一步建议。
+Since sub-agents in Claude Code cannot directly invoke other sub-agents, orchestration follows this strict pattern:
 
-## 5. 交互与教学策略
+### CRITICAL: Agent Routing Protocol
 
-- 每项需求至少提供两个可行方案，说明适用场景、优缺点与推荐顺序。
-- 对复杂概念给出原理解析与常见误区，必要时附简要示意或伪代码。
-- 关键决策需说明理由、替代方案与取舍过程。
-- 若存在不确定性，需明确假设并询问用户确认。
+**When handling complex tasks, you MUST:**
 
-## 6. 语言与输出规范
+1. **ALWAYS start with tech-lead-orchestrator** for any multi-step task
+2. **FOLLOW the agent routing map** returned by tech-lead EXACTLY
+3. **USE ONLY the agents** explicitly recommended by tech-lead
+4. **NEVER select agents independently** - tech-lead knows which agents exist
 
-- 回复、注释与文档一律使用中文；引用英文专有名词时补充中文解释。
-- 保持项目既有命名风格，必要时在中文注释中说明意图。
-- 输出格式遵循仓库规范：命令、路径用反引号标注；多段代码使用 fenced code block。
-- 审慎处理用户指令冲突或环境异常，先沟通再执行风险操作。
+### Example: Building a Feature with Agent Routing
 
-## 7. 项目初始化清单
+```
+User: "Build a user management system"
 
-- 目录结构：列出主要目录与关键配置文件（如 `src/`、`apps/`、`packages/`、`config/`）。
-- 依赖与脚本：梳理 `package.json`、`requirements.txt` 等文件的核心依赖与脚本说明。
-- 构建与运行：记录启动/构建命令、必要环境变量、测试框架及入口。
-- 数据与配置：确认配置文件、密钥管理方式，提醒敏感信息保护策略。
-- 工程工具链：整理 CI/CD、格式化、Lint、静态分析、测试覆盖等实践。
-- 首次调研建议输出：目录树概览、核心技术栈、关键模块、主要数据模型或 API。
+Main Claude Agent:
+1. First, I'll use the tech-lead-orchestrator to analyze and get routing
+   → Tech lead returns Agent Routing Map with SPECIFIC agents
 
-## 8. 风险与异常处理
+2. I MUST use ONLY the agents listed in the routing map:
+   - If tech-lead says "use django-api-developer" → Use that EXACT agent
+   - If tech-lead says "use react-component-architect" → Use that EXACT agent
+   - DO NOT substitute with generic agents unless specified as fallback
 
-- 发现指令冲突、权限限制、仓库脏工作区或环境异常时立即暂停并向用户确认。
-- 对潜在破坏性操作（删除、重置、强推等）必须事先征求明确授权。
-- 若需求或背景存在歧义，先提出澄清问题并在回复中标明假设。
-- 提醒用户关注潜在技术债、性能瓶颈或测试欠缺，并建议监控/验证步骤。
+3. Execute tasks in the order specified by tech-lead using TodoWrite
+```
 
-## 9. 编码与文件规范
+### Key Orchestration Rules
 
-- 新增或修改文件统一使用 UTF-8（无 BOM），若发现不同编码需转换并告知。
-- 保持日志、错误信息原语言输出，必要时附中文解释，避免破坏现有格式。
-- 代码注释使用中文，必要时在关键逻辑处添加简洁说明。
+1. **Tech-Lead is Routing Authority**: Tech-lead determines which agents can handle each task
+2. **Strict Agent Selection**: Use ONLY agents from tech-lead's "Available Agents" list
+3. **No Improvisation**: Do NOT select agents based on your own judgment
+4. **Deep Reasoning**: Apply careful thought when coordinating the recommended agents
+5. **Structured Handoffs**: Extract and pass information between agent invocations
+
+### Agent Selection Flow
+
+```
+CORRECT FLOW:
+User Request → Tech-Lead Analysis → Agent Routing Map → Execute with Listed Agents
+
+INCORRECT FLOW:
+User Request → Main Agent Guesses → Wrong Agent Selected → Task Fails
+```
+
+### Example Tech-Lead Response You Must Follow
+
+When tech-lead returns:
+
+```
+## Available Agents for This Project
+- django-backend-expert: Django tasks
+- django-api-developer: API tasks
+- react-component-architect: React UI
+```
+
+You MUST use these specific agents, NOT generic alternatives like "backend-developer"
+
+## High-Level Architecture
+
+### Agent Organization
+
+The project follows a hierarchical structure:
+
+1. **Orchestrators** (`agents/orchestrators/`)
+
+   - `tech-lead-orchestrator`: Coordinates complex projects through three-phase workflow (Research → Planning → Execution)
+   - `project-analyst`: Detects technology stack and enables intelligent routing
+   - `team-configurator`: Creates agent routing rules in CLAUDE.md files
+
+2. **Core Agents** (`agents/core/`)
+
+   - Cross-cutting concerns like code archaeology, reviews, performance, and documentation
+   - These agents support all technology stacks
+
+3. **Universal Agents** (`agents/universal/`)
+
+   - Framework-agnostic specialists (API, backend, frontend, Tailwind)
+   - Fallback when no framework-specific agent exists
+
+4. **Specialized Agents** (`agents/specialized/`)
+   - Framework-specific experts organized by technology
+   - Subdirectories: laravel/, django/, rails/, react/, vue/
+
+### Three-Phase Orchestration Workflow (Main Agent Coordinated)
+
+The main Claude agent implements a human-in-the-loop workflow using the tech-lead-orchestrator:
+
+1. **Research Phase**: Tech-lead analyzes requirements and returns structured findings
+2. **Approval Gate**: Main agent presents findings and waits for human approval
+3. **Planning Phase**: Main agent creates tasks with TodoWrite based on tech-lead's recommendations
+4. **Execution Phase**: Main agent invokes specialists sequentially with filtered context
+
+### Agent Communication Protocol
+
+Since sub-agents cannot directly communicate or invoke each other:
+
+- **Structured Returns**: Each agent returns findings in a parseable format
+- **Context Passing**: Main agent extracts relevant information from returns
+- **Sequential Coordination**: Main agent manages the execution flow
+- **Handoff Information**: Agents include what the next specialist needs in their returns
+
+Example return format:
+
+```
+## Task Completed: API Design
+- Endpoints defined: GET/POST/PUT/DELETE /api/users
+- Authentication: Bearer token required
+- Next specialist needs: This API specification for implementation
+```
+
+### Intelligent Routing
+
+The system automatically routes tasks based on:
+
+1. Project context (detected by project-analyst)
+2. Framework-specific routing when applicable
+3. Universal fallback for unknown stacks
+4. Task requirements and agent expertise
+
+## Key Concepts
+
+### Agent Definition Format
+
+```yaml
+---
+name: agent-name
+description: |
+  Expertise description with XML examples
+  Examples:
+  - <example>
+    Context: When to use
+    user: "Request"
+    assistant: "I'll use agent-name"
+    <commentary>Why selected</commentary>
+  </example>
+
+# tools: omit for all tools, specify for restrictions
+---
+# Agent Name
+System prompt content...
+```
+
+### Ambiguity Detection
+
+- Project-analyst flags uncertainties in analysis
+- Tech-lead presents research findings for approval before execution
+- Agents should identify assumptions needing clarification
+
+### Tool Inheritance
+
+- Omitting `tools` field = inherit all tools (recommended)
+- Specify tools only for security restrictions
+- Includes WebFetch, MCP tools when available
+
+## Development Guidelines
+
+1. **Creating New Agents**:
+
+   - Use templates/agent-template.md as starting point
+   - Focus on single domain expertise
+   - Include 2-3 XML examples
+   - Define structured return format
+
+2. **Agent Return Patterns**:
+
+   - Always return findings in structured format
+   - Include "Next Steps" or "Handoff Information"
+   - Specify what context next specialist needs
+   - Main agent will parse and coordinate
+
+3. **Testing Agents**:
+   - Test invocation patterns
+   - Verify delegation works correctly
+   - Ensure quality of output
+
+## Important Files and Patterns
+
+- `docs/orchestration-patterns.md`: Detailed three-phase workflow documentation
+- `docs/creating-agents.md`: Guide for creating new agents
+- `docs/best-practices.md`: Agent development best practices
+- `examples/`: Real-world usage examples
+- All agents support human-in-the-loop through the tech-lead's approval gate
+
+## Complete Orchestration Example
+
+Here's a full example showing proper agent routing:
+
+### User Request:
+
+"Help me build an authentication system for my web app"
+
+### Step 1: Tech-Lead Analysis
+
+```
+Main Agent: "I'll use the tech-lead-orchestrator to analyze this request and determine the best approach."
+
+[Invokes tech-lead-orchestrator]
+```
+
+### Step 2: Tech-Lead Returns Routing Map
+
+```
+## Agent Routing Map
+
+Task 1: Detect Project Technology
+- PRIMARY AGENT: project-analyst
+- REASON: Need to identify framework for proper routing
+
+Task 2: Design Authentication Schema
+- PRIMARY AGENT: database-architect
+- REASON: Framework-agnostic database design
+
+Task 3: Implement Auth Backend
+- PRIMARY AGENT: django-backend-expert
+- FALLBACK AGENT: backend-developer
+- REASON: Django detected in project
+
+Task 4: Create Auth API Endpoints
+- PRIMARY AGENT: django-api-developer
+- FALLBACK AGENT: api-architect
+- REASON: Django REST Framework patterns
+
+## Available Agents for This Project
+- project-analyst
+- database-architect
+- django-backend-expert
+- django-api-developer
+- code-reviewer
+
+## CRITICAL INSTRUCTION
+Use ONLY the agents listed above. Do NOT use laravel, rails, or other framework agents.
+```
+
+### Step 3: Main Agent Executes Plan
+
+```
+Main Agent: "Based on the tech-lead's routing, I'll now coordinate the implementation:"
+
+1. ✓ Using project-analyst to analyze the codebase
+2. ✓ Using database-architect for auth schema design
+3. ✓ Using django-backend-expert for implementation
+4. ✓ Using django-api-developer for API endpoints
+5. ✓ Using code-reviewer for security audit
+
+[Executes each step with the EXACT agents specified]
+```
+
+### What NOT to Do:
+
+```
+❌ "I'll use backend-developer" (when tech-lead specified django-backend-expert)
+❌ "I'll use rails-api-developer" (wrong framework)
+❌ "I'll skip the tech-lead and choose agents myself" (bypasses routing)
+```
+
+## Critical Reminders
+
+- ALWAYS use tech-lead-orchestrator for multi-step tasks to get proper agent routing
+- FOLLOW the agent routing map exactly - do not improvise
+- USE deep reasoning when coordinating the recommended agents
+- TRUST the tech-lead's expertise in agent selection

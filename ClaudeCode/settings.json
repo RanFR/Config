@@ -29,7 +29,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "notify-send 'Claude Code' 'Await your input...'"
+            "command": "notify-send 'Claude Code' 'Waiting for user input...'"
           }
         ]
       }
