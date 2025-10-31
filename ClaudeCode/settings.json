@@ -1,4 +1,5 @@
 {
+  "includeCoAuthoredBy": false,
   "env": {
     "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
     "ANTHROPIC_AUTH_TOKEN": "your_zhipu_api",
