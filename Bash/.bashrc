@@ -1,7 +1,7 @@
 # If not running interactively, don't do anything
 case $- in
-  *i*) ;;
-    *) return;;
+*i*) ;;
+*) return ;;
 esac
 
 # History settings
@@ -33,7 +33,7 @@ fi
 
 # Set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-  xterm-color|*-256color) color_prompt=yes;;
+xterm-color | *-256color) color_prompt=yes ;;
 esac
 
 if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -54,49 +54,32 @@ unset color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
-xterm*|rxvt*)
+xterm* | rxvt*)
   PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
   ;;
-*)
-  ;;
+*) ;;
 esac
 
 # Alias definitions.
 if [ -f ~/.bash_aliases ]; then
-  . ~/.bash_aliases
+  source ~/.bash_aliases
 fi
 
-# Private bash configuration, such as API_KEY
+# Private bash configuration
 if [ -f ~/.bash_private ]; then
-  . ~/.bash_private
+  source ~/.bash_private
 fi
 
-# Proxy — set sensible defaults only when not already configured
-# Replace the example URL with your proxy (do NOT commit credentials).
-: "${HTTP_PROXY:=http://proxy.example.com:port}"
-: "${HTTPS_PROXY:=${HTTP_PROXY}}"
-# If you use a SOCKS proxy, set ALL_PROXY (example left empty by default).
-: "${ALL_PROXY:=}"
-# NO_PROXY: some clients support CIDR (e.g. 192.168.0.0/16), but many
-# tools only accept hostnames or suffixes (e.g. .local). Adjust as needed.
-: "${NO_PROXY:=localhost,127.0.0.1,::1,.local}"
-
-# Export both uppercase and lowercase variants for maximum compatibility
-export HTTP_PROXY
-export HTTPS_PROXY
-export http_proxy="$HTTP_PROXY"
-export https_proxy="$HTTPS_PROXY"
-export ALL_PROXY
-export all_proxy="$ALL_PROXY"
-export NO_PROXY
-export no_proxy="$NO_PROXY"
-
-# Node
-export NODE_USE_ENV_PROXY="1"
-
-# Note: .bashrc only affects interactive shells. For system services,
-# consider /etc/environment or systemd drop-ins so non-interactive services
-# also see the proxy variables.
+# Proxy
+PROXY_CFG="example.com:port"
+NO_PROXY_CFG="localhost,127.0.0.1,::1"
+export HTTP_PROXY=${PROXY_CFG}
+export HTTPS_PROXY=${PROXY_CFG}
+export http_proxy=${PROXY_CFG}
+export https_proxy=${PROXY_CFG}
+export NO_PROXY=${NO_PROXY_CFG}
+export no_proxy=${NO_PROXY_CFG}
+unset PROXY_CFG NO_PROXY_CFG
 
 # Ros environment setup
 source /opt/ros/noetic/setup.bash
@@ -109,27 +92,18 @@ if [[ ":$LD_LIBRARY_PATH:" != *":$HOME/.local/lib:"* ]]; then
 fi
 export ACADOS_SOURCE_DIR="$HOME/.local"
 
-# Claude Code
-export ANTHROPIC_BASE_URL="https://open.bigmodel.cn/api/anthropic"
-export ANTHROPIC_AUTH_TOKEN="${BIGMODEL_API_KEY:-}"
-export ANTHROPIC_MODEL="glm-4.5"
-export ANTHROPIC_SMALL_FAST_MODEL="glm-4.5-air"
-export API_TIMEOUT_MS=600000
+# Astral uv
+if command -v uv >/dev/null 2>&1; then
+  eval "$(uv generate-shell-completion bash)"
+fiuser
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('$HOME/Softwares/Miniconda3/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
-if [ $? -eq 0 ]; then
-  eval "$__conda_setup"
-else
-  if [ -f "$HOME/Softwares/Miniconda3/etc/profile.d/conda.sh" ]; then
-    . "$HOME/Softwares/Miniconda3/etc/profile.d/conda.sh"
-  else
-    export PATH="$HOME/Softwares/Miniconda3/bin:$PATH"
-  fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+# Nvidia Isaac
+export ISAACSIM_PATH="$HOME/Softwares/IsaacSim"
+
+# NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 # CUDA
 if [[ ":$PATH:" != *":/usr/local/cuda/bin:"* ]]; then
@@ -139,10 +113,8 @@ if [[ ":$LD_LIBRARY_PATH:" != *":/usr/local/cuda/lib:"* ]]; then
   export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/local/cuda/lib"
 fi
 
-# Nvidia Isaac
-export ISAACSIM_PATH="$HOME/Softwares/IsaacSim"
+# Rust
+source "$HOME/.cargo/env"
 
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Flightmare
+export FLIGHTMARE_PATH=$HOME/Projects/Simulator/Flightmare
