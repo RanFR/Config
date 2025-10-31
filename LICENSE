@@ -23,3 +23,4 @@ SOFTWARE.
 Includes portions of code from the following open-source projects:
 
 - [awsome-claude-agents](https://github.com/vijaythecoder/awesome-claude-agents) Copyright (c) 2024 Awesome Claude Agents Contributors, licensed under MIT License
+- [skills](https://github.com/anthropics/skills), licensed under the Apache License, Version 2.0
