@@ -2,11 +2,12 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.8.2
- * @date 2025-10-23
+ * @version 2.8.3
+ * @date 2025-11-03
  * @description 优化了自动回退组和AI组的节点选择逻辑，优先选取香港和台湾节点
  * @description 新增加了直连下载组的配置策略
  * @description 新增加了Amazon的代理设置
+ * @description 新增加了Game的代理设置，并修改检测间隔时间为15分钟
  **/
 
 // 规则仓库地址
@@ -27,6 +28,7 @@ const PROXY_RULES = [
   "Cloudflare",
   "DevSites",
   "Docker",
+  "Game",
   "GitHub",
   "Google",
   "JetBrains",
@@ -324,7 +326,7 @@ const createProxyGroup = (
 const createUrlTestGroup = (config) => {
   return createProxyGroup(config, "UrlTest", "url-test", URLTEST_KEYWORDS, {
     url: HEALTH_CHECK_URL,
-    interval: 600, // 检查时间间隔10分钟
+    interval: 900, // 检查时间间隔15分钟
     tolerance: 150, // 偏差小于tolerance的节点不主动切换
     lazy: true, // 没有选中时不主动检测延迟
   });
@@ -343,7 +345,7 @@ const createFallbackGroup = (config) => {
     FALLBACK_KEYWORDS,
     {
       url: HEALTH_CHECK_URL,
-      interval: 450, // 每7.5分钟检查1次
+      interval: 900, // 每15分钟检查1次
       lazy: true, // 没有选中时不主动检测延迟
     }
   );
