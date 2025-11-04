@@ -1,283 +1,282 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+此文件为 Claude Code (claude.ai/code) 在处理此仓库中的代码时提供指导。
 
-## Project Overview
+## 项目概述
 
-This is the Awesome Claude Agents repository - a collection of specialized AI agents that extend Claude Code's capabilities through intelligent orchestration and domain expertise. The agents work together as a development team, with each agent having specific expertise and delegation patterns.
+这是出色的 Claude 代理仓库 - 一个专业化 AI 代理集合，通过智能编排和领域专业知识扩展 Claude Code 的功能。这些代理作为一个开发团队协同工作，每个代理都拥有特定的专业知识和委派模式。
 
-## Working with Agents
+## 与代理合作
 
-When creating or modifying agents:
+当创建或修改代理时：
 
-1. Agents are Markdown files with YAML frontmatter
-2. Most agents should omit the `tools` field to inherit all available tools
-3. Use XML-style examples in descriptions for intelligent invocation
-4. Agents return structured findings for main agent coordination
+1. 代理是带有 YAML 前置元数据的 Markdown 文件
+2. 大多数代理应省略 `tools` 字段以继承所有可用工具
+3. 在描述中使用 XML 风格的示例以便智能调用
+4. 代理返回结构化的发现供主代理协调
 
-## Orchestration Pattern for Claude Code
+## Claude Code 的编排模式
 
-Since sub-agents in Claude Code cannot directly invoke other sub-agents, orchestration follows this strict pattern:
+由于 Claude Code 中的子代理不能直接调用其他子代理，因此编排遵循以下严格的模式：
 
-### CRITICAL: Agent Routing Protocol
+### 关键：代理路由协议
 
-**When handling complex tasks, you MUST:**
+**当处理复杂任务时，你必须：**
 
-1. **ALWAYS start with tech-lead-orchestrator** for any multi-step task
-2. **FOLLOW the agent routing map** returned by tech-lead EXACTLY
-3. **USE ONLY the agents** explicitly recommended by tech-lead
-4. **NEVER select agents independently** - tech-lead knows which agents exist
+1. **始终从 tech-lead-orchestrator 开始**任何多步骤任务
+2. **精确遵循**技术负责人返回的**代理路由图**
+3. **仅使用**技术负责人**明确推荐的代理**
+4. **绝不独立选择代理** - 技术负责人知道哪些代理存在
 
-### Example: Building a Feature with Agent Routing
+### 示例：使用代理路由构建功能
 
-```
-User: "Build a user management system"
+```text
+用户："构建一个用户管理系统"
 
-Main Claude Agent:
-1. First, I'll use the tech-lead-orchestrator to analyze and get routing
-   → Tech lead returns Agent Routing Map with SPECIFIC agents
+主 Claude 代理：
+1. 首先，我将使用 tech-lead-orchestrator 分析并获取路由
+   → 技术负责人返回带有特定代理的代理路由图
 
-2. I MUST use ONLY the agents listed in the routing map:
-   - If tech-lead says "use django-api-developer" → Use that EXACT agent
-   - If tech-lead says "use react-component-architect" → Use that EXACT agent
-   - DO NOT substitute with generic agents unless specified as fallback
+2. 我必须仅使用路由图中列出的代理：
+   - 如果技术负责人说"使用 django-api-developer" → 使用那个确切的代理
+   - 如果技术负责人说"使用 react-component-architect" → 使用那个确切的代理
+   - 不要替换为通用代理，除非指定为后备选项
 
-3. Execute tasks in the order specified by tech-lead using TodoWrite
-```
-
-### Key Orchestration Rules
-
-1. **Tech-Lead is Routing Authority**: Tech-lead determines which agents can handle each task
-2. **Strict Agent Selection**: Use ONLY agents from tech-lead's "Available Agents" list
-3. **No Improvisation**: Do NOT select agents based on your own judgment
-4. **Deep Reasoning**: Apply careful thought when coordinating the recommended agents
-5. **Structured Handoffs**: Extract and pass information between agent invocations
-
-### Agent Selection Flow
-
-```
-CORRECT FLOW:
-User Request → Tech-Lead Analysis → Agent Routing Map → Execute with Listed Agents
-
-INCORRECT FLOW:
-User Request → Main Agent Guesses → Wrong Agent Selected → Task Fails
+3. 使用 TodoWrite 按技术负责人指定的顺序执行任务
 ```
 
-### Example Tech-Lead Response You Must Follow
+### 关键编排规则
 
-When tech-lead returns:
+1. **技术负责人是路由权威**：技术负责人决定哪些代理可以处理每个任务
+2. **严格代理选择**：仅使用技术负责人"可用代理"列表中的代理
+3. **禁止即兴发挥**：不要基于自己的判断选择代理
+4. **深度推理**：在协调推荐代理时应用仔细思考
+5. **结构化交接**：在代理调用之间提取和传递信息
 
+### 代理选择流程
+
+```text
+正确流程：
+用户请求 → 技术负责人分析 → 代理路由图 → 使用列出的代理执行
+
+错误流程：
+用户请求 → 主代理猜测 → 选择错误的代理 → 任务失败
 ```
-## Available Agents for This Project
-- django-backend-expert: Django tasks
-- django-api-developer: API tasks
+
+### 你必须遵循的技术负责人响应示例
+
+当技术负责人返回时：
+
+```text
+## 本项目可用代理
+- django-backend-expert: Django 任务
+- django-api-developer: API 任务
 - react-component-architect: React UI
 ```
 
-You MUST use these specific agents, NOT generic alternatives like "backend-developer"
+你必须使用这些特定代理，而不是像"backend-developer"这样的通用替代方案
 
-## High-Level Architecture
+## 高级架构
 
-### Agent Organization
+### 代理组织
 
-The project follows a hierarchical structure:
+项目遵循分层结构：
 
-1. **Orchestrators** (`agents/orchestrators/`)
+1. **编排器** (`agents/orchestrators/`)
 
-   - `tech-lead-orchestrator`: Coordinates complex projects through three-phase workflow (Research → Planning → Execution)
-   - `project-analyst`: Detects technology stack and enables intelligent routing
-   - `team-configurator`: Creates agent routing rules in CLAUDE.md files
+   - `tech-lead-orchestrator`: 通过三阶段工作流（研究 → 规划 → 执行）协调复杂项目
+   - `project-analyst`: 检测技术栈并启用智能路由
+   - `team-configurator`: 在 CLAUDE.md 文件中创建代理路由规则
 
-2. **Core Agents** (`agents/core/`)
+2. **核心代理** (`agents/core/`)
 
-   - Cross-cutting concerns like code archaeology, reviews, performance, and documentation
-   - These agents support all technology stacks
+   - 跨领域关注点，如代码考古、审查、性能和文档
+   - 这些代理支持所有技术栈
 
-3. **Universal Agents** (`agents/universal/`)
+3. **通用代理** (`agents/universal/`)
 
-   - Framework-agnostic specialists (API, backend, frontend, Tailwind)
-   - Fallback when no framework-specific agent exists
+   - 框架无关的专家（API、后端、前端、Tailwind）
+   - 当不存在框架特定代理时的后备选项
 
-4. **Specialized Agents** (`agents/specialized/`)
-   - Framework-specific experts organized by technology
-   - Subdirectories: laravel/, django/, rails/, react/, vue/
+4. **专业代理** (`agents/specialized/`)
+   - 按技术组织的框架特定专家
+   - 子目录：laravel/、django/、rails/、react/、vue/
 
-### Three-Phase Orchestration Workflow (Main Agent Coordinated)
+### 三阶段编排工作流（主代理协调）
 
-The main Claude agent implements a human-in-the-loop workflow using the tech-lead-orchestrator:
+主 Claude 代理使用技术负责人编排器实现人在环工作流：
 
-1. **Research Phase**: Tech-lead analyzes requirements and returns structured findings
-2. **Approval Gate**: Main agent presents findings and waits for human approval
-3. **Planning Phase**: Main agent creates tasks with TodoWrite based on tech-lead's recommendations
-4. **Execution Phase**: Main agent invokes specialists sequentially with filtered context
+1. **研究阶段**：技术负责人分析需求并返回结构化发现
+2. **批准门**：主代理呈现发现并等待人类批准
+3. **规划阶段**：主代理基于技术负责人的推荐使用 TodoWrite 创建任务
+4. **执行阶段**：主代理使用过滤的上下文顺序调用专家
 
-### Agent Communication Protocol
+### 代理通信协议
 
-Since sub-agents cannot directly communicate or invoke each other:
+由于子代理不能直接通信或调用彼此：
 
-- **Structured Returns**: Each agent returns findings in a parseable format
-- **Context Passing**: Main agent extracts relevant information from returns
-- **Sequential Coordination**: Main agent manages the execution flow
-- **Handoff Information**: Agents include what the next specialist needs in their returns
+- **结构化返回**：每个代理以可解析格式返回发现
+- **上下文传递**：主代理从返回中提取相关信息
+- **顺序协调**：主代理管理执行流程
+- **交接信息**：代理在返回中包含下一个专家需要的内容
 
-Example return format:
+返回格式示例：
 
+```sql
+## 任务完成：API 设计
+- 定义的端点：GET/POST/PUT/DELETE /api/users
+- 认证：需要 Bearer token
+- 下一个专家需要：此 API 规范用于实现
 ```
-## Task Completed: API Design
-- Endpoints defined: GET/POST/PUT/DELETE /api/users
-- Authentication: Bearer token required
-- Next specialist needs: This API specification for implementation
-```
 
-### Intelligent Routing
+### 智能路由
 
-The system automatically routes tasks based on:
+系统基于以下内容自动路由任务：
 
-1. Project context (detected by project-analyst)
-2. Framework-specific routing when applicable
-3. Universal fallback for unknown stacks
-4. Task requirements and agent expertise
+1. 项目上下文（由项目分析器检测）
+2. 适用的框架特定路由
+3. 未知栈的通用后备
+4. 任务需求和代理专业知识
 
-## Key Concepts
+## 关键概念
 
-### Agent Definition Format
+### 代理定义格式
 
 ```yaml
 ---
 name: agent-name
 description: |
-  Expertise description with XML examples
+  带有 XML 示例的专业描述
   Examples:
   - <example>
-    Context: When to use
-    user: "Request"
-    assistant: "I'll use agent-name"
-    <commentary>Why selected</commentary>
+    Context: 何时使用
+    user: "请求"
+    assistant: "我将使用 agent-name"
+    <commentary>为什么选择</commentary>
   </example>
 
-
-# tools: omit for all tools, specify for restrictions
+# tools: 省略以使用所有工具，指定用于限制
 ---
-# Agent Name
-System prompt content...
+# 代理名称
+系统提示内容...
 ```
 
-### Ambiguity Detection
+### 歧义检测
 
-- Project-analyst flags uncertainties in analysis
-- Tech-lead presents research findings for approval before execution
-- Agents should identify assumptions needing clarification
+- 项目分析器标记分析中的不确定性
+- 技术负责人在执行前呈现研究发现以供批准
+- 代理应识别需要澄清的假设
 
-### Tool Inheritance
+### 工具继承
 
-- Omitting `tools` field = inherit all tools (recommended)
-- Specify tools only for security restrictions
-- Includes WebFetch, MCP tools when available
+- 省略 `tools` 字段 = 继承所有工具（推荐）
+- 仅为安全限制指定工具
+- 在可用时包括 WebFetch、MCP 工具
 
-## Development Guidelines
+## 开发指南
 
-1. **Creating New Agents**:
+1. **创建新代理**：
 
-   - Use templates/agent-template.md as starting point
-   - Focus on single domain expertise
-   - Include 2-3 XML examples
-   - Define structured return format
+   - 使用 templates/agent-template.md 作为起点
+   - 专注于单一领域专业知识
+   - 包括 2-3 个 XML 示例
+   - 定义结构化返回格式
 
-2. **Agent Return Patterns**:
+2. **代理返回模式**：
 
-   - Always return findings in structured format
-   - Include "Next Steps" or "Handoff Information"
-   - Specify what context next specialist needs
-   - Main agent will parse and coordinate
+   - 始终以结构化格式返回发现
+   - 包括"下一步骤"或"交接信息"
+   - 指定下一个专家需要什么上下文
+   - 主代理将解析和协调
 
-3. **Testing Agents**:
-   - Test invocation patterns
-   - Verify delegation works correctly
-   - Ensure quality of output
+3. **测试代理**：
+   - 测试调用模式
+   - 验证委派工作正常
+   - 确保输出质量
 
-## Important Files and Patterns
+## 重要文件和模式
 
-- `docs/orchestration-patterns.md`: Detailed three-phase workflow documentation
-- `docs/creating-agents.md`: Guide for creating new agents
-- `docs/best-practices.md`: Agent development best practices
-- `examples/`: Real-world usage examples
-- All agents support human-in-the-loop through the tech-lead's approval gate
+- `docs/orchestration-patterns.md`: 详细的三阶段工作流文档
+- `docs/creating-agents.md`: 创建新代理的指南
+- `docs/best-practices.md`: 代理开发最佳实践
+- `examples/`: 真实世界的使用示例
+- 所有代理通过技术负责人的批准门支持人在环
 
-## Complete Orchestration Example
+## 完整编排示例
 
-Here's a full example showing proper agent routing:
+这是一个显示正确代理路由的完整示例：
 
-### User Request:
+### 用户请求：
 
-"Help me build an authentication system for my web app"
+"帮助我为我的网络应用构建一个认证系统"
 
-### Step 1: Tech-Lead Analysis
+### 步骤 1：技术负责人分析
 
+```text
+主代理："我将使用 tech-lead-orchestrator 分析此请求并确定最佳方法。"
+
+[调用 tech-lead-orchestrator]
 ```
-Main Agent: "I'll use the tech-lead-orchestrator to analyze this request and determine the best approach."
 
-[Invokes tech-lead-orchestrator]
-```
+### 步骤 2：技术负责人返回路由图
 
-### Step 2: Tech-Lead Returns Routing Map
+```text
+## 代理路由图
 
-```
-## Agent Routing Map
+任务 1：检测项目技术
+- 主要代理：project-analyst
+- 原因：需要识别框架以进行正确路由
 
-Task 1: Detect Project Technology
-- PRIMARY AGENT: project-analyst
-- REASON: Need to identify framework for proper routing
+任务 2：设计认证架构
+- 主要代理：database-architect
+- 原因：框架无关的数据库设计
 
-Task 2: Design Authentication Schema
-- PRIMARY AGENT: database-architect
-- REASON: Framework-agnostic database design
+任务 3：实现认证后端
+- 主要代理：django-backend-expert
+- 后备代理：backend-developer
+- 原因：项目中检测到 Django
 
-Task 3: Implement Auth Backend
-- PRIMARY AGENT: django-backend-expert
-- FALLBACK AGENT: backend-developer
-- REASON: Django detected in project
+任务 4：创建认证 API 端点
+- 主要代理：django-api-developer
+- 后备代理：api-architect
+- 原因：Django REST Framework 模式
 
-Task 4: Create Auth API Endpoints
-- PRIMARY AGENT: django-api-developer
-- FALLBACK AGENT: api-architect
-- REASON: Django REST Framework patterns
-
-## Available Agents for This Project
+## 本项目可用代理
 - project-analyst
 - database-architect
 - django-backend-expert
 - django-api-developer
 - code-reviewer
 
-## CRITICAL INSTRUCTION
-Use ONLY the agents listed above. Do NOT use laravel, rails, or other framework agents.
+## 关键指令
+仅使用上面列出的代理。不要使用 laravel、rails 或其他框架代理。
 ```
 
-### Step 3: Main Agent Executes Plan
+### 步骤 3：主代理执行计划
 
-```
-Main Agent: "Based on the tech-lead's routing, I'll now coordinate the implementation:"
+```text
+主代理："基于技术负责人的路由，我现在将协调实现："
 
-1. ✓ Using project-analyst to analyze the codebase
-2. ✓ Using database-architect for auth schema design
-3. ✓ Using django-backend-expert for implementation
-4. ✓ Using django-api-developer for API endpoints
-5. ✓ Using code-reviewer for security audit
+1. ✓ 使用 project-analyst 分析代码库
+2. ✓ 使用 database-architect 进行认证架构设计
+3. ✓ 使用 django-backend-expert 进行实现
+4. ✓ 使用 django-api-developer 进行 API 端点
+5. ✓ 使用 code-reviewer 进行安全审计
 
-[Executes each step with the EXACT agents specified]
-```
-
-### What NOT to Do:
-
-```
-❌ "I'll use backend-developer" (when tech-lead specified django-backend-expert)
-❌ "I'll use rails-api-developer" (wrong framework)
-❌ "I'll skip the tech-lead and choose agents myself" (bypasses routing)
+[使用指定的确切代理执行每个步骤]
 ```
 
-## Critical Reminders
+### 不应做什么：
 
-- ALWAYS use tech-lead-orchestrator for multi-step tasks to get proper agent routing
-- FOLLOW the agent routing map exactly - do not improvise
-- USE deep reasoning when coordinating the recommended agents
-- TRUST the tech-lead's expertise in agent selection
+```text
+❌ "我将使用 backend-developer"（当技术负责人指定了 django-backend-expert）
+❌ "我将使用 rails-api-developer"（错误的框架）
+❌ "我将跳过技术负责人自己选择代理"（绕过路由）
+```
+
+## 关键提醒
+
+- 对于多步骤任务，始终使用 tech-lead-orchestrator 以获得正确的代理路由
+- 精确遵循代理路由图 - 不要即兴发挥
+- 在协调推荐代理时使用深度推理
+- 信任技术负责人在代理选择中的专业知识
