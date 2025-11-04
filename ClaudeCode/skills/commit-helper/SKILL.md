@@ -1,19 +1,19 @@
 ---
-name: generating-commit-messages
-description: Generates clear commit messages from git diffs. Use when writing commit messages or reviewing staged changes.
+name: commit-helper
+description: 从 Git 差异生成清晰的提交信息(commit messages)。用于编写提交信息或查看暂存的更改。
 ---
 
-# Generating Commit Messages
+# 提交助手
 
-## Instructions
+## 说明
 
-1. Run `git diff --staged` to see changes
-2. I'll suggest a commit message with:
-   - Summary under 50 characters
-   - Detailed description
-   - Affected components
+1. 运行 `git diff --staged` 查看更改
+2. 建议提交信息包含以下内容：
+   - 不超过 50 个字符的摘要
+   - 详细描述
+   - 受影响的组件
 
-## Best practices
+## 最佳实践
 
-- Use present tense
-- Explain what and why, not how
+- 使用现在时
+- 解释“why”和“what”，而不是“how”

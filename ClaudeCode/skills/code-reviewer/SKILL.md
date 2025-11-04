@@ -1,22 +1,22 @@
 ---
 name: code-reviewer
-description: Review code for best practices and potential issues. Use when reviewing code, checking PRs, or analyzing code quality.
+description: 审查代码，以了解最佳实践和潜在问题。可用于代码审查、检查 PR 或分析代码质量。
 allowed-tools: Read, Grep, Glob
 ---
 
-# Code Reviewer
+# 代码审查
 
-## Review checklist
+## 审核清单
 
-1. Code organization and structure
-2. Error handling
-3. Performance considerations
-4. Security concerns
-5. Test coverage
+1. 代码组织和结构
+2. 错误处理
+3. 性能考量
+4. 安全性问题
+5. 测试覆盖率
 
-## Instructions
+## 说明
 
-1. Read the target files using Read tool
-2. Search for patterns using Grep
-3. Find related files using Glob
-4. Provide detailed feedback on code quality
+1. 使用 Read 工具读取目标文件
+2. 使用 Grep 工具搜索模式
+3. 使用 Glob 工具查找相关文件
+4. 提供详细的代码质量反馈
