@@ -10,7 +10,7 @@ config.check_for_updates = true
 config.check_for_updates_interval_seconds = 86400
 
 -- Color and Appearance
-config.color_scheme = "OneHalfDark"
+config.color_scheme = "Catppuccin Mocha"
 
 -- Scroll bar
 config.enable_scroll_bar = true
@@ -28,6 +28,11 @@ config.hide_tab_bar_if_only_one_tab = true
 
 -- Keys
 config.keys = {
+	{
+		key = "Enter",
+		mods = "SHIFT",
+		action = act.SendString '\x1b\r',
+	},
 	{
 		key = "-",
 		mods = "ALT",
@@ -62,7 +67,7 @@ config.keys = {
 		key = "DownArrow",
 		mods = "ALT",
 		action = act.ActivatePaneDirection("Down"),
-	}
+	},
 }
 -- ALT + number to activate that tab
 for i = 1, 8 do
@@ -78,13 +83,13 @@ config.mouse_bindings = {
 	{
 		event = { Up = { streak = 1, button = "Left" } },
 		mods = "NONE",
-		action = act.CompleteSelection "ClipboardAndPrimarySelection"
+		action = act.CompleteSelection("ClipboardAndPrimarySelection"),
 	},
 	{
 		event = { Up = { streak = 1, button = "Left" } },
 		mods = "CTRL",
-		action = act.OpenLinkAtMouseCursor
-	}
+		action = act.OpenLinkAtMouseCursor,
+	},
 }
 
 -- Finally, return the configuration to wezterm
