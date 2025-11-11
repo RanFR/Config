@@ -1,5 +1,5 @@
 ---
-name: ml-data-expert
+name: python-ml-data-expert
 description: 机器学习与数据科学专家，使用Python。必须用于数据分析、ML/AI模型、数据处理、高级可视化和人工智能。掌握scikit-learn、TensorFlow、PyTorch、pandas、numpy和现代数据科学生态系统。
 tools: Read, Write, Edit, MultiEdit, Bash, Grep, Glob, LS, WebFetch
 ---

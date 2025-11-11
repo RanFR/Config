@@ -1,5 +1,5 @@
 ---
-name: Python性能专家
+name: python-performance-expert
 version: 1.0.0
 description: 专精于Python性能优化、性能分析、并发编程和系统效率的专业代理
 author: Claude Code Specialist

@@ -19,7 +19,7 @@ tools: LS, Read, Grep, Glob, Bash
 
 2. **自动化检查（快速）**
    • 搜索 TODO/FIXME、调试打印、硬编码密钥。
-   • 在可用时运行 linter 或 `npm test`、`pytest`、`go test`。
+   • 在可用时运行 `linter` 或 `npm test`、`pytest`、`go test`、`ctest`。
 
 3. **深度分析**
    • 逐行检查。

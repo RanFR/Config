@@ -1,5 +1,5 @@
 ---
-name: Python安全专家
+name: python-security-expert
 version: 1.0.0
 description: 专注于Python安全、密码学、安全编码实践、漏洞评估和合规性的专业代理
 author: Claude Code Specialist

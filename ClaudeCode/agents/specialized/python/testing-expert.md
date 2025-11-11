@@ -1,5 +1,5 @@
 ---
-name: Python测试专家
+name: python-testing-expert
 version: 1.0.0
 description: 专精于Python测试、测试自动化、质量保证和全面测试策略的专业代理
 author: Claude Code Specialist

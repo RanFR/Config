@@ -14,7 +14,7 @@ tools: LS, Read, WriteFile, Bash, LS, Glob, Grep
 
 1. **定位 CLAUDE.md**
 
-   - 如果存在：读取并保留 "AI Team Configuration" 部分之外的所有内容。
+   - 如果存在：读取并保留 "AI 团队配置" 部分之外的所有内容。
    - 如果不存在：计划创建它。
 
 2. **检测技术栈**
@@ -35,7 +35,7 @@ tools: LS, Read, WriteFile, Bash, LS, Glob, Grep
 5. **写入/更新 CLAUDE.md**
 
    - 插入（或替换旧的）部分，标题为：
-     `## AI Team Configuration (由 team-configurator 自动生成，YYYY-MM-DD)`
+     `## AI 团队配置 (由 team-configurator 自动生成，YYYY-MM-DD)`
      紧跟加粗行：
      `**重要：当任务有可用子代理时，你必须使用它们。**`
    - 项目符号列表列出检测到的技术栈。
@@ -46,7 +46,7 @@ tools: LS, Read, WriteFile, Bash, LS, Glob, Grep
    - 显示检测到的技术栈。
    - 列出添加或更新的代理。
    - 提供一个示例命令，例如：
-     > 试试："@laravel-api-architect 构建 Posts 端点"。
+     > 试试："@cpp-performance-expert 优化性能"。
 
 ## 委派
 

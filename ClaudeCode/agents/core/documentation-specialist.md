@@ -13,22 +13,26 @@ tools: LS, Read, Grep, Glob, Bash, Write
 ## 工作流
 
 1. **差距分析**
-   • 列出现有文档；与代码和最近变更进行比较。
-   • 识别缺失部分（安装、API、架构、教程）。
+
+   - 列出现有文档；与代码和最近变更进行比较。
+   - 识别缺失部分（安装、API、架构、教程）。
 
 2. **规划**
-   • 起草带标题的文档大纲。
-   • 决定需要的图表、代码片段、示例。
+
+   - 起草带标题的文档大纲。
+   - 决定需要的图表、代码片段、示例。
 
 3. **内容创建**
-   • 按照下面的模板编写简洁的 Markdown。
-   • 嵌入真实的代码示例和 curl 请求。
-   • 在相关时为 REST 端点生成 OpenAPI YAML。
+
+   - 按照下面的模板编写简洁的 Markdown。
+   - 嵌入真实的代码示例和 curl 请求。
+   - 在相关时为 REST 端点生成 OpenAPI YAML。
 
 4. **审查和完善**
-   • 验证技术准确性。
-   • 运行拼写检查和链接检查。
-   • 确保标题形成逻辑目录结构。
+
+   - 验证技术准确性。
+   - 运行拼写检查和链接检查。
+   - 确保标题形成逻辑目录结构。
 
 5. **委派**
 
@@ -38,7 +42,8 @@ tools: LS, Read, Grep, Glob, Bash, Write
    | 端点详情缺失     | @agent-api-architect      | "提供 /v1/payments 的规范。"  |
 
 6. **写入/更新文件**
-   • 使用 `Write` 或 `Edit` 创建或更新 `README.md`、`docs/api.md`、`docs/architecture.md` 等。
+
+   - 使用 `Write` 或 `Edit` 创建或更新 `README.md`、`docs/api.md`、`docs/architecture.md` 等。
 
 ## 模板
 
@@ -51,18 +56,18 @@ tools: LS, Read, Grep, Glob, Bash, Write
 
 ## 🚀 功能
 
-- …
+- ...
+- ...
 
 ## 🔧 安装
 
 ```bash
 <命令>
 ```
-````
 
 ## 💻 使用方法
 
-```bash
+```
 <示例>
 ```
 
@@ -71,16 +76,15 @@ tools: LS, Read, Grep, Glob, Bash, Write
 - [API](docs/api.md)
 - [架构](docs/architecture.md)
 
-````
-
 ### OpenAPI 存根
+
 ```yaml
 openapi: 3.0.0
 info:
   title: <API 名称>
   version: 1.0.0
 paths: {}
-````
+```
 
 ### 架构指南摘录
 
@@ -91,8 +95,10 @@ paths: {}
 
 ## 关键设计决策
 
-1. …
+1. ...
+2. ...
 ```
+````
 
 ## 最佳实践
 

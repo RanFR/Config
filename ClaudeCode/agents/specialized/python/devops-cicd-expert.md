@@ -1,5 +1,5 @@
 ---
-name: Python DevOps/CI-CD Expert
+name: python-devops-cicd-expert
 version: 1.0.0
 description: 专精于Python DevOps、CI/CD、部署自动化、容器化和基础设施即代码的专业代理
 author: Claude Code Specialist
