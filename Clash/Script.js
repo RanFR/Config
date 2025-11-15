@@ -2,13 +2,14 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.8.4
- * @date 2025-11-06
+ * @version 2.8.5
+ * @date 2025-11-15
  * @description 优化了自动回退组和AI组的节点选择逻辑，优先选取香港和台湾节点
  * @description 新增加了直连下载组的配置策略
  * @description 新增加了Amazon的代理设置
  * @description 新增加了Game的代理设置，并修改检测间隔时间为15分钟
  * @description 新增加了Intel和Ubuntu的代理设置
+ * @description 新增加了Grok和X的代理设置
  **/
 
 // 规则仓库地址
@@ -45,6 +46,7 @@ const PROXY_RULES = [
   "Telegram",
   "Ubuntu",
   "Wikipedia",
+  "X",
   "Yandex",
   "YouTube",
 ];
