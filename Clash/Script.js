@@ -2,8 +2,8 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.8.5
- * @date 2025-11-15
+ * @version 2.8.5-rc0
+ * @date 2025-11-16
  * @description 优化了自动回退组和AI组的节点选择逻辑，优先选取香港和台湾节点
  * @description 新增加了直连下载组的配置策略
  * @description 新增加了Amazon的代理设置
@@ -22,7 +22,7 @@ const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
 const DIRECT_RULES = ["Bing", "China", "Download", "SteamCN"];
 
 // AI组专用规则
-const AI_RULES = ["Claude", "Gemini", "OpenAI"];
+const AI_RULES = ["Claude", "Gemini", "Grok", "OpenAI"];
 
 // 代理规则
 const PROXY_RULES = [
