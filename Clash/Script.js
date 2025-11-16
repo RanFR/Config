@@ -2,14 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.8.5-rc0
+ * @version 2.9.0
  * @date 2025-11-16
- * @description 优化了自动回退组和AI组的节点选择逻辑，优先选取香港和台湾节点
- * @description 新增加了直连下载组的配置策略
- * @description 新增加了Amazon的代理设置
- * @description 新增加了Game的代理设置，并修改检测间隔时间为15分钟
- * @description 新增加了Intel和Ubuntu的代理设置
- * @description 新增加了Grok和X的代理设置
+ * @description 新增了DNS配置，并覆写原有配置
  **/
 
 // 规则仓库地址
@@ -17,6 +12,36 @@ const RULE_URL = "";
 
 // 健康检查链接
 const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
+
+// DNS 配置常量
+const DNS_CONFIG = {
+  enable: true,
+  listen: "127.0.0.1:1053",
+  ipv6: true,
+  "enhanced-mode": "fake-ip",
+  "fake-ip-range": "198.18.0.1/16",
+  "default-nameserver": ["223.5.5.5", "119.29.29.29"],
+  nameserver: ["https://doh.pub/dns-query", "https://dns.alidns.com/dns-query"],
+  "fake-ip-filter": [
+    "*.lan",
+    "*.local",
+    "+.msftconnecttest.com",
+    "+.msftncsi.com",
+    "localhost.ptlogin2.qq.com",
+    "localhost.sec.qq.com",
+    "localhost.work.weixin.qq.com",
+  ],
+  fallback: [
+    "https://dns.cloudflare.com/dns-query",
+    "https://dns.google/dns-query",
+  ],
+  "fallback-filter": {
+    geoip: true,
+    "geoip-code": "CN",
+    ipcidr: ["240.0.0.0/4"],
+    domain: ["+.google.com", "+.youtube.com"],
+  },
+};
 
 // 直连规则
 const DIRECT_RULES = ["Bing", "China", "Download", "SteamCN"];
@@ -93,6 +118,15 @@ function createAllRuleProviders() {
   });
 
   return providers;
+}
+
+/**
+ * 生成 DNS 配置
+ * @returns {Object} DNS 配置对象
+ */
+function createDNSConfig() {
+  console.log("生成 DNS 配置");
+  return DNS_CONFIG;
 }
 
 /**
@@ -456,6 +490,7 @@ function main(config, profileName = "Default") {
 
     // 生成核心配置
     const configurations = {
+      dns: createDNSConfig(),
       "rule-providers": createAllRuleProviders(),
       rules: createRoutingRules(),
       "proxy-groups": processProxyGroupsConfig(config),
