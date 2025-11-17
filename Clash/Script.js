@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器和路由规则
  * @author RanFR
- * @version 2.9.0
- * @date 2025-11-16
- * @description 新增了DNS配置，并覆写原有配置
+ * @version 2.9.1
+ * @date 2025-11-17
+ * @description 新增DNS IPv6智能配置功能，优先使用机场配置文件中的IPv6设置，默认为false
  **/
 
 // 规则仓库地址
@@ -17,11 +17,10 @@ const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
 const DNS_CONFIG = {
   enable: true,
   listen: "127.0.0.1:1053",
-  ipv6: true,
   "enhanced-mode": "fake-ip",
   "fake-ip-range": "198.18.0.1/16",
   "default-nameserver": ["223.5.5.5", "119.29.29.29"],
-  nameserver: ["https://doh.pub/dns-query", "https://dns.alidns.com/dns-query"],
+  nameserver: ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"],
   "fake-ip-filter": [
     "*.lan",
     "*.local",
@@ -122,11 +121,32 @@ function createAllRuleProviders() {
 
 /**
  * 生成 DNS 配置
+ * @param {Object} config - 机场配置文件对象
  * @returns {Object} DNS 配置对象
  */
-function createDNSConfig() {
+function createDNSConfig(config) {
   console.log("生成 DNS 配置");
-  return DNS_CONFIG;
+
+  // 智能获取 IPv6 设置，优先级：dns.ipv6 > 根级别 ipv6 > false
+  let ipv6Enabled = false; // 默认值
+
+  if (config && config.dns && typeof config.dns.ipv6 === "boolean") {
+    ipv6Enabled = config.dns.ipv6;
+    console.log(`使用机场配置中的 DNS IPv6 设置: ${ipv6Enabled}`);
+  } else if (config && typeof config.ipv6 === "boolean") {
+    ipv6Enabled = config.ipv6;
+    console.log(`使用机场配置中的全局 IPv6 设置: ${ipv6Enabled}`);
+  } else {
+    console.log(`机场配置未找到 IPv6 设置，使用默认值: ${ipv6Enabled}`);
+  }
+
+  // 创建动态 DNS 配置
+  const dynamicDnsConfig = {
+    ...DNS_CONFIG,
+    ipv6: ipv6Enabled,
+  };
+
+  return dynamicDnsConfig;
 }
 
 /**
@@ -490,7 +510,7 @@ function main(config, profileName = "Default") {
 
     // 生成核心配置
     const configurations = {
-      dns: createDNSConfig(),
+      dns: createDNSConfig(config),
       "rule-providers": createAllRuleProviders(),
       rules: createRoutingRules(),
       "proxy-groups": processProxyGroupsConfig(config),
