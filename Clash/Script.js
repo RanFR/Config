@@ -1,11 +1,10 @@
 /**
  * Clash Verge 配置脚本
- * 用于自动配置DNS、规则提供器和路由规则
+ * 用于自动配置DNS、规则提供器、代理组和路由规则
  * @author RanFR
- * @version 2.9.1-rc0
- * @date 2025-11-17
- * @description 新增DNS IPv6智能配置功能，优先使用机场配置文件中的IPv6设置，默认为false
- * @description 优化了DNS配置
+ * @version 2.9.2
+ * @date 2025-11-19
+ * @description 智能DNS配置，支持IPv6自动检测
  **/
 
 // 规则仓库地址
@@ -15,15 +14,29 @@ const RULE_URL = "";
 const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
 
 // DNS 配置常量
-// DNS 配置常量
 const DNS_CONFIG = {
   enable: true,
-  listen: "127.0.0.1:1053",
+  listen: "127.0.0.1:5335",
+  ipv6: false, // 动态设置
+  "cache-algorithm": "arc", // or lru
+  "prefer-h3": true,
   "enhanced-mode": "fake-ip",
+  "direct-nameserver": [
+    "system",
+    "https://dns.alidns.com/dns-query",
+    "https://doh.pub/dns-query",
+  ],
+  "default-nameserver": ["tls://223.5.5.5:853", "tls://119.29.29.29:853"],
+  nameserver: [
+    "https://cloudflare-dns.com/dns-query",
+    "https://dns.google/dns-query",
+  ],
+  "proxy-server-nameserver": [
+    "https://dns.alidns.com/dns-query",
+    "https://doh.pub/dns-query",
+  ],
   "fake-ip-range": "198.18.0.1/16",
   "fake-ip-range-v6": "fdfe:dcba:9876::/64",
-  "default-nameserver": ["223.5.5.5", "119.29.29.29"],
-  nameserver: ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"],
   "fake-ip-filter": [
     "*.lan",
     "*.local",
@@ -33,13 +46,6 @@ const DNS_CONFIG = {
     "localhost.sec.qq.com",
     "localhost.work.weixin.qq.com",
   ],
-  fallback: ["1.1.1.1", "8.8.8.8"],
-  "fallback-filter": {
-    geoip: true,
-    "geoip-code": "CN",
-    ipcidr: ["240.0.0.0/4"],
-    domain: ["+.google.com", "+.youtube.com"],
-  },
 };
 
 // 直连规则
