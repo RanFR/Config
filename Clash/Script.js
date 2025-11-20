@@ -1,15 +1,10 @@
 /**
  * Clash Verge 配置脚本
- * 用于自动配置DNS、规则提供器和路由规则
+ * 用于自动配置DNS、规则提供器、代理组和路由规则
  * @author RanFR
- * @version 2.8.5-rc0
- * @date 2025-11-16
- * @description 优化了自动回退组和AI组的节点选择逻辑，优先选取香港和台湾节点
- * @description 新增加了直连下载组的配置策略
- * @description 新增加了Amazon的代理设置
- * @description 新增加了Game的代理设置，并修改检测间隔时间为15分钟
- * @description 新增加了Intel和Ubuntu的代理设置
- * @description 新增加了Grok和X的代理设置
+ * @version 2.10.1
+ * @date 2025-11-20
+ * @description 优化规则配置，优先使用GEO提供规则直连，优化节点匹配逻辑
  **/
 
 // 规则仓库地址
@@ -18,8 +13,43 @@ const RULE_URL = "";
 // 健康检查链接
 const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
 
+// DNS 配置常量
+const DNS_CONFIG = {
+  enable: true,
+  listen: "127.0.0.1:5335",
+  ipv6: false, // 动态设置
+  "cache-algorithm": "arc", // or lru
+  "prefer-h3": true,
+  "enhanced-mode": "fake-ip",
+  "direct-nameserver": [
+    "system",
+    "https://dns.alidns.com/dns-query",
+    "https://doh.pub/dns-query",
+  ],
+  "default-nameserver": ["tls://223.5.5.5:853", "tls://119.29.29.29:853"],
+  nameserver: [
+    "https://cloudflare-dns.com/dns-query",
+    "https://dns.google/dns-query",
+  ],
+  "proxy-server-nameserver": [
+    "https://dns.alidns.com/dns-query",
+    "https://doh.pub/dns-query",
+  ],
+  "fake-ip-range": "198.18.0.1/16",
+  "fake-ip-range-v6": "fdfe:dcba:9876::/64",
+  "fake-ip-filter": [
+    "*.lan",
+    "*.local",
+    "+.msftconnecttest.com",
+    "+.msftncsi.com",
+    "localhost.ptlogin2.qq.com",
+    "localhost.sec.qq.com",
+    "localhost.work.weixin.qq.com",
+  ],
+};
+
 // 直连规则
-const DIRECT_RULES = ["Bing", "China", "Download", "SteamCN"];
+const DIRECT_RULES = [];
 
 // AI组专用规则
 const AI_RULES = ["Claude", "Gemini", "Grok", "OpenAI"];
@@ -58,7 +88,7 @@ const URLTEST_KEYWORDS = ["自动", "Auto"];
 const FALLBACK_KEYWORDS = ["故障", "Fallback"];
 
 // AI组的关键词
-const AI_GROUP_KEYWORDS = ["ChatGPT", "Claude"];
+const AI_GROUP_KEYWORDS = ["ChatGPT", "OpenAI", "Claude", "Gemini", "Grok"];
 
 /**
  * 生成单个规则提供器配置
@@ -84,8 +114,8 @@ function createRuleProvider(name) {
 function createAllRuleProviders() {
   let providers = {};
 
-  // 合并直连规则、AI规则和代理规则
-  const allRules = [...DIRECT_RULES, ...AI_RULES, ...PROXY_RULES];
+  // 只合并AI规则和代理规则
+  const allRules = [...AI_RULES, ...PROXY_RULES];
 
   allRules.forEach((name) => {
     const provider = createRuleProvider(name);
@@ -96,18 +126,50 @@ function createAllRuleProviders() {
 }
 
 /**
+ * 生成 DNS 配置
+ * @param {Object} config - 机场配置文件对象
+ * @returns {Object} DNS 配置对象
+ */
+function createDNSConfig(config) {
+  console.log("生成 DNS 配置");
+
+  // 智能获取 IPv6 设置，优先级：dns.ipv6 > 根级别 ipv6 > false
+  let ipv6Enabled = false; // 默认值
+
+  if (config && config.dns && typeof config.dns.ipv6 === "boolean") {
+    ipv6Enabled = config.dns.ipv6;
+    console.log(`使用机场配置中的 DNS IPv6 设置: ${ipv6Enabled}`);
+  } else if (config && typeof config.ipv6 === "boolean") {
+    ipv6Enabled = config.ipv6;
+    console.log(`使用机场配置中的全局 IPv6 设置: ${ipv6Enabled}`);
+  } else {
+    console.log(`机场配置未找到 IPv6 设置，使用默认值: ${ipv6Enabled}`);
+  }
+
+  // 创建动态 DNS 配置
+  const dynamicDnsConfig = {
+    ...DNS_CONFIG,
+    ipv6: ipv6Enabled,
+  };
+
+  return dynamicDnsConfig;
+}
+
+/**
  * 生成路由规则列表
  * @returns {Array} 规则列表
  */
 function createRoutingRules() {
   const rules = [];
 
-  // 添加直连规则
-  console.log(`添加 ${DIRECT_RULES.length} 个直连规则`);
-  DIRECT_RULES.forEach((name) => {
-    const ruleStr = `RULE-SET,${name},DIRECT`;
-    rules.push(ruleStr);
-  });
+  // 优先添加局域网规则
+  console.log("添加局域网直连规则");
+  rules.push("GEOIP,private,DIRECT,no-resolve");
+
+  // 添加中国规则 - 中国域名/IP直连
+  console.log("添加中国直连规则");
+  rules.push("GEOSITE,cn,DIRECT");
+  rules.push("GEOIP,cn,DIRECT");
 
   // 添加AI规则
   console.log(`添加 ${AI_RULES.length} 个AI规则`);
@@ -122,12 +184,6 @@ function createRoutingRules() {
     const ruleStr = `RULE-SET,${name},Default`;
     rules.push(ruleStr);
   });
-
-  // 添加 GEO 策略
-  console.log("添加 GEO 策略规则");
-  rules.push("GEOIP,LAN,DIRECT");
-  rules.push("GEOIP,CN,DIRECT");
-  rules.push("GEOSITE,CN,DIRECT");
 
   // 添加匹配代理规则
   console.log("添加匹配代理规则");
@@ -279,7 +335,10 @@ const createProxyGroup = (
   // 查找匹配的代理组
   const searchedGroup = existingGroups.find((group) => {
     if (!group.name) return false;
-    return keywords.some((keyword) => group.name.includes(keyword));
+    const groupNameLower = group.name.toLowerCase();
+    return keywords.some((keyword) =>
+      groupNameLower.includes(keyword.toLowerCase())
+    );
   });
 
   if (searchedGroup && searchedGroup.proxies) {
@@ -456,6 +515,7 @@ function main(config, profileName = "Default") {
 
     // 生成核心配置
     const configurations = {
+      dns: createDNSConfig(config),
       "rule-providers": createAllRuleProviders(),
       rules: createRoutingRules(),
       "proxy-groups": processProxyGroupsConfig(config),
