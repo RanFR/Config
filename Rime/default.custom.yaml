@@ -1,0 +1,21 @@
+# 补丁文件
+patch:
+  # 方案列表
+  schema_list:
+    # 仅保留必须的方案
+    - schema: rime_ice # 雾凇拼音（全拼）
+    - schema: t9 # 九宫格（仓输入法）
+
+  # 菜单候选词个数
+  menu/page_size: 7
+
+  # 中西文切换
+  # 已经输入部分内容时，快捷键切换
+  ascii_composer/switch_key/Shift_L: noop # 修改左Shift无用
+  ascii_composer/switch_key/+:
+    Escape: clear # 新增快捷键 Esc 清除未上屏内容
+
+  # 快捷键
+  key_binder/bindings/+:
+    # 空格切换中英文模式
+    - { when: always, accept: Control+space, toggle: ascii_mode }
