@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器、代理组和路由规则
  * @author RanFR
- * @version 2.9.2
- * @date 2025-11-19
- * @description 智能DNS配置，支持IPv6自动检测
+ * @version 2.10.0
+ * @date 2025-11-20
+ * @description 优化规则配置，优先使用GEO提供规则直连
  **/
 
 // 规则仓库地址
@@ -49,7 +49,7 @@ const DNS_CONFIG = {
 };
 
 // 直连规则
-const DIRECT_RULES = ["Bing", "China", "Download", "SteamCN"];
+const DIRECT_RULES = [];
 
 // AI组专用规则
 const AI_RULES = ["Claude", "Gemini", "Grok", "OpenAI"];
@@ -88,7 +88,7 @@ const URLTEST_KEYWORDS = ["自动", "Auto"];
 const FALLBACK_KEYWORDS = ["故障", "Fallback"];
 
 // AI组的关键词
-const AI_GROUP_KEYWORDS = ["ChatGPT", "Claude"];
+const AI_GROUP_KEYWORDS = ["ChatGPT", "OpenAI", "Claude", "Gemini", "Grok"];
 
 /**
  * 生成单个规则提供器配置
@@ -114,8 +114,8 @@ function createRuleProvider(name) {
 function createAllRuleProviders() {
   let providers = {};
 
-  // 合并直连规则、AI规则和代理规则
-  const allRules = [...DIRECT_RULES, ...AI_RULES, ...PROXY_RULES];
+  // 只合并AI规则和代理规则（跳过空的直连规则）
+  const allRules = [...AI_RULES, ...PROXY_RULES];
 
   allRules.forEach((name) => {
     const provider = createRuleProvider(name);
@@ -162,12 +162,14 @@ function createDNSConfig(config) {
 function createRoutingRules() {
   const rules = [];
 
-  // 添加直连规则
-  console.log(`添加 ${DIRECT_RULES.length} 个直连规则`);
-  DIRECT_RULES.forEach((name) => {
-    const ruleStr = `RULE-SET,${name},DIRECT`;
-    rules.push(ruleStr);
-  });
+  // 优先添加局域网规则
+  console.log("添加局域网直连规则");
+  rules.push("GEOIP,private,DIRECT,no-resolve");
+
+  // 添加中国规则 - 中国域名/IP直连
+  console.log("添加中国直连规则");
+  rules.push("GEOSITE,cn,DIRECT");
+  rules.push("GEOIP,cn,DIRECT");
 
   // 添加AI规则
   console.log(`添加 ${AI_RULES.length} 个AI规则`);
@@ -182,12 +184,6 @@ function createRoutingRules() {
     const ruleStr = `RULE-SET,${name},Default`;
     rules.push(ruleStr);
   });
-
-  // 添加 GEO 策略
-  console.log("添加 GEO 策略规则");
-  rules.push("GEOIP,LAN,DIRECT");
-  rules.push("GEOIP,CN,DIRECT");
-  rules.push("GEOSITE,CN,DIRECT");
 
   // 添加匹配代理规则
   console.log("添加匹配代理规则");
