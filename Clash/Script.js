@@ -2,9 +2,9 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器、代理组和路由规则
  * @author RanFR
- * @version 2.10.0
+ * @version 2.10.1
  * @date 2025-11-20
- * @description 优化规则配置，优先使用GEO提供规则直连
+ * @description 优化规则配置，优先使用GEO提供规则直连，优化节点匹配逻辑
  **/
 
 // 规则仓库地址
@@ -114,7 +114,7 @@ function createRuleProvider(name) {
 function createAllRuleProviders() {
   let providers = {};
 
-  // 只合并AI规则和代理规则（跳过空的直连规则）
+  // 只合并AI规则和代理规则
   const allRules = [...AI_RULES, ...PROXY_RULES];
 
   allRules.forEach((name) => {
@@ -335,7 +335,10 @@ const createProxyGroup = (
   // 查找匹配的代理组
   const searchedGroup = existingGroups.find((group) => {
     if (!group.name) return false;
-    return keywords.some((keyword) => group.name.includes(keyword));
+    const groupNameLower = group.name.toLowerCase();
+    return keywords.some((keyword) =>
+      groupNameLower.includes(keyword.toLowerCase())
+    );
   });
 
   if (searchedGroup && searchedGroup.proxies) {
