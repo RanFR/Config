@@ -9,6 +9,10 @@ patch:
   # 菜单候选词个数
   menu/page_size: 7
 
+  # 方案选单相关
+  switcher/hotkeys:
+    - Alt+slash
+
   # 中西文切换
   # 已经输入部分内容时，快捷键切换
   ascii_composer/switch_key/Shift_L: noop # 修改左Shift无用
