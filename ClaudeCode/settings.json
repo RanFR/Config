@@ -1,5 +1,4 @@
 {
-  "includeCoAuthoredBy": false,
   "env": {
     "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
     "ANTHROPIC_AUTH_TOKEN": "your_zhipu_api",
@@ -7,6 +6,7 @@
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.6",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6"
   },
+  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": ["Bash(find:*)", "Bash(tree:*)"],
     "deny": [],
@@ -19,18 +19,27 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${HOME}/.claude/hooks/markdown_formatter.py"
+            "command": "$HOME/.claude/hooks/markdown_formatter.py"
           }
         ]
       }
     ],
     "Notification": [
       {
-        "matcher": "",
+        "matcher": "permission_prompt",
         "hooks": [
           {
             "type": "command",
-            "command": "notify-send 'Claude Code' 'Waiting for user input...'"
+            "command": "$HOME/.claude/hooks/permission_notification.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/idle_notification.sh"
           }
         ]
       }
@@ -38,7 +47,6 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "${HOME}/.claude/scripts/statusline.sh"
-  },
-  "alwaysThinkingEnabled": true
+    "command": "$HOME/.claude/scripts/statusline.sh"
+  }
 }
