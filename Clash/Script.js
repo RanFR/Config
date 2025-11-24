@@ -2,13 +2,15 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器、代理组和路由规则
  * @author RanFR
- * @version 2.10.1
- * @date 2025-11-20
- * @description 优化规则配置，优先使用GEO提供规则直连，优化节点匹配逻辑
+ * @version 3.0.0
+ * @date 2025-11-24
+ * @description
+ * - 优化路由规则，仅保留AI规则和默认MATCH匹配
  **/
 
 // 规则仓库地址
-const RULE_URL = "";
+const AI_RULE_URL =
+  "https://raw.githubusercontent.com/RanFR/Rules/master/Clash";
 
 // 健康检查链接
 const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
@@ -48,38 +50,33 @@ const DNS_CONFIG = {
   ],
 };
 
-// 直连规则
-const DIRECT_RULES = [];
+// 全局规则
+const GLOBAL_CONFIG = {
+  "allow-lan": false,
+  mode: "rule",
+  "log-level": "info",
+  ipv6: true,
+  profile: {
+    "store-selected": true,
+    "store-fake-ip": true,
+  },
+  "global-client-fingerprint": "chrome",
+  "geodata-mode": true,
+  "geodata-loader": "standard",
+  "geo-auto-update": true,
+  "geo-update-interval": 24, // 更新间隔，单位小时
+  "geox-url": {
+    geoip:
+      "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat",
+    geosite:
+      "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat",
+    mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb",
+    asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb",
+  },
+};
 
 // AI组专用规则
 const AI_RULES = ["Claude", "Gemini", "Grok", "OpenAI"];
-
-// 代理规则
-const PROXY_RULES = [
-  "Amazon",
-  "Cloudflare",
-  "DevSites",
-  "Docker",
-  "Game",
-  "GitHub",
-  "Google",
-  "Intel",
-  "JetBrains",
-  "JsDelivr",
-  "Microsoft",
-  "Misc",
-  "Mozilla",
-  "Overleaf",
-  "Scholar",
-  "SourceForge",
-  "Steam",
-  "Telegram",
-  "Ubuntu",
-  "Wikipedia",
-  "X",
-  "Yandex",
-  "YouTube",
-];
 
 // 自动选择组关键词
 const URLTEST_KEYWORDS = ["自动", "Auto"];
@@ -101,7 +98,7 @@ function createRuleProvider(name) {
     format: "yaml",
     interval: 86400, // 每天更新
     behavior: "classical",
-    url: `${RULE_URL}${name}.yaml`,
+    url: `${AI_RULE_URL}/${name}.yaml`,
     path: `RuleProvider/${name}.yaml`,
   };
   return ruleProvider;
@@ -114,8 +111,8 @@ function createRuleProvider(name) {
 function createAllRuleProviders() {
   let providers = {};
 
-  // 只合并AI规则和代理规则
-  const allRules = [...AI_RULES, ...PROXY_RULES];
+  // 只合并AI规则
+  const allRules = [...AI_RULES];
 
   allRules.forEach((name) => {
     const provider = createRuleProvider(name);
@@ -133,15 +130,12 @@ function createAllRuleProviders() {
 function createDNSConfig(config) {
   console.log("生成 DNS 配置");
 
-  // 智能获取 IPv6 设置，优先级：dns.ipv6 > 根级别 ipv6 > false
+  // 智能获取 IPv6 设置，优先级：dns.ipv6 > false
   let ipv6Enabled = false; // 默认值
 
   if (config && config.dns && typeof config.dns.ipv6 === "boolean") {
     ipv6Enabled = config.dns.ipv6;
     console.log(`使用机场配置中的 DNS IPv6 设置: ${ipv6Enabled}`);
-  } else if (config && typeof config.ipv6 === "boolean") {
-    ipv6Enabled = config.ipv6;
-    console.log(`使用机场配置中的全局 IPv6 设置: ${ipv6Enabled}`);
   } else {
     console.log(`机场配置未找到 IPv6 设置，使用默认值: ${ipv6Enabled}`);
   }
@@ -153,6 +147,21 @@ function createDNSConfig(config) {
   };
 
   return dynamicDnsConfig;
+}
+
+/**
+ * 生成自定义全局配置
+ * @param {Object} config 配置文件对象
+ * @returns {Object} 全局配置对象
+ */
+function createGlobalConfig(config) {
+  console.log("生成全局配置");
+
+  const globalConfig = {
+    ...GLOBAL_CONFIG,
+  };
+
+  return globalConfig;
 }
 
 /**
@@ -178,18 +187,10 @@ function createRoutingRules() {
     rules.push(ruleStr);
   });
 
-  // 添加代理规则
-  console.log(`添加 ${PROXY_RULES.length} 个代理规则`);
-  PROXY_RULES.forEach((name) => {
-    const ruleStr = `RULE-SET,${name},Default`;
-    rules.push(ruleStr);
-  });
-
-  // 添加匹配代理规则
-  console.log("添加匹配代理规则");
+  // 添加默认代理规则
+  console.log("添加默认匹配代理规则");
   rules.push(`MATCH,Default`);
 
-  console.log(`总共生成了 ${rules.length} 条路由规则`);
   return rules;
 }
 
@@ -443,17 +444,19 @@ const createAIGroup = (config) => {
  * @returns {boolean} 是否有效
  */
 function isValidConfig(config) {
-  // 如果配置无效，返回 true；否则返回 false
+  // 如果配置有效，返回 true；否则返回 false
   if (!config || typeof config !== "object") {
-    return true;
+    console.log("配置无效：不是对象");
+    return false;
   }
 
   // 检查 proxies 是否有效
   if (!Array.isArray(config.proxies) || config.proxies.length === 0) {
-    return true;
+    console.log("配置无效：缺少有效的 proxies 列表");
+    return false;
   }
 
-  return false;
+  return true;
 }
 
 /**
@@ -507,14 +510,15 @@ function main(config, profileName = "Default") {
   const startTime = Date.now();
 
   try {
-    if (isValidConfig(config)) {
-      throw new Error("Invalid config object provided");
+    if (!isValidConfig(config)) {
+      throw new Error("无效的配置文件，请检查！");
     }
 
     console.log(`开始处理配置文件: ${profileName}`);
 
     // 生成核心配置
     const configurations = {
+      ...createGlobalConfig(config),
       dns: createDNSConfig(config),
       "rule-providers": createAllRuleProviders(),
       rules: createRoutingRules(),
