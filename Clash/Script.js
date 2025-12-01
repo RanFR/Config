@@ -2,10 +2,12 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器、代理组和路由规则
  * @author RanFR
- * @version 3.0.0
- * @date 2025-11-24
+ * @version 3.1.0
+ * @date 2025-12-01
  * @description
- * - 优化路由规则，仅保留AI规则和默认MATCH匹配
+ * - 优化代理组排序逻辑，优先匹配香港和台湾节点
+ * - 智能IPv6配置支持
+ * - AI规则使用GEOSITE提供器
  **/
 
 // 规则仓库地址
@@ -14,6 +16,31 @@ const AI_RULE_URL =
 
 // 健康检查链接
 const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
+
+// 全局规则
+const GLOBAL_CONFIG = {
+  "allow-lan": false,
+  mode: "rule",
+  "log-level": "info",
+  ipv6: true,
+  profile: {
+    "store-selected": true,
+    "store-fake-ip": true,
+  },
+  "global-client-fingerprint": "chrome",
+  "geodata-mode": true,
+  "geodata-loader": "standard",
+  "geo-auto-update": true,
+  "geo-update-interval": 24, // 更新间隔，单位小时
+  "geox-url": {
+    geoip:
+      "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat",
+    geosite:
+      "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat",
+    mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb",
+    asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb",
+  },
+};
 
 // DNS 配置常量
 const DNS_CONFIG = {
@@ -50,34 +77,6 @@ const DNS_CONFIG = {
   ],
 };
 
-// 全局规则
-const GLOBAL_CONFIG = {
-  "allow-lan": false,
-  mode: "rule",
-  "log-level": "info",
-  ipv6: true,
-  profile: {
-    "store-selected": true,
-    "store-fake-ip": true,
-  },
-  "global-client-fingerprint": "chrome",
-  "geodata-mode": true,
-  "geodata-loader": "standard",
-  "geo-auto-update": true,
-  "geo-update-interval": 24, // 更新间隔，单位小时
-  "geox-url": {
-    geoip:
-      "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat",
-    geosite:
-      "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat",
-    mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb",
-    asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb",
-  },
-};
-
-// AI组专用规则
-const AI_RULES = ["Claude", "Gemini", "Grok", "OpenAI"];
-
 // 自动选择组关键词
 const URLTEST_KEYWORDS = ["自动", "Auto"];
 
@@ -88,38 +87,17 @@ const FALLBACK_KEYWORDS = ["故障", "Fallback"];
 const AI_GROUP_KEYWORDS = ["ChatGPT", "OpenAI", "Claude", "Gemini", "Grok"];
 
 /**
- * 生成单个规则提供器配置
- * @param {string} name - 规则名称
- * @returns {Object} 规则提供器对象
+ * 生成自定义全局配置
+ * @returns {Object} 全局配置对象
  */
-function createRuleProvider(name) {
-  let ruleProvider = {
-    type: "http",
-    format: "yaml",
-    interval: 86400, // 每天更新
-    behavior: "classical",
-    url: `${AI_RULE_URL}/${name}.yaml`,
-    path: `RuleProvider/${name}.yaml`,
+function createGlobalConfig() {
+  console.log("生成全局配置");
+
+  const globalConfig = {
+    ...GLOBAL_CONFIG,
   };
-  return ruleProvider;
-}
 
-/**
- * 生成所有规则提供器
- * @returns {Object} 所有规则提供器配置
- */
-function createAllRuleProviders() {
-  let providers = {};
-
-  // 只合并AI规则
-  const allRules = [...AI_RULES];
-
-  allRules.forEach((name) => {
-    const provider = createRuleProvider(name);
-    providers[name] = provider;
-  });
-
-  return providers;
+  return globalConfig;
 }
 
 /**
@@ -150,21 +128,6 @@ function createDNSConfig(config) {
 }
 
 /**
- * 生成自定义全局配置
- * @param {Object} config 配置文件对象
- * @returns {Object} 全局配置对象
- */
-function createGlobalConfig(config) {
-  console.log("生成全局配置");
-
-  const globalConfig = {
-    ...GLOBAL_CONFIG,
-  };
-
-  return globalConfig;
-}
-
-/**
  * 生成路由规则列表
  * @returns {Array} 规则列表
  */
@@ -181,11 +144,11 @@ function createRoutingRules() {
   rules.push("GEOIP,cn,DIRECT");
 
   // 添加AI规则
-  console.log(`添加 ${AI_RULES.length} 个AI规则`);
-  AI_RULES.forEach((name) => {
-    const ruleStr = `RULE-SET,${name},AI`;
-    rules.push(ruleStr);
-  });
+  console.log(`添加AI规则`);
+  rules.push("GEOSITE,anthropic,AI");
+  rules.push("GEOSITE,openai,AI");
+  rules.push("GEOSITE,google-gemini,AI");
+  rules.push("GEOSITE,xai,AI");
 
   // 添加默认代理规则
   console.log("添加默认匹配代理规则");
@@ -518,9 +481,8 @@ function main(config, profileName = "Default") {
 
     // 生成核心配置
     const configurations = {
-      ...createGlobalConfig(config),
+      ...createGlobalConfig(),
       dns: createDNSConfig(config),
-      "rule-providers": createAllRuleProviders(),
       rules: createRoutingRules(),
       "proxy-groups": processProxyGroupsConfig(config),
     };
