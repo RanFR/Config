@@ -74,54 +74,54 @@ export NO_PROXY=${NO_PROXY_CFG}
 export no_proxy=${NO_PROXY_CFG}
 unset PROXY_CFG NO_PROXY_CFG
 
-# Ros environment setup
-source /opt/ros/noetic/setup.bash
-# Disable ROS1 Rviz EOL warnings
-export DISABLE_ROS1_EOL_WARNINGS=true
+# # Ros environment setup
+# source /opt/ros/noetic/setup.bash
+# # Disable ROS1 Rviz EOL warnings
+# export DISABLE_ROS1_EOL_WARNINGS=true
 
-# Acados
-case ":${LD_LIBRARY_PATH}:" in
-    *:"$HOME/.local/lib":*)
-        ;;
-    *)
-        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/lib"
-        ;;
-esac
-export ACADOS_SOURCE_DIR="$HOME/.local"
+# # Acados
+# case ":${LD_LIBRARY_PATH}:" in
+#     *:"$HOME/.local/lib":*)
+#         ;;
+#     *)
+#         export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/lib"
+#         ;;
+# esac
+# export ACADOS_SOURCE_DIR="$HOME/.local"
 
-# Astral uv
-if command -v uv >/dev/null 2>&1; then
-    eval "$(uv generate-shell-completion bash)"
-fi
+# # Astral uv
+# if command -v uv >/dev/null 2>&1; then
+#     eval "$(uv generate-shell-completion bash)"
+# fi
 
-# Nvidia Isaac
-export ISAACSIM_PATH="$HOME/Softwares/IsaacSim"
+# # Nvidia Isaac
+# export ISAACSIM_PATH="$HOME/Softwares/IsaacSim"
 
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+# # NVM
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
-# CUDA
-case ":${PATH}:" in
-    *:"/usr/local/cuda/bin":*)
-        ;;
-    *)
-        export PATH=${PATH}:/usr/local/cuda/bin
-        ;;
-esac
-case ":${LD_LIBRARY_PATH}:" in
-    *:"/usr/local/cuda/lib":*)
-        ;;
-    *)
-        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/cuda/lib"
-        ;;
-esac
+# # CUDA
+# case ":${PATH}:" in
+#     *:"/usr/local/cuda/bin":*)
+#         ;;
+#     *)
+#         export PATH=${PATH}:/usr/local/cuda/bin
+#         ;;
+# esac
+# case ":${LD_LIBRARY_PATH}:" in
+#     *:"/usr/local/cuda/lib":*)
+#         ;;
+#     *)
+#         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/cuda/lib"
+#         ;;
+# esac
 
-# Rust
-source "$HOME/.cargo/env"
-export RUSTUP_UPDATE_ROOT=https://mirrors.cernet.edu.cn/rustup/rustup
-export RUSTUP_DIST_SERVER=https://mirrors.cernet.edu.cn/rustup
+# # Rust
+# source "$HOME/.cargo/env"
+# export RUSTUP_UPDATE_ROOT=https://mirrors.cernet.edu.cn/rustup/rustup
+# export RUSTUP_DIST_SERVER=https://mirrors.cernet.edu.cn/rustup
 
 # # Flightmare
 # export FLIGHTMARE_PATH=$HOME/Projects/Simulator/Flightmare
