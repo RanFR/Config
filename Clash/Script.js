@@ -2,7 +2,7 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器、代理组和路由规则
  * @author RanFR
- * @version 3.1.0
+ * @version 3.2.0
  * @date 2025-12-01
  * @description
  * - 优化代理组排序逻辑，优先匹配香港和台湾节点
@@ -21,8 +21,10 @@ const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
 const GLOBAL_CONFIG = {
   "allow-lan": false,
   mode: "rule",
+  "mixed-port": 7890,
   "log-level": "info",
   ipv6: true,
+  "unified-delay": true,
   profile: {
     "store-selected": true,
     "store-fake-ip": true,
@@ -40,6 +42,10 @@ const GLOBAL_CONFIG = {
     mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb",
     asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb",
   },
+  "external-controller": "127.0.0.1:9090",
+  "external-ui": "ui",
+  "external-ui-url":
+    "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip",
 };
 
 // DNS 配置常量
@@ -48,14 +54,13 @@ const DNS_CONFIG = {
   listen: "127.0.0.1:5335",
   ipv6: false, // 动态设置
   "cache-algorithm": "arc", // or lru
-  "prefer-h3": true,
+  "respect-rules": true,
   "enhanced-mode": "fake-ip",
   "direct-nameserver": [
-    "system",
     "https://dns.alidns.com/dns-query",
     "https://doh.pub/dns-query",
   ],
-  "default-nameserver": ["tls://223.5.5.5:853", "tls://119.29.29.29:853"],
+  "default-nameserver": ["223.5.5.5", "119.29.29.29"],
   nameserver: [
     "https://cloudflare-dns.com/dns-query",
     "https://dns.google/dns-query",
@@ -65,7 +70,6 @@ const DNS_CONFIG = {
     "https://doh.pub/dns-query",
   ],
   "fake-ip-range": "198.18.0.1/16",
-  "fake-ip-range-v6": "fdfe:dcba:9876::/64",
   "fake-ip-filter": [
     "*.lan",
     "*.local",
