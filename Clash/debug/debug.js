@@ -7,7 +7,7 @@ const configYaml = fs.readFileSync("./config.yaml", "utf8");
 const configObj = yaml.load(configYaml);
 
 // 引入你的主脚本
-const { main } = require("./Script.js"); // 路径根据实际情况调整
+const { main } = require("./script.js"); // 路径根据实际情况调整
 
 // 运行主函数
 const result = main(configObj);
