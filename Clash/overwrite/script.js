@@ -2,17 +2,14 @@
  * Clash Verge 配置脚本
  * 用于自动配置DNS、规则提供器、代理组和路由规则
  * @author RanFR
- * @version 3.2.0
- * @date 2025-12-01
+ * @version 3.3.0-alpha
+ * @date 2025-12-05
  * @description
- * - 优化代理组排序逻辑，优先匹配香港和台湾节点
  * - 智能IPv6配置支持
  * - AI规则使用GEOSITE提供器
+ * - 预先清理配置，避免冲突
+ * - 直连增加系统DNS解析
  **/
-
-// 规则仓库地址
-const AI_RULE_URL =
-  "https://raw.githubusercontent.com/RanFR/Rules/master/Clash";
 
 // 健康检查链接
 const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
@@ -21,7 +18,7 @@ const HEALTH_CHECK_URL = "https://www.gstatic.com/generate_204";
 const GLOBAL_CONFIG = {
   "allow-lan": false,
   mode: "rule",
-  "mixed-port": 7890,
+  port: 7890,
   "log-level": "info",
   ipv6: true,
   "unified-delay": true,
@@ -53,14 +50,15 @@ const DNS_CONFIG = {
   enable: true,
   listen: "127.0.0.1:5335",
   ipv6: false, // 动态设置
-  "cache-algorithm": "arc", // or lru
+  "cache-algorithm": "arc",
   "respect-rules": true,
   "enhanced-mode": "fake-ip",
   "direct-nameserver": [
+    "system",
     "https://dns.alidns.com/dns-query",
     "https://doh.pub/dns-query",
   ],
-  "default-nameserver": ["223.5.5.5", "119.29.29.29"],
+  "default-nameserver": ["system", "223.5.5.5", "119.29.29.29"],
   nameserver: [
     "https://cloudflare-dns.com/dns-query",
     "https://dns.google/dns-query",
@@ -70,15 +68,7 @@ const DNS_CONFIG = {
     "https://doh.pub/dns-query",
   ],
   "fake-ip-range": "198.18.0.1/16",
-  "fake-ip-filter": [
-    "*.lan",
-    "*.local",
-    "+.msftconnecttest.com",
-    "+.msftncsi.com",
-    "localhost.ptlogin2.qq.com",
-    "localhost.sec.qq.com",
-    "localhost.work.weixin.qq.com",
-  ],
+  "fake-ip-filter": ["geosite:private", "geosite:category-ntp"],
 };
 
 // 自动选择组关键词
@@ -145,7 +135,7 @@ function createRoutingRules() {
   // 添加中国规则 - 中国域名/IP直连
   console.log("添加中国直连规则");
   rules.push("GEOSITE,cn,DIRECT");
-  rules.push("GEOIP,cn,DIRECT");
+  rules.push("GEOIP,cn,DIRECT,no-resolve");
 
   // 添加AI规则
   console.log(`添加AI规则`);
@@ -427,6 +417,28 @@ function isValidConfig(config) {
 }
 
 /**
+ * 清除无用的配置，避免覆写冲突
+ * @param {Object} config - 配置文件对象
+ * @returns {void}
+ */
+function removeUnusedParameters(config) {
+  // 需要清除的参数列表 - 这些参数会重新设置
+  // 谨慎添加，避免误删重要配置
+  const parametersToRemove = ["mixed-port", "dns", "rules"];
+
+  console.log("开始清除无用配置...");
+
+  parametersToRemove.forEach((param) => {
+    if (param in config) {
+      delete config[param];
+      console.log(`已删除配置: ${param}`);
+    }
+  });
+
+  console.log("无用配置清除完成");
+}
+
+/**
  * 处理代理组配置
  * @param {Object} config - 配置对象
  * @returns {Object} 新的代理组配置
@@ -482,6 +494,9 @@ function main(config, profileName = "Default") {
     }
 
     console.log(`开始处理配置文件: ${profileName}`);
+
+    // 清除无用的配置
+    removeUnusedParameters(config);
 
     // 生成核心配置
     const configurations = {
