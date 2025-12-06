@@ -1,10 +1,11 @@
 {
+  "companyAnnouncements": ["欢迎回来，今天也是充满活力的一天！"],
   "env": {
     "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
-    "ANTHROPIC_AUTH_TOKEN": "your_zhipu_api",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.6",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6",
+    "CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL": true
   },
   "includeCoAuthoredBy": false,
   "permissions": {
@@ -31,15 +32,6 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/permission_notification.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "idle_prompt",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/idle_notification.sh"
           }
         ]
       }
