@@ -104,62 +104,6 @@ export HISTTIMEFORMAT="%F %T "
 stty -ixon
 
 # =============================================================================
-# 可选环境配置
-# =============================================================================
-# 以下配置根据需要取消注释启用
-
-# ROS（机器人操作系统）
-# # source /opt/ros/noetic/setup.bash
-# # export DISABLE_ROS1_EOL_WARNINGS=true
-
-# Acados（优化工具包）
-# # case ":${LD_LIBRARY_PATH}:" in
-# #     *:"$HOME/.local/lib":*)
-# #         ;;
-# #     *)
-# #         export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/lib"
-# #         ;;
-# # esac
-# # export ACADOS_SOURCE_DIR="$HOME/.local"
-
-# Astral uv（Python 包管理器）
-# # if command -v uv >/dev/null 2>&1; then
-# #     eval "$(uv generate-shell-completion bash)"
-# # fi
-
-# Nvidia Isaac Sim
-# # export ISAACSIM_PATH="$HOME/Softwares/IsaacSim"
-
-# NVM（Node 版本管理器）
-# # export NVM_DIR="$HOME/.nvm"
-# # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-# # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
-# CUDA（NVIDIA GPU 计算工具包）
-# # case ":${PATH}:" in
-# #     *:"/usr/local/cuda/bin":*)
-# #         ;;
-# #     *)
-# #         export PATH=${PATH}:/usr/local/cuda/bin
-# #         ;;
-# # esac
-# # case ":${LD_LIBRARY_PATH}:" in
-# #     *:"/usr/local/cuda/lib":*)
-# #         ;;
-# #     *)
-# #         export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/cuda/lib"
-# #         ;;
-# # esac
-
-# Rust 编程语言
-# # source "$HOME/.cargo/env"
-# # export RUSTUP_UPDATE_ROOT=https://mirrors.cernet.edu.cn/rustup/rustup
-# # export RUSTUP_DIST_SERVER=https://mirrors.cernet.edu.cn/rustup
-
-# Flightmare 模拟器
-# # export FLIGHTMARE_PATH=$HOME/Projects/Simulator/Flightmare
-
-# =============================================================================
 # 终端启动提示
 # =============================================================================
 # 显示一个欢迎信息，可以通过设置环境变量禁用
