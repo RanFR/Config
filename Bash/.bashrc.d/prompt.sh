@@ -102,10 +102,14 @@ git_info() {
 # 获取 Python 虚拟环境名称
 venv_info() {
 	if [ -n "$VIRTUAL_ENV_PROMPT" ]; then
-		# 使用自定义提示符变量（如果设置了）
+		# UV 环境
 		echo -e "${COLOR_VENV}🐍 ${VIRTUAL_ENV_PROMPT}${RESET}"
 		return
+	elif [ -n "$CONDA_DEFAULT_ENV" ]; then
+		# Conda 环境
+		echo -e "${COLOR_VENV}🐍 ${CONDA_DEFAULT_ENV}${RESET}"
 	elif [ -n "$VIRTUAL_ENV" ]; then
+		# 标准虚拟环境
 		local venv_name=$(basename "$VIRTUAL_ENV")
 		echo -e "${COLOR_VENV}🐍 ${venv_name}${RESET}"
 	fi
