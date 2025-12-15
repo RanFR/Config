@@ -1,5 +1,5 @@
 ---
-name: Python网络爬虫专家
+name: python-web-scraping-expert
 version: 1.0.0
 description: 专注于Python网络爬虫、数据提取、自动化和网络爬取的专业代理，使用现代异步技术
 author: Claude Code Specialist
