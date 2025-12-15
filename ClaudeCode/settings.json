@@ -24,17 +24,6 @@
           }
         ]
       }
-    ],
-    "Notification": [
-      {
-        "matcher": "permission_prompt",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/permission_notification.sh"
-          }
-        ]
-      }
     ]
   },
   "statusLine": {
