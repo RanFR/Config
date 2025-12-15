@@ -97,9 +97,6 @@ elif command -v nano >/dev/null 2>&1; then
 	export EDITOR=nano
 fi
 
-# 历史记录时间格式
-export HISTTIMEFORMAT="%F %T "
-
 # 禁用 Ctrl+S（终端冻结）
 stty -ixon
 
@@ -112,18 +109,7 @@ if [ "$BASH_STARTUP_MESSAGE" != "false" ] && [ -t 1 ]; then
 	if [ "$TERM" != "dumb" ] && [ -n "$BASH_VERSION" ]; then
 		# 获取系统信息
 		if command -v figlet >/dev/null 2>&1; then
-			echo -e "${COLOR_BLUE}$(figlet -f small "Welcome back!")${RESET}"
+			echo -e "${COLOR_BLUE}$(figlet "Welcome back!")${RESET}"
 		fi
-
-		# 显示时间
-		echo -e "${DIM}${COLOR_TIME}$(date '+%A, %B %d, %Y - %H:%M:%S')${RESET}"
-
-		# 显示系统负载（可选）
-		if [ -f /proc/loadavg ]; then
-			load=$(cut -d' ' -f1-3 /proc/loadavg)
-			echo -e "${DIM}System Load: ${load}${RESET}"
-		fi
-
-		echo # 空行分隔
 	fi
 fi

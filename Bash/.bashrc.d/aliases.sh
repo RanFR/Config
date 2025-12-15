@@ -36,14 +36,11 @@ alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 # =============================================================================
 
 # 基础 Git 命令
-alias gc='git commit'
-alias gs='git status'
-alias gb='git branch'
-alias gm='git merge'
+alias gc="git clone"
+alias gs='git switch'
 alias gp='git pull'
 alias gpp='git push'
 alias gsu='git submodule update --init --recursive --progress'
-alias gcl='git clone'
 
 # =============================================================================
 # 系统管理别名
@@ -51,27 +48,15 @@ alias gcl='git clone'
 
 # 进程管理
 alias ps='ps auxf'
-alias psg='ps aux | grep -v grep | grep'
-alias killall='killall -v'
 alias top='htop 2>/dev/null || top' # 优先使用 htop
 
 # 网络相关
-alias ping='ping -c 4'            # 默认只 ping 4 次
-alias myip='curl -s ipinfo.io/ip' # 获取外网 IP
-alias ports='netstat -tuln'       # 查看监听端口
-alias connections='ss -tuln'      # 使用 ss 替代 netstat
+alias ping='ping -c 4'      # 默认只 ping 4 次
+alias ports='netstat -tuln' # 查看监听端口
 
 # 系统信息
 alias df='df -h'
 alias free='free -h'
-alias uptime='uptime -p'
-alias meminfo='free -m -l -t'
-alias psproc='ps -ef | grep'
-
-# 权限管理
-alias chmodx='chmod +x'
-alias chmodr='chmod -R'
-alias chownr='chown -R'
 
 # =============================================================================
 # 开发相关别名
@@ -80,25 +65,7 @@ alias chownr='chown -R'
 # Python 相关
 alias py='python3'
 alias pip='pip3'
-alias venv='python3 -m venv'
-alias activate='source .venv/bin/activate'
-
-# Node.js 相关
-alias node='node'
-alias npm='npm'
-alias npx='npx'
-alias yarn='yarn'
-alias serve='python3 -m http.server'
-
-# Docker 相关
-alias d='docker'
-alias dc='docker-compose'
-alias dps='docker ps'
-alias dpsa='docker ps -a'
-alias di='docker images'
-alias drm='docker rm'
-alias drmi='docker rmi'
-alias dexec='docker exec -it'
+alias activate='. .venv/bin/activate'
 
 # ROS（机器人操作系统）
 alias cb='catkin_make --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
@@ -143,10 +110,6 @@ if [ -x /usr/bin/man ]; then
 			man "$@"
 	}
 fi
-
-# 快速编辑配置文件
-alias bashrc='nvim ~/.bashrc'
-alias bashrcd='nvim ~/.bashrc.d/'
 
 # 快速重载配置
 alias reload='. ~/.bashrc'

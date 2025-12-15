@@ -101,48 +101,13 @@ git_info() {
 
 # 获取 Python 虚拟环境名称
 venv_info() {
-	if [ -n "$VIRTUAL_ENV" ]; then
+	if [ -n "$VIRTUAL_ENV_PROMPT" ]; then
+		# 使用自定义提示符变量（如果设置了）
+		echo -e "${COLOR_VENV}🐍 ${VIRTUAL_ENV_PROMPT}${RESET}"
+		return
+	elif [ -n "$VIRTUAL_ENV" ]; then
 		local venv_name=$(basename "$VIRTUAL_ENV")
 		echo -e "${COLOR_VENV}🐍 ${venv_name}${RESET}"
-	fi
-}
-
-# =============================================================================
-# 命令执行时间
-# =============================================================================
-
-# 记录命令开始时间
-timer_start() {
-	timer=${timer:-$SECONDS}
-}
-
-# 记录命令结束时间并显示耗时
-timer_stop() {
-	timer_show=$((SECONDS - timer))
-	unset timer
-}
-
-# 设置 trap 以捕获命令
-trap 'timer_start' DEBUG
-PROMPT_COMMAND='timer_stop'
-
-# 格式化执行时间显示
-format_timer() {
-	if [ "${timer_show:-0}" -gt 0 ]; then
-		local hours=$((timer_show / 3600))
-		local minutes=$(((timer_show % 3600) / 60))
-		local seconds=$((timer_show % 60))
-
-		local time_str=""
-		if [ "$hours" -gt 0 ]; then
-			time_str="${hours}h "
-		fi
-		if [ "$minutes" -gt 0 ]; then
-			time_str="${time_str}${minutes}m "
-		fi
-		time_str="${time_str}${seconds}s"
-
-		echo -e "${DIM}${COLOR_TIME}⏱ ${time_str}${RESET}"
 	fi
 }
 
@@ -163,15 +128,23 @@ smart_path() {
 	# 如果路径太长，缩短中间部分
 	local max_length=40
 	if [ ${#path} -gt "$max_length" ]; then
-		local parts=(${path//\// })
+		# 使用 / 分割为数组，保留绝对路径时首元素为空的特性
+		local IFS='/'
+		local parts=()
+		read -r -a parts <<<"$path"
+		local last_index=$((${#parts[@]} - 1))
+		local first=""
+		local last="${parts[$last_index]}"
 		local new_path=""
 
-		if [ "$path" = "${path#/}" ]; then
-			# 相对路径
-			new_path="${parts[0]}/.../${parts[-1]}"
+		if [[ "$path" = "${path#/}" ]]; then
+			# 非以 / 开头（相对路径或以 ~ 开头）
+			first="${parts[0]}"
+			new_path="${first}/.../${last}"
 		else
-			# 绝对路径
-			new_path="/${parts[1]}/.../${parts[-1]}"
+			# 以 / 开头的绝对路径，parts[1] 为第一个目录名
+			first="${parts[1]}"
+			new_path="/${first}/.../${last}"
 		fi
 		path="$new_path"
 	fi
@@ -213,52 +186,29 @@ host_info() {
 }
 
 # =============================================================================
-# 终端状态
-# =============================================================================
-
-# 显示上一条命令的退出状态
-last_command_status() {
-	local status=$?
-	if [ "$status" -ne 0 ]; then
-		echo -e "${BOLD}${COLOR_ERROR}✖ ${status}${RESET} "
-	fi
-}
-
-# =============================================================================
 # 构建最终的提示符
 # =============================================================================
 
 # 构建多行提示符
 build_prompt() {
-	# 第一行：用户@主机 和路径
-	local line1="$(host_info) $(smart_path)"
+	# 第一部分：用户@主机
+	local part1="$(host_info)"
 
-	# 第二行：Git、虚拟环境、目录统计等
-	local line2=""
+	# 第二部分：当前目录
+	local part2="   $(smart_path)"
+
+	# 第三部：Git、虚拟环境、目录统计等
+	local part3=""
 	local git_info_output=$(git_info)
-	[ -n "$git_info_output" ] && line2="${line2} ${git_info_output}"
-
+	[ -n "$git_info_output" ] && part3="${part3}   ${git_info_output}"
 	local venv_info_output=$(venv_info)
-	[ -n "$venv_info_output" ] && line2="${line2} ${venv_info_output}"
-
-	# 第三行：时间和命令状态
-	local line3=""
-	local timer_output=$(format_timer)
-	[ -n "$timer_output" ] && line3="${line3} ${timer_output}"
-
-	local status_output=$(last_command_status)
-	[ -n "$status_output" ] && line3="${status_output}${line3}"
+	[ -n "$venv_info_output" ] && part3="${part3}   ${venv_info_output}"
 
 	# 组合所有行
 	PS1=""
 
-	# 添加命令执行时间在提示符之前
-	if [ -n "$timer_output" ]; then
-		PS1="${timer_output}\n"
-	fi
-
 	# 主提示符内容
-	PS1="${PS1}${line1}${line2}\n"
+	PS1="${PS1}${part1}${part2}${part3}\n"
 
 	# 提示符符号
 	if [ "$EUID" -eq 0 ]; then
@@ -270,11 +220,14 @@ build_prompt() {
 	# 设置窗口标题
 	case "$TERM" in
 	xterm* | rxvt* | screen* | tmux*)
-		local title=$(smart_path | sed 's/\x1b\[[0-9;]*m//g') # 移除 ANSI 颜色代码
-		PS1="\[\e]0;${user}@${host}: ${title}\a\]${PS1}"
+		# 设定标题所用的用户与主机，并移除路径中的 ANSI 颜色
+		local title_user=$(whoami)
+		local title_host=$(hostname)
+		local title=$(smart_path | sed 's/\x1b\[[0-9;]*m//g')
+		PS1="\[\e]0;${title_user}@${title_host}: ${title}\a\]${PS1}"
 		;;
 	esac
 }
 
 # 设置 PROMPT_COMMAND 来动态构建提示符
-PROMPT_COMMAND="build_prompt; $PROMPT_COMMAND"
+PROMPT_COMMAND="build_prompt"
