@@ -73,7 +73,7 @@ git_info() {
 
 		[ "$staged_count" -gt 0 ] && status_indicator="${status_indicator} ${COLOR_GIT_STAGED}●${staged_count}${RESET}"
 		[ "$modified_count" -gt 0 ] && status_indicator="${status_indicator} ${COLOR_GIT_DIRTY}✚${modified_count}${RESET}"
-		[ "$untracked_count" -gt 0 ] && status_indicator="${status_indicator} ${COLOR_WARNING}…${untracked_count}${RESET}"
+		[ "$untracked_count" -gt 0 ] && status_indicator="${status_indicator} ${COLOR_WARNING}?${untracked_count}${RESET}"
 	fi
 
 	# 获取远程分支状态（ahead/behind）
@@ -92,7 +92,7 @@ git_info() {
 	fi
 
 	# 输出完整的 Git 信息
-	echo -e "${COLOR_GIT}${RESET} ${BOLD}${status_color}${branch}${RESET}${status_indicator}${remote_info}"
+	echo -e "${COLOR_GIT}${RESET}${BOLD}${status_color}${branch}${RESET}${status_indicator}${remote_info}"
 }
 
 # =============================================================================
@@ -228,6 +228,7 @@ build_prompt() {
 		local title_user=$(whoami)
 		local title_host=$(hostname)
 		local title=$(smart_path | sed 's/\x1b\[[0-9;]*m//g')
+		# 设置窗口标题
 		PS1="\[\e]0;${title_user}@${title_host}: ${title}\a\]${PS1}"
 		;;
 	esac
