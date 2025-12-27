@@ -92,7 +92,7 @@ unset PROXY_CFG NO_PROXY_CFG
 
 # 默认编辑器
 if command -v nvim >/dev/null 2>&1; then
-	export EDITOR=vim
+	export EDITOR=nvim
 elif command -v nano >/dev/null 2>&1; then
 	export EDITOR=nano
 fi
