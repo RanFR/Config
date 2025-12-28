@@ -1,16 +1,19 @@
 {
-  "companyAnnouncements": ["欢迎回来，今天也是充满活力的一天！"],
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "cleanupPeriodDays": 30,
   "env": {
     "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.6",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.7",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.7",
     "CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL": true
   },
-  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": ["Bash(find:*)", "Bash(tree:*)"],
-    "deny": [],
+    "deny": ["Read(./build)", "Read(./.env)"],
     "ask": ["Bash(rm:*)"]
   },
   "hooks": {
@@ -29,5 +32,14 @@
   "statusLine": {
     "type": "command",
     "command": "$HOME/.claude/scripts/statusline.sh"
+  },
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true
   }
 }
