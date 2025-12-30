@@ -1,77 +1,86 @@
-# If not running interactively, don't do anything
+# =============================================================================
+# Bash 交互模式检查
+# =============================================================================
+# 如果不是交互模式，不执行任何操作
 case $- in
 *i*) ;;
 *) return ;;
 esac
 
-# History settings
-# Set the maximum number of lines in the history file
-HISTSIZE=1000
-# Set the maximum number of lines in the history file on disk
-HISTFILESIZE=2000
-# Don't put duplicate lines or lines starting with space in the history.
-HISTCONTROL=ignoreboth
-# Append to the history file, don't overwrite it
-shopt -s histappend
+# =============================================================================
+# 基础配置
+# =============================================================================
 
-# Check the window size after each command and.
-# If necessary, update the values of LINES and COLUMNS.
+# 历史记录设置
+# 设置内存中保存的命令数量
+HISTSIZE=5000
+# 设置历史文件中保存的命令数量
+HISTFILESIZE=10000
+# 忽略重复命令和以空格开头的命令
+HISTCONTROL=ignoreboth:erasedups
+# 追加而不是覆盖历史文件
+shopt -s histappend
+# 多行命令保存为单条记录
+shopt -s cmdhist
+# 检查并更新终端窗口大小
 shopt -s checkwinsize
 
-# Make less more friendly for non-text input files, see lesspipe(1)
+# less 增强配置
+# 使 less 更好地处理非文本文件
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# Set variable identifying the chroot you work in
+# Chroot 环境标识
+# 设置标识以识别当前是否在 chroot 环境中工作
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-  debian_chroot=$(cat /etc/debian_chroot)
+	debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# Bash function
-if [ -f ~/.bash_function ]; then
-  source ~/.bash_function
-fi
+# =============================================================================
+# 模块化配置加载
+# =============================================================================
+# 按特定顺序加载配置文件，确保依赖关系正确
+if [ -d "$HOME/.bashrc.d" ]; then
+	# 首先加载基础配置（颜色等）
+	for config_file in "$HOME/.bashrc.d"/colors.sh; do
+		[ -f "$config_file" ] && . "$config_file"
+	done
 
-# Set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-xterm-color | *-256color) color_prompt=yes ;;
-esac
+	# 然后加载功能配置
+	for config_file in "$HOME/.bashrc.d"/{completion,function,aliases}.sh; do
+		[ -f "$config_file" ] && . "$config_file"
+	done
 
-if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-  # We have color support; assume it's compliant with Ecma-48
-  # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-  # a case would tend to support setf rather than setaf.)
-  color_prompt=yes
+	# 最后加载提示符配置（依赖颜色配置）
+	for config_file in "$HOME/.bashrc.d"/prompt.sh; do
+		[ -f "$config_file" ] && . "$config_file"
+	done
+
+	# 确保提示符已设置（如果没有则设置一个基本的提示符）
+	if [ -z "$PS1" ]; then
+		PS1='\u@\h:\w\$ '
+	fi
+
+	# 加载其他自定义配置
+	for config_file in "$HOME/.bashrc.d"/*.sh; do
+		# 跳过已加载的文件
+		case "$(basename "$config_file")" in
+		colors | prompt | completion | function | aliases) continue ;;
+		*)
+			[ -f "$config_file" ] && . "$config_file"
+			;;
+		esac
+	done
 else
-  color_prompt=
+	# 如果 .bashrc.d 目录不存在，使用基本提示符
+	PS1='\u@\h:\w\$ '
 fi
 
-if [ "$color_prompt" = yes ]; then
-  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]   \[\033[01;34m\]\w\[\033[00m\]   \[\033[01;36m\]$(parse_git_branch)\[\033[00m\]\n\[\033[01;33m\]➔\[\033[00m\] '
-else
-  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(parse_git_branch)\n➔ '
-fi
-unset color_prompt
+# =============================================================================
+# 环境变量配置
+# =============================================================================
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm* | rxvt*)
-  PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-  ;;
-*) ;;
-esac
-
-# Alias definitions.
-if [ -f ~/.bash_aliases ]; then
-  source ~/.bash_aliases
-fi
-
-# Private bash configuration
-if [ -f ~/.bash_private ]; then
-  source ~/.bash_private
-fi
-
-# Proxy
-PROXY_CFG="example.com:port"
+# 代理配置
+PROXY_CFG="http://example.com:port"
 NO_PROXY_CFG="localhost,127.0.0.1,::1"
 export HTTP_PROXY=${PROXY_CFG}
 export HTTPS_PROXY=${PROXY_CFG}
@@ -81,40 +90,26 @@ export NO_PROXY=${NO_PROXY_CFG}
 export no_proxy=${NO_PROXY_CFG}
 unset PROXY_CFG NO_PROXY_CFG
 
-# Ros environment setup
-source /opt/ros/noetic/setup.bash
-# Disable ROS1 Rviz EOL warnings
-export DISABLE_ROS1_EOL_WARNINGS=true
-
-# ACADOS
-if [[ ":$LD_LIBRARY_PATH:" != *":$HOME/.local/lib:"* ]]; then
-  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$HOME/.local/lib"
-fi
-export ACADOS_SOURCE_DIR="$HOME/.local"
-
-# Astral uv
-if command -v uv >/dev/null 2>&1; then
-  eval "$(uv generate-shell-completion bash)"
-fiuser
-
-# Nvidia Isaac
-export ISAACSIM_PATH="$HOME/Softwares/IsaacSim"
-
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
-
-# CUDA
-if [[ ":$PATH:" != *":/usr/local/cuda/bin:"* ]]; then
-  export PATH=${PATH}:/usr/local/cuda/bin
-fi
-if [[ ":$LD_LIBRARY_PATH:" != *":/usr/local/cuda/lib:"* ]]; then
-  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/local/cuda/lib"
+# 默认编辑器
+if command -v nvim >/dev/null 2>&1; then
+	export EDITOR=vim
+elif command -v nano >/dev/null 2>&1; then
+	export EDITOR=nano
 fi
 
-# Rust
-source "$HOME/.cargo/env"
+# 禁用 Ctrl+S（终端冻结）
+stty -ixon
 
-# Flightmare
-export FLIGHTMARE_PATH=$HOME/Projects/Simulator/Flightmare
+# =============================================================================
+# 终端启动提示
+# =============================================================================
+# 显示一个欢迎信息，可以通过设置环境变量禁用
+if [ "$BASH_STARTUP_MESSAGE" != "false" ] && [ -t 1 ]; then
+	# 只在支持的终端显示（避免在 scp、rsync 等情况下显示）
+	if [ "$TERM" != "dumb" ] && [ -n "$BASH_VERSION" ]; then
+		# 获取系统信息
+		if command -v figlet >/dev/null 2>&1; then
+			echo -e "${COLOR_BLUE}$(figlet "Welcome back!")${RESET}"
+		fi
+	fi
+fi
