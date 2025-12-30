@@ -1,20 +1,20 @@
 {
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
   "cleanupPeriodDays": 30,
   "env": {
     "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.7",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.7",
-    "CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL": true
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.7"
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
   },
   "permissions": {
     "allow": ["Bash(find:*)", "Bash(tree:*)"],
     "deny": ["Read(./build)", "Read(./.env)"],
-    "ask": ["Bash(rm:*)"]
+    "ask": ["Bash(rm:*)"],
+    "defaultMode": "default"
   },
   "hooks": {
     "PostToolUse": [
@@ -40,6 +40,13 @@
     "typescript-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
-    "commit-commands@claude-plugins-official": true
+    "commit-commands@claude-plugins-official": true,
+    "glm-plan-usage@zai-coding-plugins": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "csharp-lsp@claude-plugins-official": true,
+    "php-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "jdtls-lsp@claude-plugins-official": true,
+    "glm-plan-bug@zai-coding-plugins": true
   }
 }
