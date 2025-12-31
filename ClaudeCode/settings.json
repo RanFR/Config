@@ -1,16 +1,21 @@
 {
-  "includeCoAuthoredBy": false,
+  "cleanupPeriodDays": 30,
   "env": {
     "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
-    "ANTHROPIC_AUTH_TOKEN": "your_zhipu_api",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.6",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6"
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.7",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.7"
   },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": ["Bash(find:*)", "Bash(tree:*)"],
-    "deny": [],
-    "ask": ["Bash(rm:*)"]
+    "deny": ["Read(./build)", "Read(./.env)"],
+    "ask": ["Bash(rm:*)"],
+    "defaultMode": "default"
   },
   "hooks": {
     "PostToolUse": [
@@ -19,18 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${HOME}/.claude/hooks/markdown_formatter.py"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "notify-send 'Claude Code' 'Waiting for user input...'"
+            "command": "$HOME/.claude/hooks/markdown_formatter.py"
           }
         ]
       }
@@ -38,7 +32,22 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "${HOME}/.claude/scripts/statusline.sh"
+    "command": "$HOME/.claude/scripts/statusline.sh"
   },
-  "alwaysThinkingEnabled": true
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "glm-plan-usage@zai-coding-plugins": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "csharp-lsp@claude-plugins-official": true,
+    "php-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "jdtls-lsp@claude-plugins-official": true,
+    "glm-plan-bug@zai-coding-plugins": true
+  }
 }
