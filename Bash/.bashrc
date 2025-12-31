@@ -29,50 +29,39 @@ shopt -s checkwinsize
 # 使 less 更好地处理非文本文件
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# Chroot 环境标识
-# 设置标识以识别当前是否在 chroot 环境中工作
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-	debian_chroot=$(cat /etc/debian_chroot)
-fi
-
 # =============================================================================
 # 模块化配置加载
 # =============================================================================
 # 按特定顺序加载配置文件，确保依赖关系正确
 if [ -d "$HOME/.bashrc.d" ]; then
-	# 首先加载基础配置（颜色等）
-	for config_file in "$HOME/.bashrc.d"/colors.sh; do
-		[ -f "$config_file" ] && . "$config_file"
+	# 加载功能配置
+	for config_file in "$HOME/.bashrc.d"/{function,aliases}.sh; do
+		[ -f "$config_file" ] && source "$config_file"
 	done
 
-	# 然后加载功能配置
-	for config_file in "$HOME/.bashrc.d"/{completion,function,aliases}.sh; do
-		[ -f "$config_file" ] && . "$config_file"
-	done
-
-	# 最后加载提示符配置（依赖颜色配置）
-	for config_file in "$HOME/.bashrc.d"/prompt.sh; do
-		[ -f "$config_file" ] && . "$config_file"
-	done
+	# 加载提示符配置
+	[ -f "$HOME/.bashrc.d/prompt.sh" ] && source "$HOME/.bashrc.d/prompt.sh"
 
 	# 确保提示符已设置（如果没有则设置一个基本的提示符）
 	if [ -z "$PS1" ]; then
 		PS1='\u@\h:\w\$ '
+		echo "ERROR! Please check the configuration of PS1 in prompt.sh!"
 	fi
 
 	# 加载其他自定义配置
 	for config_file in "$HOME/.bashrc.d"/*.sh; do
 		# 跳过已加载的文件
 		case "$(basename "$config_file")" in
-		colors | prompt | completion | function | aliases) continue ;;
+		colors | prompt | function | aliases) continue ;;
 		*)
-			[ -f "$config_file" ] && . "$config_file"
+			[ -f "$config_file" ] && source "$config_file"
 			;;
 		esac
 	done
 else
 	# 如果 .bashrc.d 目录不存在，使用基本提示符
 	PS1='\u@\h:\w\$ '
+	echo "ERROR! Please set the configuration files in .bashrc.d folder!"
 fi
 
 # =============================================================================
@@ -92,7 +81,7 @@ unset PROXY_CFG NO_PROXY_CFG
 
 # 默认编辑器
 if command -v nvim >/dev/null 2>&1; then
-	export EDITOR=vim
+	export EDITOR=nvim
 elif command -v nano >/dev/null 2>&1; then
 	export EDITOR=nano
 fi
@@ -109,7 +98,7 @@ if [ "$BASH_STARTUP_MESSAGE" != "false" ] && [ -t 1 ]; then
 	if [ "$TERM" != "dumb" ] && [ -n "$BASH_VERSION" ]; then
 		# 获取系统信息
 		if command -v figlet >/dev/null 2>&1; then
-			echo -e "${COLOR_BLUE}$(figlet "Welcome back!")${RESET}"
+			echo -e "$(figlet "Welcome back!")"
 		fi
 	fi
 fi
