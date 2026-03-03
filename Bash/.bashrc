@@ -34,25 +34,16 @@ shopt -s checkwinsize
 # =============================================================================
 # 按特定顺序加载配置文件，确保依赖关系正确
 if [ -d "$HOME/.bashrc.d" ]; then
-	# 加载功能配置
-	for config_file in "$HOME/.bashrc.d"/{function,aliases}.sh; do
+	# 按顺序加载核心配置：aliases -> function -> prompt
+	for config_file in "$HOME/.bashrc.d"/aliases.bash "$HOME/.bashrc.d"/function.bash "$HOME/.bashrc.d"/prompt.bash; do
 		[ -f "$config_file" ] && source "$config_file"
 	done
 
-	# 加载提示符配置
-	[ -f "$HOME/.bashrc.d/prompt.sh" ] && source "$HOME/.bashrc.d/prompt.sh"
-
-	# 确保提示符已设置（如果没有则设置一个基本的提示符）
-	if [ -z "$PS1" ]; then
-		PS1='\u@\h:\w\$ '
-		echo "ERROR! Please check the configuration of PS1 in prompt.sh!"
-	fi
-
 	# 加载其他自定义配置
-	for config_file in "$HOME/.bashrc.d"/*.sh; do
+	for config_file in "$HOME/.bashrc.d"/*.bash; do
 		# 跳过已加载的文件
 		case "$(basename "$config_file")" in
-		colors | prompt | function | aliases) continue ;;
+		aliases.bash | function.bash | prompt.bash) continue ;;
 		*)
 			[ -f "$config_file" ] && source "$config_file"
 			;;
@@ -68,19 +59,24 @@ fi
 # 环境变量配置
 # =============================================================================
 
-# 代理配置
-PROXY_CFG="http://example.com:port"
-NO_PROXY_CFG="localhost,127.0.0.1,::1"
-export HTTP_PROXY=${PROXY_CFG}
-export HTTPS_PROXY=${PROXY_CFG}
-export http_proxy=${PROXY_CFG}
-export https_proxy=${PROXY_CFG}
-export NO_PROXY=${NO_PROXY_CFG}
-export no_proxy=${NO_PROXY_CFG}
-unset PROXY_CFG NO_PROXY_CFG
+# 网络代理
+PROXY_URL="http://example.com:port"
+NO_PROXY_URL="localhost,127.0.0.1,::1"
+# 配置代理
+export http_proxy="${PROXY_URL}"
+export https_proxy="${PROXY_URL}"
+export HTTP_PROXY="${PROXY_URL}"
+export HTTPS_PROXY="${PROXY_URL}"
+# 本地回环不走代理
+export no_proxy="${NO_PROXY_URL}"
+export NO_PROXY="${NO_PROXY_URL}"
+# 清除中间配置
+unset PROXY_URL NO_PROXY_URL
 
 # 默认编辑器
-if command -v nvim >/dev/null 2>&1; then
+if command -v code >/dev/null 2>&1; then
+	export EDITOR="code --wait"
+elif command -v nvim >/dev/null 2>&1; then
 	export EDITOR=nvim
 elif command -v nano >/dev/null 2>&1; then
 	export EDITOR=nano
@@ -88,17 +84,3 @@ fi
 
 # 禁用 Ctrl+S（终端冻结）
 stty -ixon
-
-# =============================================================================
-# 终端启动提示
-# =============================================================================
-# 显示一个欢迎信息，可以通过设置环境变量禁用
-if [ "$BASH_STARTUP_MESSAGE" != "false" ] && [ -t 1 ]; then
-	# 只在支持的终端显示（避免在 scp、rsync 等情况下显示）
-	if [ "$TERM" != "dumb" ] && [ -n "$BASH_VERSION" ]; then
-		# 获取系统信息
-		if command -v figlet >/dev/null 2>&1; then
-			echo -e "$(figlet "Welcome back!")"
-		fi
-	fi
-fi

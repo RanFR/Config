@@ -5,11 +5,6 @@
 # =============================================================================
 # 此文件包含常用的自定义函数，扩展 shell 功能
 
-# 加载颜色配置（如果还未加载）
-if [ -z "$HAS_COLOR" ]; then
-	source "$HOME/.bashrc.d/colors.sh"
-fi
-
 # =============================================================================
 # 目录和文件操作
 # =============================================================================
@@ -77,7 +72,7 @@ download() {
 	local output=${2:-$(basename "$url")}
 
 	if command -v wget >/dev/null 2>&1; then
-		wget --progress=bar:force "$url" -O "$output"
+		wget --progress=bar "$url" -O "$output"
 	elif command -v curl >/dev/null 2>&1; then
 		curl -L --progress-bar "$url" -o "$output"
 	else

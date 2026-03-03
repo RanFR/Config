@@ -34,7 +34,7 @@ git_info() {
 		# 如果不是分支，获取标签或提交哈希
 		branch=$(git describe --tags --exact-match HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
 		if [ -n "$branch" ]; then
-			echo "   \[\033[01;31m\]${branch}\[\033[00m\]"
+			echo "${branch}"
 			return
 		fi
 		return
