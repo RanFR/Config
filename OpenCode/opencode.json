@@ -1,0 +1,30 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "share": "disabled",
+  "autoupdate": true,
+  "compaction": {
+    "auto": true,
+    "prune": true
+  },
+  "watcher": {
+    "ignore": ["node_modules/**", ".git/**", "temp/**"]
+  },
+  "mcp": {
+    "web-search-prime": {
+      "type": "remote",
+      "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp",
+      "headers": {
+        "Authorization": "Bearer {env:ZHIPU_MCP_API_KEY}"
+      }
+    },
+    "web-reader": {
+      "type": "remote",
+      "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp",
+      "headers": {
+        "Authorization": "Bearer {env:ZHIPU_MCP_API_KEY}"
+      }
+    }
+  },
+  "plugin": ["oh-my-opencode@latest"],
+  "enabled_providers": ["zhipuai-coding-plan"]
+}
