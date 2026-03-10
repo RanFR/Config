@@ -77,12 +77,9 @@ alias cbr='catkin_make --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_CO
 # =============================================================================
 
 # 压缩解压
-alias mktar='tar -cvf'
-alias untar='tar -xvf'
-alias mktgz='tar -czvf'
-alias untgz='tar -xzvf'
-alias mktxz='tar -cJvf'
-alias untxz='tar -xJvf'
+alias mktar='tar --auto-compress -cf'
+alias untar='tar -xf'
+alias lstar='tar -tf'
 
 # 时间日期
 alias now='date +"%T"'
