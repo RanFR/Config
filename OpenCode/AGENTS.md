@@ -1,37 +1,38 @@
-# OpenCode 全局代理指令
+# OpenCode Global Agent Instructions
 
-## 核心原则
+## Core Principles
 
-作为 OpenCode 代理，你必须在生成代码时严格遵守以下原则：
+As an OpenCode agent, you must strictly adhere to the following principles when generating code:
 
 1.  **KISS (Keep It Simple, Stupid)**
-    - 保持代码简单直观。
-    - 避免过度复杂的抽象和嵌套逻辑。
-    - 优先选择清晰的标准库实现，而非复杂的自定义框架。
+    - Keep code simple and intuitive.
+    - Avoid overly complex abstractions and nested logic.
+    - Prefer clear standard library implementations over complex custom frameworks.
 
 2.  **YAGNI (You Aren't Gonna Need It)**
-    - 仅实现当前需求明确要求的功能。
-    - 杜绝“以防万一”的预测性编码和未来功能的占位代码。
-    - 不要添加当前未使用的依赖或配置。
+    - Only implement features explicitly required by current needs.
+    - Avoid "just in case" predictive coding and placeholder code for future features.
+    - Do not add unused dependencies or configurations.
 
-3.  **SOLID 原则**
-    - **S (单一职责):** 每个模块、类或函数只做一件事。
-    - **O (开闭原则):** 对扩展开放，对修改关闭；优先通过组合而非修改现有代码来增加功能。
-    - **L (里氏替换):** 确保子类可以透明地替换其基类而不破坏程序逻辑。
-    - **I (接口隔离):** 不应强迫依赖它们不使用的方法，保持接口精简。
-    - **D (依赖倒置):** 依赖于抽象接口，而非具体实现细节。
+3.  **SOLID Principles**
+    - **S (Single Responsibility):** Each module, class, or function should do one thing only.
+    - **O (Open/Closed):** Open for extension, closed for modification; prefer adding functionality through composition rather than modifying existing code.
+    - **L (Liskov Substitution):** Ensure subclasses can transparently replace their base classes without breaking program logic.
+    - **I (Interface Segregation):** Don't force dependencies on methods they don't use; keep interfaces lean.
+    - **D (Dependency Inversion):** Depend on abstract interfaces, not concrete implementation details.
 
-## 交互规范
+## Interaction Guidelines
 
-1.  **语言要求**
-    - 除非我明确指定使用其他语言，否则你**必须始终使用简体中文**进行回答、注释及解释。
+1.  **Language Requirements**
+    - Native Language: Simplified Chinese
+    - Unless I explicitly specify otherwise, you **must always use Simplified Chinese** for responses, comments, and explanations.
 
-2.  **讨论优先**
-    - **严禁盲目执行：** 在编写代码或执行关键操作前，鼓励多与我进行讨论，确认需求细节和技术方案。
-    - **方案确认：** 只有当我们对解决方案达成共识后，方可开始执行。如果需求模糊，请主动提问，不要猜测。
+2.  **Discussion First**
+    - **No blind execution:** Before writing code or performing critical operations, discuss with me to confirm requirement details and technical approaches.
+    - **Solution confirmation:** Only begin execution after we reach consensus on the solution. If requirements are unclear, ask questions proactively—don't guess.
 
-## 输出要求
+## Output Requirements
 
-- **简洁性：** 代码应当是自解释的，尽量减少注释（除非解释“为什么”）。
-- **模块化：** 保持函数短小，逻辑分层清晰。
-- **实效性：** 交付可运行、可测试的最小可行代码。
+- **Simplicity:** Code should be self-explanatory; minimize comments (unless explaining "why").
+- **Modularity:** Keep functions small with clear logical layering.
+- **Practicality:** Deliver runnable, testable minimum viable code.
