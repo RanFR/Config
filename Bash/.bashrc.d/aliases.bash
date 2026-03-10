@@ -37,6 +37,7 @@ alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 
 # 基础 Git 命令
 alias gc="git clone"
+alias gl="git log"
 alias gs='git status'
 alias gp='git pull'
 alias gpp='git push'
@@ -76,10 +77,12 @@ alias cbr='catkin_make --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_CO
 # =============================================================================
 
 # 压缩解压
-alias untar='tar -xvf'
 alias mktar='tar -cvf'
+alias untar='tar -xvf'
 alias mktgz='tar -czvf'
 alias untgz='tar -xzvf'
+alias mktxz='tar -cJvf'
+alias untxz='tar -xJvf'
 
 # 时间日期
 alias now='date +"%T"'
