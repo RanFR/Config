@@ -1,14 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "share": "disabled",
   "autoupdate": true,
   "compaction": {
     "auto": true,
     "prune": true
   },
-  "watcher": {
-    "ignore": ["node_modules/**", ".git/**", "temp/**"]
-  },
+  "enabled_providers": ["zhipuai-coding-plan"],
   "mcp": {
     "web-search-prime": {
       "type": "remote",
@@ -26,5 +23,8 @@
     }
   },
   "plugin": ["oh-my-opencode@latest"],
-  "enabled_providers": ["zhipuai-coding-plan"]
+  "share": "disabled",
+  "watcher": {
+    "ignore": ["node_modules/**", ".git/**", "temp/**"]
+  }
 }
