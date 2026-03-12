@@ -21,9 +21,9 @@
     {
       "command": {
         "action": "sendInput",
-        "input": "\u001b\n"
+        "input": "\u001b[13;2u"
       },
-      "id": "User.sendInput.WezTermLineBreak"
+      "id": "User.sendInput.ShiftEnterCustom"
     }
   ],
   "copyFormatting": "none",
@@ -134,7 +134,7 @@
       "keys": "ctrl+shift+w"
     },
     {
-      "id": "User.sendInput.WezTermLineBreak",
+      "id": "User.sendInput.ShiftEnterCustom",
       "keys": "shift+enter"
     }
   ],
