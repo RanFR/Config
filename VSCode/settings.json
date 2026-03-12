@@ -2,74 +2,94 @@
   /* C/C++ */
   "C_Cpp.clang_format_style": "Google",
 
-  /* CMake */
-  "cmake.ignoreCMakeListsMissing": true,
-
   /* Editor */
-  "editor.acceptSuggestionOnEnter": "off", // Only accept suggestion by <tab>
-  "editor.fontLigatures": true, // ligature
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.fontLigatures": true,
   "editor.fontFamily": "Maple Mono NF CN",
   "editor.fontSize": 16,
-  "editor.guides.bracketPairs": "active", // Display bracket pairs
-  "editor.suggest.insertMode": "replace", // Replace text when accepting suggestion
-  // Wrodwrap
-  "editor.wordWrap": "bounded",
-  "editor.wordWrapColumn": 80, // 120 characters
+  "editor.guides.bracketPairs": "active",
+  "editor.rulers": [80],
+  "editor.suggest.insertMode": "replace",
+  "editor.tabSize": 2,
+  "editor.unicodeHighlight.allowedLocales": {
+    "zh-hans": true
+  },
+  "editor.wordWrap": "off",
+
+  /* Chat */
+  "chat.agent.enabled": true,
+  "chat.mcp.gallery.enabled": true,
 
   /* Explorer */
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
 
   /* Files */
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 3000,
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
   "files.associations": {
-    "*.launch": "xml" // Set ros launch file type as xml
+    "*.launch": "xml"
   },
 
   /* Formatter */
-  "editor.formatOnSave": true,
-  "editor.formatOnPaste": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode", // Default formatter for all files
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[c]": {
     "editor.defaultFormatter": "ms-vscode.cpptools"
   },
   "[cpp]": {
     "editor.defaultFormatter": "ms-vscode.cpptools"
   },
-  "[dockerfile]": {
-    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
-  },
   "[latex]": {
+    "editor.wordWrap": "bounded",
+    "editor.wordWrapColumn": 80,
+    "editor.minimap.enabled": false,
     "editor.defaultFormatter": "James-Yu.latex-workshop"
   },
   "[python]": {
+    "editor.tabSize": 4,
+    "editor.rulers": [120],
     "editor.defaultFormatter": "charliermarsh.ruff"
   },
   "[xml]": {
     "editor.defaultFormatter": "redhat.vscode-xml"
   },
-  "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml"
-  },
 
   /* Git */
+  "git.addAICoAuthor": "off",
   "git.autofetch": true,
-  "git.confirmSync": false,
   "git.openRepositoryInParentFolders": "never",
 
-  /* Github Copilot */
+  /* GitHub Copilot */
   "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.nextEditSuggestions.extendedRange": true,
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Use conventional commit message format."
+    }
+  ],
+
+  /* JSON */
+  "json.schemaDownload.trustedDomains": {
+    "https://esm.sh/": true,
+    "https://models.dev/": true,
+    "https://opencode.ai/": true,
+    "https://raw.githubusercontent.com/": true
+  },
 
   /* Integrated terminal */
+  "terminal.integrated.enableImages": true,
+  "terminal.integrated.gpuAcceleration": "auto",
+  "terminal.integrated.windowsUseConptyDll": true,
   "terminal.integrated.fontFamily": "Maple Mono NF CN",
   "terminal.integrated.fontSize": 16,
 
-  /* Jupyter */
-  "jupyter.askForKernelRestart": false,
-
   /* Latex */
-  "latex-workshop.latex.outDir": "build",
+  "latex-workshop.latex.outDir": "",
+  "latex-workshop.latex.auxDir": "build",
   "latex-workshop.latex.tools": [
     {
       "name": "xelatex",
@@ -78,7 +98,6 @@
         "-synctex=1",
         "-interaction=nonstopmode",
         "-file-line-error",
-        "-shell-escape",
         "-output-directory=%OUTDIR%",
         "%DOCFILE%"
       ],
@@ -88,8 +107,10 @@
       "name": "biber",
       "command": "biber",
       "args": [
-        "--input-directory=%OUTDIR%",
-        "--output-directory=%OUTDIR%",
+        "--input-directory",
+        "%OUTDIR%",
+        "--output-directory",
+        "%OUTDIR%",
         "%DOCFILE%"
       ],
       "env": {}
@@ -108,41 +129,30 @@
   "latex-workshop.latex.autoBuild.run": "never",
   "latex-workshop.latex.autoClean.run": "onFailed",
   "latex-workshop.latex.recipe.default": "lastUsed",
-  "latex-workshop.formatting.latex": "latexindent",
+  "latex-workshop.formatting.latex": "tex-fmt",
   "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
 
   /* Markdown */
-  "markdown.preview.fontFamily": "Noto Sans SC",
-  "markdown.preview.fontSize": 14,
-
-  /* Python */
-  "python.analysis.autoImportCompletions": true,
-  "python.analysis.typeCheckingMode": "standard",
+  "markdown.preview.fontFamily": "Maple Mono NF CN",
+  "markdown.preview.fontSize": 16,
 
   /* Remote */
   "remote.autoForwardPortsSource": "hybrid",
 
-  /* Search settings */
-  "search.exclude": {
-    // Clangd cache
-    "**/.cache": true,
-    // Git
-    "**/.git": true,
-    // IDEs
-    "**/.vscode": true,
-    "**/.idea": true,
-    // Ros build folder
-    "**/build": true,
-    "**/devel": true,
-    "**/logs": true,
-    // Python
-    "**/__pycache__": true
-  },
+  /* Python */
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "standard",
+  "python.defaultInterpreterPath": "python3",
+  "python.useEnvironmentsExtension": true,
+
+  /* Window */
+  "window.confirmSaveUntitledWorkspace": false,
 
   /* Workbench */
-  "workbench.colorTheme": "Default Dark Modern", // Color theme
-  "workbench.iconTheme": "vscode-icons", // Icon theme
-  // Tree indent
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.editor.useModal": "some",
+  "workbench.iconTheme": "catppuccin-mocha",
+  "workbench.notifications.position": "top-right",
   "workbench.tree.renderIndentGuides": "onHover",
   "workbench.tree.indent": 16
 }
