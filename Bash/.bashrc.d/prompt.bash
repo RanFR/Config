@@ -34,37 +34,34 @@ git_info() {
 		# 如果不是分支，获取标签或提交哈希
 		branch=$(git describe --tags --exact-match HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
 		if [ -n "$branch" ]; then
-			echo "${branch}"
+			echo "   ${branch}"
 			return
 		fi
 		return
 	fi
 
 	# 输出 Git 信息（红色）
-	echo "${branch}"
+	echo "   ${branch}"
 }
 
 # =============================================================================
 # Python 虚拟环境检测
 # =============================================================================
 
-# 获取 Python 虚拟环境名称并输出
+# 获取 Python 虚拟环境类型并输出
 venv_info() {
-	# UV 相关变量优先，避免被标准 venv 捕获
-	if [ -n "$VIRTUAL_ENV_PROMPT" ] || [ -n "$UV_ACTIVE" ] || [ -n "$UV_PYTHON" ]; then
-		env_type="UV"
-		env_name=${VIRTUAL_ENV_PROMPT:-$(basename "${VIRTUAL_ENV:-${UV_PYTHON:-uv}}")}
+	local env_type
+	if [ -n "$VIRTUAL_ENV" ]; then
+		# 标准虚拟环境
+		env_type="VENV"
 	elif [ -n "$CONDA_DEFAULT_ENV" ] || [ -n "$CONDA_PREFIX" ]; then
 		# Conda 环境
 		env_type="CONDA"
-		env_name=${CONDA_DEFAULT_ENV:-$(basename "$CONDA_PREFIX")}
-	elif [ -n "$VIRTUAL_ENV" ]; then
-		# 标准虚拟环境
-		env_type="VENV"
-		env_name=$(basename "$VIRTUAL_ENV")
+	else
+		return
 	fi
 
-	[ -n "$env_type" ] && echo "🐍${env_type}-${env_name}"
+	echo "   🐍${env_type}"
 }
 
 # =============================================================================
@@ -72,7 +69,7 @@ venv_info() {
 # =============================================================================
 
 if [ "$color_prompt" = yes ]; then
-	PS1='${debian_chroot:+($debian_chroot)}\[\033[01;34m\]\u\[\033[00m\]@\[\033[01;32m\]\h\[\033[00m\]   \[\033[01;35m\]\w\[\033[00m\]   \[\033[01;31m\]$(git_info)\[\033[00m\]   \[\033[01;33m\]$(venv_info)\[\033[00m\]\n❯ '
+	PS1='${debian_chroot:+($debian_chroot)}\[\033[01;34m\]\u\[\033[00m\]@\[\033[01;32m\]\h\[\033[00m\]   \[\033[01;35m\]\w\[\033[00m\]\[\033[01;31m\]$(git_info)\[\033[00m\]\[\033[01;33m\]$(venv_info)\[\033[00m\]\n❯ '
 else
 	PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi

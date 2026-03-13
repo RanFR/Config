@@ -37,6 +37,7 @@ alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 
 # 基础 Git 命令
 alias gc="git clone"
+alias gf="git fetch"
 alias gl="git log"
 alias gs='git status'
 alias gp='git pull'
