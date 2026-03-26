@@ -1,30 +1,32 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": true,
-  "compaction": {
-    "auto": true,
-    "prune": true
-  },
-  "enabled_providers": ["zhipuai-coding-plan"],
   "mcp": {
-    "web-search-prime": {
-      "type": "remote",
-      "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp",
-      "headers": {
-        "Authorization": "Bearer {env:ZHIPU_MCP_API_KEY}"
-      }
-    },
     "web-reader": {
-      "type": "remote",
-      "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp",
       "headers": {
-        "Authorization": "Bearer {env:ZHIPU_MCP_API_KEY}"
-      }
+        "Authorization": "Bearer {env:Z_AI_API_KEY}"
+      },
+      "type": "remote",
+      "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp"
+    },
+    "web-search-prime": {
+      "headers": {
+        "Authorization": "Bearer {env:Z_AI_API_KEY}"
+      },
+      "type": "remote",
+      "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp"
+    },
+    "zai-mcp-server": {
+      "command": [
+        "npx",
+        "-y",
+        "@z_ai/mcp-server"
+      ],
+      "environment": {
+        "Z_AI_MODE": "ZHIPU"
+      },
+      "type": "local"
     }
   },
-  "plugin": ["oh-my-opencode@latest"],
-  "share": "disabled",
-  "watcher": {
-    "ignore": ["node_modules/**", ".git/**", "temp/**"]
-  }
+  "share": "disabled"
 }

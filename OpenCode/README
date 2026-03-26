@@ -1,0 +1,7 @@
+The configurations of opencode.
+
+## How to use
+
+Copy this folder to `~/.config` and then rename it as `opencode`.
+
+Then, add `Z_AI_API_KEY` to the environment variables.
