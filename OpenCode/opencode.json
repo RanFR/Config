@@ -1,31 +1,163 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "autoupdate": true,
-  "mcp": {
-    "web-reader": {
-      "headers": {
-        "Authorization": "Bearer {env:Z_AI_API_KEY}"
-      },
-      "type": "remote",
-      "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp"
+  "agent": {
+    "build": {
+      "model": "glm-coding-plan/glm-5-turbo"
     },
-    "web-search-prime": {
+    "compaction": {
+      "model": "glm-coding-plan/glm-4.5-air"
+    },
+    "explore": {
+      "model": "glm-coding-plan/glm-4.7"
+    },
+    "general": {
+      "model": "glm-coding-plan/glm-5.1"
+    },
+    "plan": {
+      "model": "glm-coding-plan/glm-5.1"
+    },
+    "summary": {
+      "model": "glm-coding-plan/glm-4.5-air"
+    },
+    "title": {
+      "model": "glm-coding-plan/glm-4.5-air"
+    }
+  },
+  "autoupdate": true,
+  "enabled_providers": ["glm-coding-plan"],
+  "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "web-search": {
       "headers": {
-        "Authorization": "Bearer {env:Z_AI_API_KEY}"
+        "Authorization": "Bearer {env:GLM_CODING_PLAN_API_KEY}"
       },
       "type": "remote",
       "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp"
     },
-    "zai-mcp-server": {
-      "command": [
-        "npx",
-        "-y",
-        "@z_ai/mcp-server"
-      ],
-      "environment": {
-        "Z_AI_MODE": "ZHIPU"
+    "web-read": {
+      "headers": {
+        "Authorization": "Bearer {env:GLM_CODING_PLAN_API_KEY}"
       },
-      "type": "local"
+      "type": "remote",
+      "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp"
+    },
+    "repo-read": {
+      "headers": {
+        "Authorization": "Bearer {env:GLM_CODING_PLAN_API_KEY}"
+      },
+      "type": "remote",
+      "url": "https://open.bigmodel.cn/api/mcp/zread/mcp"
+    }
+  },
+  "provider": {
+    "glm-coding-plan": {
+      "api": "https://open.bigmodel.cn/api/coding/paas/v4",
+      "env": ["GLM_CODING_PLAN_API_KEY"],
+      "id": "glm-coding-plan",
+      "models": {
+        "glm-4.5-air": {
+          "attachment": false,
+          "cost": {
+            "cache_read": 0,
+            "cache_write": 0,
+            "input": 0,
+            "output": 0
+          },
+          "id": "glm-4.5-air",
+          "limit": {
+            "context": 131072,
+            "output": 98304
+          },
+          "modalities": {
+            "input": ["text"],
+            "output": ["text"]
+          },
+          "name": "GLM-4.5-Air",
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true
+        },
+        "glm-4.7": {
+          "attachment": false,
+          "cost": {
+            "cache_read": 0,
+            "cache_write": 0,
+            "input": 0,
+            "output": 0
+          },
+          "id": "glm-4.7",
+          "interleaved": {
+            "field": "reasoning_content"
+          },
+          "limit": {
+            "context": 204800,
+            "output": 131072
+          },
+          "modalities": {
+            "input": ["text"],
+            "output": ["text"]
+          },
+          "name": "GLM-4.7",
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true
+        },
+        "glm-5-turbo": {
+          "attachment": false,
+          "cost": {
+            "cache_read": 0,
+            "cache_write": 0,
+            "input": 0,
+            "output": 0
+          },
+          "id": "glm-5-turbo",
+          "interleaved": {
+            "field": "reasoning_content"
+          },
+          "limit": {
+            "context": 204800,
+            "output": 131072
+          },
+          "modalities": {
+            "input": ["text"],
+            "output": ["text"]
+          },
+          "name": "GLM-5-Turbo",
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true
+        },
+        "glm-5.1": {
+          "attachment": false,
+          "cost": {
+            "cache_read": 0,
+            "cache_write": 0,
+            "input": 0,
+            "output": 0
+          },
+          "id": "glm-5.1",
+          "interleaved": {
+            "field": "reasoning_content"
+          },
+          "limit": {
+            "context": 204800,
+            "output": 131072
+          },
+          "modalities": {
+            "input": ["text"],
+            "output": ["text"]
+          },
+          "name": "GLM-5.1",
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true
+        }
+      },
+      "name": "GLM Coding Plan",
+      "npm": "@ai-sdk/openai-compatible"
     }
   },
   "share": "disabled"
