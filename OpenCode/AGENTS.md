@@ -1,4 +1,4 @@
-# OpenCode Global Agent Instructions
+# OpenCode Agent Instructions
 
 ## Core Principles
 

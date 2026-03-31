@@ -4,4 +4,4 @@ The configurations of opencode.
 
 Copy this folder to `~/.config` and then rename it as `opencode`.
 
-Then, add `Z_AI_API_KEY` to the environment variables.
+Then, add `Z_AI_API_KEY` and `ZHIPU_API_KEY` to the environment variables.
