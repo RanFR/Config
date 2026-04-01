@@ -2,25 +2,32 @@
   "$schema": "https://opencode.ai/config.json",
   "agent": {
     "build": {
-      "model": "zhipuai-coding-plan/glm-5-turbo"
+      "model": "zhipuai-coding-plan/glm-5-turbo",
+      "prompt": "{file:prompts/build.md}"
     },
     "compaction": {
-      "model": "zhipuai-coding-plan/glm-4.5-air"
+      "model": "zhipuai-coding-plan/glm-4.5-air",
+      "prompt": "{file:prompts/compaction.md}"
     },
     "explore": {
-      "model": "zhipuai-coding-plan/glm-4.7"
+      "model": "zhipuai-coding-plan/glm-4.7",
+      "prompt": "{file:prompts/explore.md}"
     },
     "general": {
-      "model": "zhipuai-coding-plan/glm-5.1"
+      "model": "zhipuai-coding-plan/glm-5.1",
+      "prompt": "{file:prompts/general.md}"
     },
     "plan": {
-      "model": "zhipuai-coding-plan/glm-5.1"
+      "model": "zhipuai-coding-plan/glm-5.1",
+      "prompt": "{file:prompts/plan.md}"
     },
     "summary": {
-      "model": "zhipuai-coding-plan/glm-4.5-air"
+      "model": "zhipuai-coding-plan/glm-4.5-air",
+      "prompt": "{file:prompts/summary.md}"
     },
     "title": {
-      "model": "zhipuai-coding-plan/glm-4.5-air"
+      "model": "zhipuai-coding-plan/glm-4.5-air",
+      "prompt": "{file:prompts/title.md}"
     }
   },
   "autoupdate": true,
