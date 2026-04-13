@@ -11,11 +11,6 @@ if [ -d "$HOME/.local/bin" ]; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-# Set PATH so it includes user's private bash files if it exists
-if [ -d "$HOME/.local/bin/bash" ]; then
-    PATH="$HOME/.local/bin/bash:$PATH"
-fi
-
 # Set XDG
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"

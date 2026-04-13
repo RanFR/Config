@@ -25,6 +25,9 @@ shopt -s cmdhist
 # 检查并更新终端窗口大小
 shopt -s checkwinsize
 
+# 禁用 Ctrl+S（终端冻结）
+stty -ixon
+
 # less 增强配置
 # 使 less 更好地处理非文本文件
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -59,28 +62,9 @@ fi
 # 环境变量配置
 # =============================================================================
 
-# 网络代理
-PROXY_URL="http://example.com:port"
-NO_PROXY_URL="localhost,127.0.0.1,::1"
-# 配置代理
-export http_proxy="${PROXY_URL}"
-export https_proxy="${PROXY_URL}"
-export HTTP_PROXY="${PROXY_URL}"
-export HTTPS_PROXY="${PROXY_URL}"
-# 本地回环不走代理
-export no_proxy="${NO_PROXY_URL}"
-export NO_PROXY="${NO_PROXY_URL}"
-# 清除中间配置
-unset PROXY_URL NO_PROXY_URL
-
 # 默认编辑器
 if command -v code >/dev/null 2>&1; then
 	export EDITOR="code --wait"
-elif command -v nvim >/dev/null 2>&1; then
-	export EDITOR=nvim
 elif command -v nano >/dev/null 2>&1; then
 	export EDITOR=nano
 fi
-
-# 禁用 Ctrl+S（终端冻结）
-stty -ixon

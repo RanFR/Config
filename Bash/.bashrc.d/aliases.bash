@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # =============================================================================
 # 命令别名配置
 # =============================================================================
@@ -19,9 +17,7 @@ alias lsg='ls -l --color=auto | grep' # 列出并过滤
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ~='cd ~'
-alias cd.='cd $(pwd)' # 刷新当前目录
+alias ~='cd ~' # 快速回到主目录
 
 # 磁盘使用
 alias du='du -h'                # 人类可读格式
@@ -54,7 +50,6 @@ alias top='htop 2>/dev/null || top' # 优先使用 htop
 
 # 网络相关
 alias ping='ping -c 4'      # 默认只 ping 4 次
-alias ports='netstat -tuln' # 查看监听端口
 
 # 系统信息
 alias df='df -h'
@@ -81,11 +76,6 @@ alias cbr='catkin_make --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_CO
 alias mktar='tar --auto-compress -cf'
 alias untar='tar -xf'
 alias lstar='tar -tf'
-
-# 时间日期
-alias now='date +"%T"'
-alias today='date +"%Y-%m-%d"'
-alias timestamp='date +"%Y%m%d_%H%M%S"'
 
 # 安全命令
 alias rm='rm -I'        # 删除多个文件时提示确认

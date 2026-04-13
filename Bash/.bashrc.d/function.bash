@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # =============================================================================
 # 自定义函数
 # =============================================================================
@@ -39,25 +37,6 @@ treeinfo() {
 }
 
 # =============================================================================
-# Git 相关函数
-# =============================================================================
-
-# 解析 Git 分支（保留原函数以兼容）
-parse_git_branch() {
-	branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-	if [ -n "$branch" ]; then
-		# 显示分支名称
-		echo "$branch"
-	else
-		# 分离头状态，尝试获取标签或提交哈希
-		ref=$(git describe --tags --exact-match HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
-		if [ -n "$ref" ]; then
-			echo "➤ $ref" # 使用不同的符号表示分离状态
-		fi
-	fi
-}
-
-# =============================================================================
 # 网络相关函数
 # =============================================================================
 
@@ -79,4 +58,28 @@ download() {
 		echo "Neither wget nor curl is available"
 		return 1
 	fi
+}
+
+# ============================================================================
+# 代理开关函数
+# ============================================================================
+
+# 开启 Proxy 代理
+proxyon() {
+	PROXY_URL="http://example.com:port"
+	NO_PROXY_URL="localhost,127.0.0.1"
+	export http_proxy="${PROXY_URL}"
+	export https_proxy="${PROXY_URL}"
+	export HTTP_PROXY="${PROXY_URL}"
+	export HTTPS_PROXY="${PROXY_URL}"
+	export no_proxy="${NO_PROXY_URL}"
+	export NO_PROXY="${NO_PROXY_URL}"
+	echo "Proxy enabled: ${PROXY_URL}"
+	unset PROXY_URL NO_PROXY_URL
+}
+
+# 关闭 Proxy 代理
+proxyoff() {
+	unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY no_proxy NO_PROXY
+	echo "Proxy disabled"
 }
