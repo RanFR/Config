@@ -3,35 +3,60 @@
   "agent": {
     "build": {
       "model": "zhipuai-coding-plan/glm-5-turbo",
-      "prompt": "{file:prompts/build.md}"
+      "prompt": "{file:./prompts/build.md}",
+      "options": {},
+      "permission": {}
+    },
+    "chat": {
+      "description": "Direct question answering and technical discussion",
+      "mode": "primary",
+      "model": "zhipuai-coding-plan/glm-5.1",
+      "prompt": "{file:./prompts/chat.md}",
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      }
     },
     "compaction": {
       "model": "zhipuai-coding-plan/glm-4.5-air",
-      "prompt": "{file:prompts/compaction.md}"
+      "prompt": "{file:./prompts/compaction.md}",
+      "options": {},
+      "permission": {}
     },
     "explore": {
       "model": "zhipuai-coding-plan/glm-4.7",
-      "prompt": "{file:prompts/explore.md}"
+      "prompt": "{file:./prompts/explore.md}",
+      "options": {},
+      "permission": {}
     },
     "general": {
       "model": "zhipuai-coding-plan/glm-5.1",
-      "prompt": "{file:prompts/general.md}"
+      "prompt": "{file:./prompts/general.md}",
+      "options": {},
+      "permission": {}
     },
     "plan": {
       "model": "zhipuai-coding-plan/glm-5.1",
-      "prompt": "{file:prompts/plan.md}"
+      "prompt": "{file:./prompts/plan.md}",
+      "options": {},
+      "permission": {}
     },
     "summary": {
       "model": "zhipuai-coding-plan/glm-4.5-air",
-      "prompt": "{file:prompts/summary.md}"
+      "prompt": "{file:./prompts/summary.md}",
+      "options": {},
+      "permission": {}
     },
     "title": {
       "model": "zhipuai-coding-plan/glm-4.5-air",
-      "prompt": "{file:prompts/title.md}"
+      "prompt": "{file:./prompts/title.md}",
+      "options": {},
+      "permission": {}
     }
   },
   "autoupdate": true,
-  "enabled_providers": ["zhipuai-coding-plan"],
+  "default_agent": "chat",
+  "enabled_providers": ["deepseek", "zhipuai-coding-plan"],
   "mcp": {
     "context7": {
       "type": "remote",

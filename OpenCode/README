@@ -1,7 +1,25 @@
-The configurations of opencode.
+OpenCode configuration files for this workspace.
+
+## What is included
+
+- `opencode.json`: agent, provider, and MCP configuration
+- `prompts/`: custom prompts for `build`, `chat`, `compaction`, `explore`, `general`, `plan`, `summary`, and `title`
+- `skills/`: custom OpenCode skills
+- `tui.json`: terminal UI configuration
+- `AGENTS.md`: repository-specific agent guidance
 
 ## How to use
 
-Copy this folder to `~/.config` and then rename it as `opencode`.
+1. Copy this folder to `~/.config`.
+2. Rename the copied folder to `opencode`.
+3. Set the required environment variables:
 
-Then, add `Z_AI_API_KEY` and `ZHIPU_API_KEY` to the environment variables.
+	- `ZHIPU_API_KEY`
+
+`ZHIPU_API_KEY` is used by the configured MCP servers for web search, web reading, and repository reading.
+
+## Notes
+
+- The default agent is `chat`.
+- The configured providers are `deepseek` and `zhipuai-coding-plan`.
+- Sharing is disabled in this setup.
