@@ -27,6 +27,9 @@ export ACADOS_SOURCE_DIR="$HOME/src/acados"
 # opencode
 export OPENCODE_BIN_DIR="$HOME/.opencode/bin"
 
+# Tools configurations
+export OPENCODE_EXPERIMENTAL_PLAN_MODE=true
+
 # Load secrets
 if [[ -f "$HOME/.config/secrets/env" ]]; then
 	source "$HOME/.config/secrets/env"
