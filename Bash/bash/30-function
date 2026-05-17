@@ -1,0 +1,70 @@
+# =============================================================================
+# Directory & File Operations
+# =============================================================================
+
+mkcd() {
+	if (($# == 0)); then
+		echo "Usage: mkcd <directory>"
+		return 1
+	fi
+	mkdir -p "$1" && cd "$1"
+}
+
+tmpcd() {
+	local temp_dir=$(mktemp -d)
+	cd "$temp_dir"
+	echo "Created temp directory: $temp_dir"
+}
+
+# =============================================================================
+# Proxy Toggle
+# =============================================================================
+
+proxyon() {
+	PROXY_URL="http://example.com:port"
+	NO_PROXY_URL="localhost,127.0.0.1"
+	export http_proxy="${PROXY_URL}"
+	export https_proxy="${PROXY_URL}"
+	export HTTP_PROXY="${PROXY_URL}"
+	export HTTPS_PROXY="${PROXY_URL}"
+	export no_proxy="${NO_PROXY_URL}"
+	export NO_PROXY="${NO_PROXY_URL}"
+	echo "Proxy enabled: ${PROXY_URL}"
+	unset PROXY_URL NO_PROXY_URL
+}
+
+proxyoff() {
+	unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY no_proxy NO_PROXY
+	echo "Proxy disabled"
+}
+
+# =============================================================================
+# Archive Operations
+# =============================================================================
+
+mktar() {
+	if (($# < 2)); then
+		echo "Usage: mktar <archive.tar(.gz|.xz|.bz2)> <files...>"
+		return 1
+	fi
+
+	tar -caf "$1" "${@:2}"
+}
+
+untar() {
+	if (($# < 1)); then
+		echo "Usage: untar <archive> [dest]"
+		return 1
+	fi
+
+	tar -xf "$1" -C "${2:-.}"
+}
+
+lstar() {
+	if (($# < 1)); then
+		echo "Usage: lstar <archive>"
+		return 1
+	fi
+
+	tar -tf "$1"
+}

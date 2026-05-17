@@ -1,0 +1,33 @@
+# =============================================================================
+# Environment & Basic Settings
+# =============================================================================
+
+# === History ===
+HISTSIZE=5000
+HISTFILESIZE=10000
+HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend cmdhist lithist checkwinsize
+
+# === XDG Directories ===
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+# === Default Editor ===
+if command -v code &>/dev/null; then
+	export EDITOR="code --wait"
+elif command -v nano &>/dev/null; then
+	export EDITOR=nano
+fi
+
+# === Tool Directories ===
+# acados
+export ACADOS_SOURCE_DIR="$HOME/src/acados"
+# opencode
+export OPENCODE_BIN_DIR="$HOME/.opencode/bin"
+
+# Load secrets
+if [[ -f "$HOME/.config/secrets/env" ]]; then
+	source "$HOME/.config/secrets/env"
+fi

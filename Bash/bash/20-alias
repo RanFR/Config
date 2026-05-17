@@ -1,0 +1,42 @@
+# =============================================================================
+# Aliases
+# =============================================================================
+
+# ls
+alias ll='ls -alF'
+alias la='ls -A'
+
+# cd navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# Disk usage
+alias du='du -h'
+alias dua='du -sh'
+
+# Git
+alias gc='git clone'
+alias gf='git fetch'
+alias gl='git log'
+alias gs='git status'
+alias gp='git pull'
+alias gpp='git push'
+alias gsu='git submodule update --init --recursive'
+
+# System
+alias ping='ping -c 4'
+alias df='df -h'
+alias free='free -h'
+
+# Python
+alias py='python3'
+alias pip='pip3'
+alias activate='source .venv/bin/activate'
+
+# ROS
+alias cm='catkin_make --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+alias cmr='catkin_make --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+
+# Reload bashrc
+alias reload='source ~/.bashrc'

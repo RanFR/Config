@@ -1,0 +1,34 @@
+# =============================================================================
+# PATH Management
+# =============================================================================
+
+# === path_add helper ===
+# Usage: path_add <var> <dir> [after]
+# Prepends by default; use "after" to append
+path_add() {
+	local var="$1" dir="$2"
+	case ":${!var}:" in
+	*:"$dir":*) return ;;
+	esac
+	if [[ "$3" == "after" ]]; then
+		export "$var"="${!var:+${!var}:}$dir"
+	else
+		export "$var"="$dir${!var:+:${!var}}"
+	fi
+}
+
+# === PATH ===
+# --- prepend ---
+# cuda
+path_add PATH "/usr/local/cuda/bin"
+# ~/.local/bin, by default set it at the beginning
+path_add PATH "$HOME/.local/bin"
+# --- append ---
+# opencode
+path_add PATH "$OPENCODE_BIN_DIR" after
+
+# === LD_LIBRARY_PATH ===
+# acados
+path_add LD_LIBRARY_PATH "$ACADOS_SOURCE_DIR/lib" after
+# cuda
+path_add LD_LIBRARY_PATH "/usr/local/cuda/lib" after
