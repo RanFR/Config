@@ -16,6 +16,11 @@ alias ....='cd ../../..'
 alias du='du -h'
 alias dua='du -sh'
 
+# For safe
+alias rm='rm -I'
+alias cp='cp -iv'
+alias mv='mv -iv'
+
 # Git
 alias gc='git clone'
 alias gf='git fetch'
