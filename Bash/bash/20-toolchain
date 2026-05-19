@@ -1,0 +1,8 @@
+# nvm
+[[ -r "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+
+# ROS
+[[ -r /opt/ros/noetic/setup.bash ]] && source /opt/ros/noetic/setup.bash
+
+# Rust
+[[ -r "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"

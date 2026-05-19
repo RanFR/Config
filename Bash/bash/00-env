@@ -8,29 +8,35 @@ HISTFILESIZE=10000
 HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend cmdhist lithist checkwinsize
 
-# === XDG Directories ===
+# XDG Directories
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
-# === Default Editor ===
-if command -v code &>/dev/null; then
-	export EDITOR="code --wait"
-elif command -v nano &>/dev/null; then
-	export EDITOR=nano
-fi
+# Editor
+for editor_cmd in "code --wait" nano vim vi; do
+	editor_bin="${editor_cmd%% *}"
+
+	if command -v -- "$editor_bin" >/dev/null 2>&1; then
+		export EDITOR="$editor_cmd"
+		break
+	fi
+done
 
 # === Tool Directories ===
 # acados
 export ACADOS_SOURCE_DIR="$HOME/src/acados"
+# nvm
+export NVM_DIR="$HOME/.nvm"
 # opencode
 export OPENCODE_BIN_DIR="$HOME/.opencode/bin"
 
 # Tools configurations
+# opencode
 export OPENCODE_EXPERIMENTAL_PLAN_MODE=true
+# ros
+export DISABLE_ROS1_EOL_WARNINGS=true
 
 # Load secrets
-if [[ -f "$HOME/.config/secrets/env" ]]; then
-	source "$HOME/.config/secrets/env"
-fi
+[[ -r "$HOME/.config/secrets/env" ]] && source "$HOME/.config/secrets/env"
