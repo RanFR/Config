@@ -21,6 +21,10 @@
       "model": "zhipuai-coding-plan/glm-5.1",
       "prompt": "{file:prompts/plan.md}"
     },
+    "scout": {
+      "model": "zhipuai-coding-plan/glm-4.5-air",
+      "prompt": "{file:prompts/scout.md}"
+    },
     "summary": {
       "model": "zhipuai-coding-plan/glm-4.5-air",
       "prompt": "{file:prompts/summary.md}"
