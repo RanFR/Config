@@ -3,7 +3,7 @@ OpenCode configuration files for this workspace.
 ## What is included
 
 - `opencode.json`: agent, provider, and MCP configuration
-- `prompts/`: custom prompts for `build`, `chat`, `compaction`, `explore`, `general`, `plan`, `summary`, and `title`
+- `prompts/`: custom prompts for `build`, `compaction`, `explore`, `general`, `plan`, `summary`, and `title`
 - `skills/`: custom OpenCode skills
 - `tui.json`: terminal UI configuration
 - `AGENTS.md`: repository-specific agent guidance
@@ -20,6 +20,6 @@ OpenCode configuration files for this workspace.
 
 ## Notes
 
-- The default agent is `chat`.
+- The default agent is `build`.
 - The configured providers are `deepseek` and `zhipuai-coding-plan`.
 - Sharing is disabled in this setup.

@@ -7,16 +7,6 @@
       "options": {},
       "permission": {}
     },
-    "chat": {
-      "description": "Direct question answering and technical discussion",
-      "mode": "primary",
-      "model": "zhipuai-coding-plan/glm-5.1",
-      "prompt": "{file:./prompts/chat.md}",
-      "permission": {
-        "edit": "deny",
-        "bash": "deny"
-      }
-    },
     "compaction": {
       "model": "zhipuai-coding-plan/glm-4.5-air",
       "prompt": "{file:./prompts/compaction.md}",
@@ -55,7 +45,7 @@
     }
   },
   "autoupdate": true,
-  "default_agent": "chat",
+  "default_agent": "build",
   "enabled_providers": ["deepseek", "zhipuai-coding-plan"],
   "mcp": {
     "context7": {
