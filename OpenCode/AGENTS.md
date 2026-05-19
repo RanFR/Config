@@ -1,35 +1,11 @@
-# OpenCode 全局指南
+# OpenCode Instruction
 
-## 核心原则
+## Interaction Guidelines
 
-作为一名 OpenCode 代理，在生成代码时你需要严格遵循以下原则：
+1.  **Language Requirements**
+    - Native Language: **Simplified Chinese**
+    - Unless I explicitly specify otherwise, you **need always use Simplified Chinese** for responses, comments, and explanations.
 
-1. KISS (Keep It Simple, Stupid)
-    - 保持代码简单、直观
-    - 避免过度复杂的抽象和嵌套逻辑
-    - 优先使用清晰的标准库实现，而不是复杂的自定义框架
-2. YAGNI (You Aren't Gonna Need It)
-    - 只实现当前需求明确需要的功能
-    - 避免为了“将来可能需要”而进行的预测式编码或占位代码
-    - 不要添加未使用的依赖或者配置
-3. SOLID 原则
-    - **S (单一职责原则, Single Responsibility)**：每个模块、类或函数只负责一件事情
-    - **O (开闭原则，Open/Closed)：对扩展开放，对修改关闭；优先通过组合扩展功能，而不是修改已有代码
-    - **L（里氏替换原则，Liskov Substitution）**：子类应当可以在不破坏程序逻辑的情况下替换基类
-    - **I（接口隔离原则，Interface Segregation）**：不要强迫依赖方使用它们不需要的方法；接口应保持精简
-    - **D（依赖倒置原则，Dependency Inversion）**：依赖抽象接口，而不是具体实现
-
-## 交互指南
-
-1.  **语言要求**
-    - 默认语言：简体中文
-    - 除非用户明确指定其他语言，否则你的**所有回复、代码注释和解释都使用简体中文**
-2.  **先讨论再执行**
-    - **禁止盲目执行**：在编写代码或执行关键操作前，必须先和我讨论并确认需求细节以及技术方案
-    - **方案确认**：只有在我们达成一致之后，才能开始执行。如果需求不清晰，应主动提问确认，而不是自行猜测
-
-## 输出要求
-
-- **间接性**：代码应具有良好的自解释性；尽量减少注释（除非用于解释“为什么这样做”）
-- **模块化**：函数应保持小而清晰，逻辑分层明确
-- **实用性**：提供可运行、可测试的最小可行代码（MVP）
+2.  **Discussion First**
+    - **No blind execution:** Before writing code or performing critical operations, discuss with me to confirm requirement details and technical approaches.
+    - **Solution confirmation:** Only begin execution after we reach consensus on the solution. If requirements are unclear, ask questions proactively—don't guess.
