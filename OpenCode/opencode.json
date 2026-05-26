@@ -2,48 +2,55 @@
   "$schema": "https://opencode.ai/config.json",
   "agent": {
     "build": {
-      "model": "zhipuai-coding-plan/glm-5-turbo",
-      "prompt": "{file:prompts/build.md}"
+      "model": "zhipuai-coding-plan/glm-5.1"
     },
     "compaction": {
-      "model": "zhipuai-coding-plan/glm-5.1",
-      "prompt": "{file:prompts/compaction.md}"
+      "model": "zhipuai-coding-plan/glm-4.5-air"
     },
     "explore": {
-      "model": "zhipuai-coding-plan/glm-4.7",
-      "prompt": "{file:prompts/explore.md}"
+      "model": "zhipuai-coding-plan/glm-4.7"
     },
     "general": {
-      "model": "zhipuai-coding-plan/glm-5-turbo",
-      "prompt": "{file:prompts/general.md}"
+      "model": "zhipuai-coding-plan/glm-5-turbo"
     },
     "plan": {
-      "model": "zhipuai-coding-plan/glm-5.1",
-      "prompt": "{file:prompts/plan.md}"
+      "model": "zhipuai-coding-plan/glm-5.1"
     },
     "scout": {
-      "model": "zhipuai-coding-plan/glm-4.5-air",
-      "prompt": "{file:prompts/scout.md}"
+      "model": "zhipuai-coding-plan/glm-4.7"
     },
     "summary": {
-      "model": "zhipuai-coding-plan/glm-4.5-air",
-      "prompt": "{file:prompts/summary.md}"
+      "model": "zhipuai-coding-plan/glm-4.5-air"
     },
     "title": {
-      "model": "zhipuai-coding-plan/glm-4.5-air",
-      "prompt": "{file:prompts/title.md}"
+      "model": "zhipuai-coding-plan/glm-4.5-air"
     }
   },
   "autoupdate": "notify",
   "default_agent": "build",
-  "enabled_providers": ["deepseek", "zhipuai-coding-plan"],
+  "enabled_providers": [
+    "deepseek",
+    "zhipuai-coding-plan"
+  ],
   "mcp": {
-    "web-search": {
+    "open-source-reader": {
       "headers": {
         "Authorization": "Bearer {env:ZHIPU_API_KEY}"
       },
       "type": "remote",
-      "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp"
+      "url": "https://open.bigmodel.cn/api/mcp/zread/mcp"
+    },
+    "vision": {
+      "command": [
+        "npx",
+        "-y",
+        "@z_ai/mcp-server"
+      ],
+      "environment": {
+        "Z_AI_API_KEY": "{env:ZHIPU_API_KEY}",
+        "Z_AI_MODE": "ZHIPU"
+      },
+      "type": "local"
     },
     "web-reader": {
       "headers": {
@@ -52,12 +59,12 @@
       "type": "remote",
       "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp"
     },
-    "open-source-reader": {
+    "web-search": {
       "headers": {
         "Authorization": "Bearer {env:ZHIPU_API_KEY}"
       },
       "type": "remote",
-      "url": "https://open.bigmodel.cn/api/mcp/zread/mcp"
+      "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp"
     }
   },
   "share": "disabled"
