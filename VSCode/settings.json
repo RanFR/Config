@@ -1,158 +1,45 @@
 {
-  /* C/C++ */
-  "C_Cpp.clang_format_style": "Google",
-
-  /* Editor */
-  "editor.acceptSuggestionOnEnter": "off",
-  "editor.fontLigatures": true,
-  "editor.fontFamily": "Maple Mono NF CN",
-  "editor.fontSize": 16,
-  "editor.guides.bracketPairs": "active",
-  "editor.rulers": [80],
-  "editor.suggest.insertMode": "replace",
-  "editor.tabSize": 2,
-  "editor.unicodeHighlight.allowedLocales": {
-    "zh-hans": true
-  },
-  "editor.wordWrap": "off",
-
-  /* Chat */
-  "chat.agent.enabled": true,
-  "chat.mcp.gallery.enabled": true,
-
-  /* Explorer */
-  "explorer.confirmDelete": false,
-  "explorer.confirmDragAndDrop": false,
-
-  /* Files */
-  "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 3000,
-  "files.insertFinalNewline": true,
-  "files.trimTrailingWhitespace": true,
-  "files.associations": {
-    "*.launch": "xml"
-  },
-
-  /* Formatter */
-  "editor.formatOnSave": false,
-  "editor.formatOnPaste": false,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[c]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools"
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.rulers": [80],
+    "editor.tabSize": 2
   },
   "[cpp]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools"
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.rulers": [80],
+    "editor.tabSize": 2
   },
-  "[latex]": {
-    "editor.wordWrap": "bounded",
-    "editor.wordWrapColumn": 80,
-    "editor.minimap.enabled": false,
-    "editor.defaultFormatter": "James-Yu.latex-workshop"
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonl]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[python]": {
-    "editor.tabSize": 4,
-    "editor.rulers": [120],
-    "editor.defaultFormatter": "charliermarsh.ruff"
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.rulers": [120]
   },
-  "[xml]": {
-    "editor.defaultFormatter": "redhat.vscode-xml"
-  },
-
-  /* Git */
+  "C_Cpp.clang_format_style": "Google",
+  "C_Cpp.default.cppStandard": "c++17",
+  "C_Cpp.default.cStandard": "c17",
+  "chat.editor.fontFamily": "'Monaspace Krypton','Noto Sans SC'",
+  "chat.fontFamily": "'Monaspace Krypton','Noto Sans SC'",
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.fontFamily": "Cascadia Next SC",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 16,
+  "editor.tabSize": 4,
+  "editor.guides.bracketPairs": "active",
+  "editor.suggest.insertMode": "replace",
+  "files.trimTrailingWhitespace": true,
   "git.addAICoAuthor": "off",
-  "git.autofetch": true,
-  "git.openRepositoryInParentFolders": "never",
-
-  /* GitHub Copilot */
-  "github.copilot.nextEditSuggestions.enabled": true,
-  "github.copilot.nextEditSuggestions.extendedRange": true,
-  "github.copilot.chat.commitMessageGeneration.instructions": [
-    {
-      "text": "Use conventional commit message format."
-    }
-  ],
-
-  /* JSON */
-  "json.schemaDownload.trustedDomains": {
-    "https://esm.sh/": true,
-    "https://models.dev/": true,
-    "https://opencode.ai/": true,
-    "https://raw.githubusercontent.com/": true
-  },
-
-  /* Integrated terminal */
-  "terminal.integrated.enableImages": true,
-  "terminal.integrated.gpuAcceleration": "auto",
-  "terminal.integrated.windowsUseConptyDll": true,
-  "terminal.integrated.fontFamily": "Maple Mono NF CN",
-  "terminal.integrated.fontSize": 16,
-
-  /* Latex */
-  "latex-workshop.latex.outDir": "",
-  "latex-workshop.latex.auxDir": "build",
-  "latex-workshop.latex.tools": [
-    {
-      "name": "xelatex",
-      "command": "xelatex",
-      "args": [
-        "-synctex=1",
-        "-interaction=nonstopmode",
-        "-file-line-error",
-        "-output-directory=%OUTDIR%",
-        "%DOCFILE%"
-      ],
-      "env": {}
-    },
-    {
-      "name": "biber",
-      "command": "biber",
-      "args": [
-        "--input-directory",
-        "%OUTDIR%",
-        "--output-directory",
-        "%OUTDIR%",
-        "%DOCFILE%"
-      ],
-      "env": {}
-    }
-  ],
-  "latex-workshop.latex.recipes": [
-    {
-      "name": "xelatex",
-      "tools": ["xelatex", "xelatex"]
-    },
-    {
-      "name": "xelatex+biber",
-      "tools": ["xelatex", "biber", "xelatex", "xelatex"]
-    }
-  ],
-  "latex-workshop.latex.autoBuild.run": "never",
-  "latex-workshop.latex.autoClean.run": "onFailed",
-  "latex-workshop.latex.recipe.default": "lastUsed",
-  "latex-workshop.formatting.latex": "tex-fmt",
-  "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
-
-  /* Markdown */
-  "markdown.preview.fontFamily": "Maple Mono NF CN",
-  "markdown.preview.fontSize": 16,
-
-  /* Remote */
-  "remote.autoForwardPortsSource": "hybrid",
-
-  /* Python */
+  "markdown.preview.fontFamily": "Noto Sans SC",
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "standard",
-  "python.defaultInterpreterPath": "python3",
-  "python.useEnvironmentsExtension": true,
-
-  /* Window */
-  "window.confirmSaveUntitledWorkspace": false,
-
-  /* Workbench */
-  "workbench.colorTheme": "Catppuccin Mocha",
-  "workbench.editor.useModal": "some",
-  "workbench.iconTheme": "catppuccin-mocha",
-  "workbench.notifications.position": "top-right",
-  "workbench.tree.renderIndentGuides": "onHover",
-  "workbench.tree.indent": 16
+  "terminal.integrated.fontFamily": "'Cascadia Mono', 'Noto Sans SC'",
+  "terminal.integrated.fontSize": 16,
+  "workbench.tree.renderIndentGuides": "onHover"
 }
