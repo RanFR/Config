@@ -8,7 +8,7 @@
 [![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)](https://git-scm.com/)
 [![VSCode](https://img.shields.io/badge/VSCode-007ACC?style=flat&logo=visualstudiocode&logoColor=white)](https://code.visualstudio.com/)
 
-包含终端、编辑器、代理工具和开发工具的完整配置方案
+包含终端、编辑器、AI 编程工具和输入法的完整配置方案
 
 </div>
 
@@ -24,89 +24,77 @@
 
 ## 🌟 项目特色
 
-- **🤖 AI 驱动**: 集成 Claude Code AI 编程助手，包含专业化代理系统
+- **🤖 AI 编程**: 基于 OpenCode 的多智能体配置，按任务自动分派模型
 - **⚡ 高效开发**: 预配置的开发环境，开箱即用
-- **🎨 美观界面**: 精心设计的终端和编辑器主题
-- **🌐 网络优化**: 智能代理配置，支持全球网络访问
-- **🔧 模块化**: 模块化设计，按需使用各组件
+- **🧩 模块化**: Bash 配置按数字前缀分层加载，职责清晰、易于增删
+- **🌐 网络优化**: 代理开关函数与 Clash 规则转换脚本
+- **⌨️ 输入法**: Rime 输入法个人覆写配置
 
 ## 📁 目录结构
 
 ### 🖥️ [Bash](./Bash/)
 
-Bash 终端配置文件
+Bash 终端配置，采用数字前缀分层模块结构
+
+```text
+Bash/
+├── .profile      # 登录 shell 配置
+├── bashrc        # 交互式 shell 主入口，按序加载模块
+└── bash/         # 分层模块（按字典序自动加载）
+    ├── 00-env          # 环境变量
+    ├── 10-path         # PATH 管理（path_add）
+    ├── 20-toolchain    # 工具链配置
+    ├── 30-alias        # 命令别名
+    ├── 40-function     # 自定义函数
+    ├── 50-completion   # 命令补全
+    └── 60-prompt       # 提示符
+```
 
 > **⚠️ 注意**: 配置文件需要 [Nerd Fonts](https://www.nerdfonts.com/) 字体以获得正确显示效果。
-
-**文件说明**:
-
-- `.bashrc` - Bash 主配置文件，包含别名、函数和环境变量
-- `.bash_aliases` - 命令别名配置
-- `.bash_profile` - 登录 Shell 配置
-- `.bash_function` - 自定义的 Bash 函数
 
 ### 🌐 [Clash](./Clash/)
 
 网络代理配置文件
 
-**主要功能**:
-
-- 🔄 自动规则转换和优化
-- 🐛 内置调试工具
-- 📊 详细日志记录
-- 🌍 全球节点智能选择
-
 **核心文件**:
 
 - `Script.js` - 规则转换脚本
 - `Debug.js` - 调试和分析工具
-- `README.md` - 详细配置说明
+- `log_analyzer/` - 日志分析工具
 
-**调试设置**:
-
-```javascript
-// 在 Script.js 中添加以启用调试
-module.exports = { main };
-```
-
-### 🤖 [ClaudeCode](./ClaudeCode/)
-
-**Claude Code** AI 编程助手配置和代理系统
-
-#### 🎯 核心功能
-
-- **🧠 专业化代理**: C++、Python、Web 开发等领域专家代理
-- **🎭 智能编排**: 通过 tech-lead-orchestrator 实现任务自动路由
-- **🛠️ 技能系统**: 可扩展的技能工具集（代码审查、PR 创建、提交助手等）
-- **🌏 完整中文化**: 中文界面和文档
-
-#### 📦 主要组件
-
-```text
-ClaudeCode/
-├── CLAUDE.md          # 系统配置和使用指南
-├── agents/            # 专业化代理集合
-│   ├── core/         # 核心代理（代码审查、性能优化等）
-│   ├── universal/    # 通用代理（后端、前端、API 等）
-│   └── specialized/  # 专业代理（C++、Python 专家等）
-├── skills/           # 技能工具集
-│   ├── code-reviewer/    # 代码审查技能
-│   ├── commit-helper/    # 提交信息生成
-│   ├── pr-creator/       # PR 创建技能
-│   └── skill-creator/    # 技能创建工具
-└── settings.json    # Claude Code 主配置
-```
+详细配置说明见 [Clash/README.md](./Clash/README.md)
 
 ### 🌍 [KissTranslator](./KissTranslator/)
 
-自定义翻译 API 配置
+Kiss Translator 浏览器翻译插件的自定义翻译接口
 
-**特性**:
+- `baidu.js` - 百度翻译 API 接口，内置自研 MD5 签名实现，
+  兼容 Firefox 中 sval 沙盒的函数限制，并将常见错误码转为中文提示
+- 密钥填写格式：`appid#key`
 
-- 🔌 多翻译服务 API 支持
-- 🎣 自定义钩子和扩展
-- 📚 详细使用示例和文档
-- 🚀 高性能翻译优化
+### ⚡ [Lazygit](./Lazygit/)
+
+Lazygit 终端 Git 工具配置
+
+- `config.yaml` - 键位绑定优化（如 Ctrl+s 确认提交）
+
+### 🤖 [OpenCode](./OpenCode/)
+
+[OpenCode](https://opencode.ai) AI 编程助手配置
+
+**主要组件**:
+
+- `opencode.json` - agent、provider 与 MCP 配置
+- `prompts/` - 自定义提示词（build、explore、plan、summary 等）
+- `skills/` - 自定义技能（如 git-commit 提交助手）
+- `tui.json` - 终端 UI 配置
+- `AGENTS.md` - 仓库级代理指引
+
+### 💪 [PowerShell](./PowerShell/)
+
+PowerShell 7 配置文件
+
+- `profile.ps1` - 提供 `proxyon` / `proxyoff` 代理开关函数等
 
 ### 🚁 [PX4](./PX4/)
 
@@ -114,43 +102,29 @@ ClaudeCode/
 
 > **✅ 测试版本**: PX4 v1.12.3
 
-**配置步骤**:
+运行环境初始化脚本（自动配置 `ROS_PACKAGE_PATH`、Gazebo 路径等）：
 
-1. 修改脚本中的源码和构建目录路径
-2. 运行环境初始化脚本：
-   ```bash
-   source setup_px4_autopilot.sh
-   ```
+```bash
+source setup_px4_autopilot.sh
+```
 
-### ⚡ [Lazygit](./Lazygit/)
+### ⌨️ [Rime](./Rime/)
 
-Lazygit 终端 Git 工具配置
+[Rime-Ice](https://github.com/iDvel/rime-ice) 输入法覆写配置
 
-**特色功能**:
-
-- 🎨 优化键位绑定
-- 📊 可视化提交历史
-- ⚡ 快速分支管理
+- 候选词数量、中英文切换键位（Control+Space）等个人偏好
 
 ### 🛠️ [Terminal](./Terminal/)
 
 终端工具配置集合
 
-**包含工具**:
-
-- **WezTerm** - 现代终端模拟器配置
-- **Windows Terminal** - 相关配置和主题
+- **Windows Terminal** - `settings.json` 配置与主题
 
 ### 💻 [VSCode](./VSCode/)
 
 Visual Studio Code 编辑器配置
 
-**配置亮点**:
-
-- 🎨 精选主题和字体配置
-- 🔧 生产力提升扩展设置
-- 📝 代码格式化规则
-- 🚀 调试环境优化
+- `settings.json` - 精简的编辑器、格式化与语言配置
 
 ## 🚀 快速开始
 
@@ -166,7 +140,7 @@ cd Config
 ```bash
 # 备份 Bash 配置
 cp ~/.bashrc ~/.bashrc.backup
-cp ~/.bash_aliases ~/.bash_aliases.backup
+[ -d ~/.bash ] && cp -r ~/.bash ~/.bash.backup
 
 # 备份 VSCode 配置
 cp ~/.config/Code/User/settings.json ~/.config/Code/User/settings.json.backup
@@ -177,11 +151,8 @@ cp ~/.config/Code/User/settings.json ~/.config/Code/User/settings.json.backup
 #### Bash 环境配置
 
 ```bash
-# 复制配置文件
-cp Bash/.bashrc ~/.bashrc
-cp Bash/.bash_aliases ~/.bash_aliases
-cp Bash/.bash_profile ~/.bash_profile
-cp Bash/.bash_function ~/.bash_function
+cp Bash/bashrc ~/.bashrc
+cp -r Bash/bash ~/.bash
 
 # 重新加载配置
 source ~/.bashrc
@@ -190,103 +161,81 @@ source ~/.bashrc
 #### VSCode 配置
 
 ```bash
-# 创建配置目录（如果不存在）
-mkdir -p ~/.config/Code/User
-
-# 复制配置文件
 cp VSCode/settings.json ~/.config/Code/User/
 ```
 
-#### Claude Code 配置
+#### OpenCode 配置
 
 ```bash
-# 创建 Claude Code 配置目录
-mkdir -p ~/.claude
+# 复制并重命名为 opencode
+cp -r OpenCode ~/.config/opencode
 
-# 复制所有配置文件
-cp -r ClaudeCode/* ~/.claude/
+# 设置所需环境变量（MCP 服务器用于联网搜索/读取）
+export ZHIPU_API_KEY=<your-key>
 ```
 
-#### 终端配置
+#### PowerShell 配置（Windows）
 
-```bash
-# WezTerm 配置
-cp Terminal/WezTerm/.wezterm.lua ~/.wezterm.lua
+```powershell
+# 将 profile.ps1 内容合并到 $PROFILE 指向的文件
+Copy-Item PowerShell/profile.ps1 $PROFILE -Force
 ```
+
+#### Rime 配置
+
+将 `Rime/default.custom.yaml` 放入 Rime 用户目录后重新部署。
 
 ### 4️⃣ 安装必要依赖
 
-#### 字体安装
-
-```bash
-# 安装 Nerd Fonts（以 Ubuntu 为例）
-sudo apt update
-sudo apt install fonts-firacode
-```
-
-#### 工具安装
-
-```bash
-# 安装基础工具
-sudo apt install git curl wget
-
-# 安装 Node.js（某些配置需要）
-curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-sudo apt-get install -y nodejs
-```
+Bash 提示符与终端图标需要 [Nerd Fonts](https://www.nerdfonts.com/) 字体；其他工具（git、lazygit 等）请参考各自官方文档安装。
 
 ## 📖 详细配置
 
-### Claude Code 代理系统
+### OpenCode 多智能体
 
-Claude Code 代理系统是本配置的核心特色，提供智能化的编程辅助：
+OpenCode 配置将不同任务分派给合适的模型：
 
-#### 使用方法
+- **build / plan** - 主力模型（glm-5.1）
+- **explore / scout** - 探索与检索（glm-4.7）
+- **summary / title / compaction** - 轻量任务（glm-4.5-air）
 
-1. **安装 Claude Code**: 参考 [Claude Code 官方文档](https://docs.anthropic.com/claude/docs/claude-code)
-2. **配置代理**: 复制 ClaudeCode 目录到 `~/.claude/`
-3. **开始使用**: 在 Claude Code 中享受专业化的 AI 代理服务
-
-#### 代理类型
-
-- **核心代理**: 代码审查、性能优化、文档生成
-- **通用代理**: 后端开发、前端开发、API 设计
-- **专业代理**: C++ 专家、Python 专家、安全专家等
+默认 agent 为 `build`，provider 包括 `deepseek` 与 `zhipuai-coding-plan`。
 
 ### Clash 代理配置
 
 详细的 Clash 配置说明请参考 [Clash/README.md](./Clash/README.md)
+
+### Bash 模块加载
+
+`bashrc` 按数字前缀顺序加载 `bash/` 中的模块：环境变量 → PATH → 工具链 → 别名 → 函数 → 补全 → 提示符。
+新增配置时按职责放入对应模块，详见 [Bash/README.md](./Bash/README.md)
 
 ## 🔧 自定义配置
 
 ### 添加个人配置
 
 ```bash
-# 在 .bashrc 中添加个人别名
-echo "alias myproject='cd /path/to/my/project'" >> ~/.bashrc
+# 在 Bash 中添加个人别名
+echo "alias myproject='cd /path/to/my/project'" >> ~/.bash/30-alias
 
 # 在 VSCode 中添加个人设置
-echo '  "terminal.integrated.fontFamily": "Fira Code Retina",' >> ~/.config/Code/User/settings.json
+echo '  "editor.fontSize": 16,' >> ~/.config/Code/User/settings.json
 ```
 
 ### 配置同步
 
 ```bash
-# 创建同步脚本
 cat > sync_config.sh << 'EOF'
 #!/bin/bash
 # 同步配置到新机器的脚本
 
 CONFIG_DIR="$HOME/Config"
-BACKUP_DIR="$HOME/Config_backup"
-
-# 备份现有配置
-mkdir -p $BACKUP_DIR
 
 # 同步配置文件
-rsync -av $CONFIG_DIR/Bash/ ~/
-rsync -av $CONFIG_DIR/VSCode/ ~/.config/Code/User/
-rsync -av $CONFIG_DIR/ClaudeCode/ ~/.claude/
+cp "$CONFIG_DIR/Bash/bashrc" ~/.bashrc
+cp -r "$CONFIG_DIR/Bash/bash" ~/.bash
+cp "$CONFIG_DIR/VSCode/settings.json" ~/.config/Code/User/
+cp -r "$CONFIG_DIR/OpenCode" ~/.config/opencode
 
 echo "配置同步完成！"
 EOF
@@ -303,11 +252,10 @@ chmod +x sync_config.sh
 1. **🐛 报告问题**: 在 Issues 中报告 bug 或提出建议
 2. **💻 提交代码**: Fork 项目并提交 Pull Request
 3. **📖 改进文档**: 帮助完善文档和说明
-4. **🌟 推荐项目**: 给项目点星支持
 
 ### 提交规范
 
-- 使用清晰的提交信息
+- 使用清晰的提交信息（Conventional Commits 格式）
 - 遵循现有的代码风格
 - 添加必要的文档说明
 - 确保配置文件可正常工作
@@ -315,15 +263,6 @@ chmod +x sync_config.sh
 ## 📄 许可证
 
 本项目采用 [MIT 许可证](./LICENSE)。
-
-### 🙏 致谢
-
-本项目包含以下开源项目的部分代码：
-
-- [awesome-claude-agents](https://github.com/vijaythecoder/awesome-claude-agents) - MIT License
-- [skills](https://github.com/anthropics/skills) - Apache License 2.0
-
-感谢这些项目的贡献者们！
 
 ---
 
