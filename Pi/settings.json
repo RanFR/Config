@@ -1,0 +1,11 @@
+{
+  "defaultModel": "glm-5.3",
+  "defaultProvider": "zai-coding-cn",
+  "defaultThinkingLevel": "max",
+  "enabledModels": ["glm-5.3", "glm-5.3-flash"],
+  "externalEditor": "code --wait",
+  "modelThinkingLevels": {
+    "zai-coding-cn/glm-5.3": "max",
+    "zai-coding-cn/glm-5.3-flash": "max"
+  }
+}

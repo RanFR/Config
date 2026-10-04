@@ -108,6 +108,18 @@ PowerShell 7 配置文件
 source setup_px4_autopilot.sh
 ```
 
+### 🤖 [Pi](./Pi/)
+
+[Pi](https://github.com/EarendilWorks/pi) AI 编程助手配置
+
+- `settings.json` - 模型与思考等级设置（glm-5.3）
+- `mcp.json` - MCP 服务器（联网搜索、网页读取、GitHub 仓库浏览）
+- `extensions/` - TypeScript 扩展（TUI 交互、shell 超时限制）
+- `prompts/` - 斜杠命令模板（`/commit`、`/init`）
+- `skills/` - 技能（git-commit 提交流程）
+
+详见 [Pi/README.md](./Pi/README.md)
+
 ### ⌨️ [Rime](./Rime/)
 
 [Rime-Ice](https://github.com/iDvel/rime-ice) 输入法覆写配置

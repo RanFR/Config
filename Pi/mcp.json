@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "web-reader": {
+      "description": "Web page reader: fetch any URL and convert it to model-friendly markdown (title, body, metadata, links) with image and link-summary options; use it after search or for any URL you need to read",
+      "headers": {
+        "Authorization": "Bearer ${ZAI_CODING_CN_API_KEY}"
+      },
+      "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp"
+    },
+    "web-search-prime": {
+      "description": "Web search over the live internet: fresh, real-time information such as news, stock prices and weather; returns page title, URL and summary, with domain and recency filters",
+      "headers": {
+        "Authorization": "Bearer ${ZAI_CODING_CN_API_KEY}"
+      },
+      "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp"
+    },
+    "zread": {
+      "description": "GitHub repository explorer (zread.ai): search a repo's knowledge docs, issues and PRs, list its directory structure, and read any file in full; for studying external open-source repos and dependencies",
+      "headers": {
+        "Authorization": "Bearer ${ZAI_CODING_CN_API_KEY}"
+      },
+      "url": "https://open.bigmodel.cn/api/mcp/zread/mcp"
+    }
+  }
+}
