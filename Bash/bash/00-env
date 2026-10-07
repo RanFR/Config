@@ -2,41 +2,42 @@
 # Environment & Basic Settings
 # =============================================================================
 
-# === History ===
-HISTSIZE=5000
-HISTFILESIZE=10000
-HISTCONTROL=ignoreboth:erasedups
-shopt -s histappend cmdhist lithist checkwinsize
-
 # XDG Directories
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
-# Editor
-for editor_cmd in "code --wait" nano vim vi; do
-	editor_bin="${editor_cmd%% *}"
+# === History ===
+# NOTE: HISTFILE must be set after XDG_STATE_HOME above.
+# bash loads history AFTER reading startup files, so setting it here is reliable.
+HISTSIZE=5000
+HISTFILESIZE=10000
+HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend cmdhist lithist checkwinsize
 
-	if command -v -- "$editor_bin" >/dev/null 2>&1; then
+# Store history under the XDG state directory
+# The mkdir guard is mandatory: bash does NOT create parent directories,
+# a missing dir would silently lose history on exit.
+HISTFILE="$XDG_STATE_HOME/bash/history"
+[[ -d "$XDG_STATE_HOME/bash" ]] || mkdir -p -m 700 "$XDG_STATE_HOME/bash"
+
+# Editor and Visual
+for editor_cmd in nvim vim nano vi; do
+	if command -v "$editor_cmd" >/dev/null 2>&1; then
 		export EDITOR="$editor_cmd"
 		break
 	fi
 done
+command -v code >/dev/null 2>&1 && export VISUAL="code --wait"
 
 # === Tool Directories ===
 # acados
 export ACADOS_SOURCE_DIR="$HOME/src/acados"
 # nvm
-export NVM_DIR="$HOME/.nvm"
-# opencode
-export OPENCODE_BIN_DIR="$HOME/.opencode/bin"
+export NVM_DIR="$HOME/.config/nvm"
 
 # Tools configurations
-# opencode
-export OPENCODE_EXPERIMENTAL_PLAN_MODE=true
-# ros
-export DISABLE_ROS1_EOL_WARNINGS=true
 
 # Load secrets
 [[ -r "$HOME/.config/secrets/env" ]] && source "$HOME/.config/secrets/env"

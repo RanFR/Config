@@ -1,20 +1,23 @@
 # Only run for interactive shells
 [[ $- != *i* ]] && return
 
-# XDG config directory
-BASH_CONFIG_DIR="$HOME/.config/bash"
+# Load modular config from ~/.config/bash/NN-*
+# All loader-internal state lives inside this function and is freed afterwards.
+__load_bash_config() {
+	local dir="$HOME/.config/bash"
+	local file
 
-# Ensure predictable glob behavior
-shopt -s nullglob
+	if [[ ! -d "$dir" ]]; then
+		printf 'ERROR: Configuration directory not found: %s\n' "$dir" >&2
+		PS1='\u@\h:\w\$ '
+		return 1
+	fi
 
-if [[ -d "$BASH_CONFIG_DIR" ]]; then
-    for file in "$BASH_CONFIG_DIR"/[0-9][0-9]-*; do
-        [[ -f "$file" && -r "$file" ]] && source "$file"
-    done
-else
-    PS1='\u@\h:\w\$ '
-    printf 'ERROR: Configuration directory not found: %s\n' "$BASH_CONFIG_DIR" >&2
-fi
+	for file in "$dir"/[0-9][0-9]-*; do
+		[[ -f "$file" && -r "$file" ]] && source "$file"
+	done
 
-# Restore default glob behavior
-shopt -u nullglob
+	return 0
+}
+__load_bash_config
+unset -f __load_bash_config

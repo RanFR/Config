@@ -7,6 +7,7 @@
 # Prepends by default; use "after" to append
 path_add() {
 	local var="$1" dir="$2"
+	[[ -e "$dir" ]] || return # skip if dir does not exist
 	case ":${!var}:" in
 	*:"$dir":*) return ;;
 	esac
