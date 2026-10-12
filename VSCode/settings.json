@@ -1,12 +1,19 @@
 {
+  "C_Cpp.clang_format_style": "Google",
+  "C_Cpp.default.cStandard": "c17",
+  "C_Cpp.default.cppStandard": "c++17",
   "[c]": {
     "editor.defaultFormatter": "ms-vscode.cpptools",
-    "editor.rulers": [80],
+    "editor.rulers": [
+      80
+    ],
     "editor.tabSize": 2
   },
   "[cpp]": {
     "editor.defaultFormatter": "ms-vscode.cpptools",
-    "editor.rulers": [80],
+    "editor.rulers": [
+      80
+    ],
     "editor.tabSize": 2
   },
   "[json]": {
@@ -18,31 +25,35 @@
   "[jsonl]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.rulers": [120]
+    "editor.rulers": [
+      120
+    ]
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "C_Cpp.clang_format_style": "Google",
-  "C_Cpp.default.cppStandard": "c++17",
-  "C_Cpp.default.cStandard": "c17",
   "chat.editor.fontFamily": "'Monaspace Krypton','Noto Sans SC'",
   "chat.fontFamily": "'Monaspace Krypton','Noto Sans SC'",
   "editor.acceptSuggestionOnEnter": "off",
-  "editor.fontFamily": "Cascadia Next SC",
+  "editor.fontFamily": "'Monaspace Neon', 'Noto Sans SC'",
   "editor.fontLigatures": true,
   "editor.fontSize": 16,
-  "editor.tabSize": 4,
   "editor.guides.bracketPairs": "active",
   "editor.suggest.insertMode": "replace",
+  "editor.tabSize": 4,
+  "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
   "git.addAICoAuthor": "off",
-  "markdown.preview.fontFamily": "Noto Sans SC",
+  "markdown.preview.fontFamily": "'Noto Sans SC'",
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "standard",
-  "terminal.integrated.fontFamily": "'Cascadia Mono', 'Noto Sans SC'",
+  "terminal.integrated.fontFamily": "'Maple Mono NF CN'",
   "terminal.integrated.fontSize": 16,
+  "terminal.integrated.initialHint": false,
   "workbench.tree.renderIndentGuides": "onHover"
 }
